@@ -1,0 +1,582 @@
+{
+  "status": "success",
+  "total_reports": 1,
+  "reports": [
+    {
+      "report_number": 1,
+      "file_name": "Screenshot 2025-10-23 102328.png",
+      "form_id": "",
+      "form_type": "Leads Agri Folliar/Biostimulant Demo Form",
+      "extracted_content": "# Leads Agri Folliar/Biostimulant Demo Form\n\n## Fields\n- **Name/Position/Area**: JOEL ANOS O. MOLINA / TPS ZAMBALES\n- **Leads Agri Product (Rate/Timing/No of applications)**: ISMART NANO UREA\n- **Name of Cooperator**: MICHAEL D. RANGES\n- **Farm Location**: PI, DIRITA, IBA, ZAMBALES\n- **Contact Number**: 09/632616034\n- **Plot size (sq meter)**: 1000 sqm\n- **Date of Application**: APRIL 4, 2025\n- **Crop/Variety**: RICE / NSIC RC 534\n- **Date of Planting**: MARCH 4, 2025\n- **Farmers Practice (Product/Rate/Timing)**: FEB. 8, 2024\n- **Date of Product Demo Showcase/s**: N/A\n- **Total Move-out**: N/A\n- **No of Participants**: N/A\n- **Name and Signature of Demo Cooperator**: MICHAEL RANGES\n\n## Treatment\n| Treatment | Product      | Rate | Application Method | Timing/s of application |\n|-----------|--------------|------|--------------------|-------------------------|\n| 1         | FP/Untreated | N/A  | N/A                | 31 DAT                  |\n| 2         | Leads Agri   | 50ml | FOLIAR             | N/A                     |\n\n## Crop Vigor (whole plot)\n| Trt | Product      | 10 DAA        | 18 DAA | LCC: 10 DAA | 18 DAA |\n|-----|--------------|---------------|--------|-------------|--------|\n| 1   | FP/Untreated | # of tillers: 16 | 19     | 4           | 3      |\n| 2   | Leads Agri   | # of tillers: 18 | 20     | 4           | 4      |\n\n## Yield (MT/Ha)\n| Product      | Yield |\n|--------------|-------|\n| FP/Untreated | N/A   |\n| Leads Agri   | N/A   |\n\n## Notes\n- **Remarks/Cooperator Feedback/Result of Demo**: At 10 DAA, the results were almost the same for both the treated and untreated. The leaves were both green. However, the treated had more tillers. Meanwhile, at 18 DAA, the leaves of the treated were greener.",
+      "analysis": {
+        "template_version": "1.1.0",
+        "model_name": "AgriculturalDataAnalyst_V1.1",
+        "status": "success",
+        "product_category": "foliar",
+        "metrics_detected": [
+          "tillers",
+          "LCC_rating"
+        ],
+        "measurement_intervals": [
+          "10 DAA",
+          "18 DAA"
+        ],
+        "data_quality": {
+          "completeness_score": 80,
+          "critical_data_present": false,
+          "sample_size_adequate": false,
+          "reliability_notes": "Yield data is missing, which is critical for a complete commercial assessment. Only two assessment intervals were provided, limiting the robustness of trend analysis. The entry 'Farmers Practice (Product/Rate/Timing): FEB. 8, 2024' was ambiguous and ignored in favor of the structured treatment table.",
+          "missing_fields": [
+            "yield_data",
+            "participants",
+            "total_sales",
+            "demo_date"
+          ]
+        },
+        "basic_info": {
+          "cooperator": "MICHAEL D. RANGES",
+          "product": "ISMART NANO UREA",
+          "location": "PI, DIRITA, IBA, ZAMBALES",
+          "application_date": "2025-04-04",
+          "planting_date": "2025-03-04",
+          "crop": "RICE / NSIC RC 534",
+          "plot_size": "1000 sqm",
+          "contact": "masked",
+          "participants": 0,
+          "total_sales": 0
+        },
+        "treatment_comparison": {
+          "control": {
+            "description": "Farmer's Practice / Untreated",
+            "product": "FP/Untreated",
+            "rate": "N/A",
+            "timing": "31 DAT",
+            "method": "N/A",
+            "applications": "1 (implied)"
+          },
+          "leads_agri": {
+            "product": "ISMART NANO UREA",
+            "rate": "50ml",
+            "timing": "31 DAP (inferred from application and planting dates)",
+            "method": "FOLIAR",
+            "applications": "1 (implied)"
+          },
+          "protocol_assessment": "The application timings for both treatments are inferred to be at 31 Days After Planting/Transplanting (DAP/DAT), suggesting a fair comparison in terms of crop stage. However, the 'Timing/s of application' for Leads Agri was explicitly listed as 'N/A' in the treatment table, requiring inference. The application method differs, with Leads Agri applied foliarly and no method specified for the control."
+        },
+        "performance_analysis": {
+          "metric_type": "count",
+          "scale_info": "N/A for count data (Tillers)",
+          "raw_data": {
+            "control": {
+              "10 DAA": 16,
+              "18 DAA": 19
+            },
+            "leads_agri": {
+              "10 DAA": 18,
+              "18 DAA": 20
+            }
+          },
+          "raw_data_notes": "Data for # of tillers (count) at 10 DAA and 18 DAA. LCC ratings for control were 4 (10 DAA) and 3 (18 DAA); for Leads Agri, LCC ratings were 4 (10 DAA) and 4 (18 DAA).",
+          "calculated_metrics": {
+            "control_average": 17.5,
+            "leads_average": 19,
+            "absolute_difference": 1.5,
+            "absolute_difference_unit": "tillers",
+            "relative_improvement_percent": 8.57,
+            "improvement_interpretation": "The Leads Agri treated plot showed an average of 1.5 more tillers compared to the Farmer's Practice/Untreated plot across the assessment period, representing an 8.57% increase in tillering."
+          },
+          "statistical_assessment": {
+            "improvement_significance": "moderate",
+            "significance_basis": "An 8.57% improvement in tillering falls within the moderate significance heuristic (5-15% improvement).",
+            "performance_consistency": "high",
+            "confidence_level": "medium",
+            "notes": "The improvement in tillering was consistent across both assessment intervals, with Leads Agri always having a higher tiller count. Confidence level is medium due to the limited number of data points (only 2 intervals) and the absence of formal statistical testing."
+          },
+          "trend_analysis": {
+            "control_trend": "improving",
+            "leads_trend": "improving",
+            "early_performance": "At 10 DAA, Leads Agri had 18 tillers compared to 16 for the control, indicating an early positive effect.",
+            "late_performance": "At 18 DAA, Leads Agri maintained its advantage with 20 tillers compared to 19 for the control.",
+            "key_observation": "Both treatments showed an increase in tillers over time, with Leads Agri consistently outperforming the control. Crucially, while the control's leaf color (LCC) declined from 4 to 3 by 18 DAA, Leads Agri maintained an LCC rating of 4, indicating better sustained crop vigor and health.",
+            "speed_of_action": "moderate"
+          }
+        },
+        "yield_analysis": {
+          "control_yield": "N/A",
+          "leads_yield": "N/A",
+          "yield_difference_absolute": "N/A",
+          "yield_improvement_percent": 0,
+          "yield_status": "not_measured"
+        },
+        "cooperator_feedback": {
+          "raw_feedback": "At 10 DAA, the results were almost the same for both the treated and untreated. The leaves were both green. However, the treated had more tillers. Meanwhile, at 18 DAA, the leaves of the treated were greener.",
+          "sentiment": "positive",
+          "key_highlights": [
+            "More tillers observed in the treated plot by 10 DAA.",
+            "Treated plot's leaves were noticeably greener by 18 DAA, indicating sustained vigor.",
+            "Initial visual similarity at 10 DAA in leaf color, with clear differentiation emerging by 18 DAA."
+          ],
+          "visible_results_timeline": "Visible differentiation in tillering by 10 DAA, and in leaf color becoming more pronounced by 18 DAA.",
+          "concerns": []
+        },
+        "commercial_metrics": {
+          "demo_date": "N/A",
+          "participants": 0,
+          "total_sales": 0,
+          "sales_per_participant": 0,
+          "demo_conducted": false,
+          "market_reception": "N/A - Demo not yet conducted"
+        },
+        "privacy": {
+          "pii_detected": true,
+          "fields_masked": [
+            "contact"
+          ]
+        },
+        "validation": {
+          "warnings": [
+            "Yield data is critical for a complete commercial assessment and is currently missing.",
+            "Only two assessment intervals were provided, limiting the robustness of trend analysis.",
+            "The entry 'Farmers Practice (Product/Rate/Timing): FEB. 8, 2024' was ambiguous and not used for extracting treatment details.",
+            "The 'Timing/s of application' for Leads Agri was listed as 'N/A' in the treatment table, requiring inference for protocol assessment."
+          ],
+          "assumptions": [
+            "The 'Date of Planting' (March 4, 2025) is considered equivalent to 'Date of Transplanting' (DAT) for rice.",
+            "The Leads Agri application date (April 4, 2025) implies it was applied at 31 Days After Planting/Transplanting (DAP/DAT), aligning with the control's '31 DAT' timing.",
+            "For LCC analysis, a 1-4 rating scale was assumed (where 4 is excellent), based on the observed values (3-4) and common visual assessment scales."
+          ]
+        },
+        "risk_factors": [
+          {
+            "risk": "Missing critical yield data",
+            "data_basis": "Yield (MT/Ha) is marked as N/A for both treatments, preventing a full economic evaluation of the product's impact.",
+            "severity": "high"
+          },
+          {
+            "risk": "Limited assessment intervals and sample size",
+            "data_basis": "The analysis is based on a single plot demo with only two assessment points (10 DAA, 18 DAA), which limits the statistical confidence and generalizability of the findings.",
+            "severity": "medium"
+          }
+        ],
+        "opportunities": [
+          {
+            "opportunity": "Positive impact on key vegetative growth parameters",
+            "data_basis": "Leads Agri showed a moderate improvement in tiller count (8.57% higher) and significantly better maintenance of leaf color (LCC) compared to the control.",
+            "potential": "high"
+          },
+          {
+            "opportunity": "Strong positive cooperator feedback",
+            "data_basis": "The cooperator explicitly noted 'more tillers' and 'greener leaves' in the treated plot, indicating visible and appreciated benefits from the product.",
+            "potential": "medium"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "high",
+            "recommendation": "Follow up immediately to obtain and analyze yield data for both treated and control plots.",
+            "data_basis": "Yield data is currently N/A, which is critical for a complete commercial assessment and to quantify the return-on-investment of ISMART NANO UREA.",
+            "expected_impact": "Provide a comprehensive economic analysis, strengthen the product's value proposition, and enable data-driven sales and marketing claims."
+          },
+          {
+            "priority": "medium",
+            "recommendation": "Design and execute additional demo trials across varied locations and include more frequent assessment intervals.",
+            "data_basis": "Current data is from a single plot with limited assessment points, restricting statistical robustness and generalizability.",
+            "expected_impact": "Increase confidence in product performance consistency, identify optimal application strategies, and gather a more robust dataset for broader market adoption."
+          },
+          {
+            "priority": "low",
+            "recommendation": "Standardize and clarify the documentation of application timing for all treatments in future demo forms.",
+            "data_basis": "The application timing for Leads Agri was ambiguously marked 'N/A' in the treatment table, requiring inference during analysis.",
+            "expected_impact": "Improve data quality, reduce ambiguities in trial documentation, and streamline the data analysis process."
+          }
+        ],
+        "executive_summary": "ISMART NANO UREA demonstrated positive effects on rice vegetative growth, producing an average of 19.0 tillers compared to 17.5 for the untreated control (1.5 tillers absolute difference, 8.57% improvement). The cooperator provided positive feedback, noting 'more tillers' by 10 DAA and 'greener leaves' by 18 DAA in the treated plot. Critical yield data is currently pending for a full commercial assessment."
+      },
+      "graph_suggestions": {
+        "suggested_charts": [
+          {
+            "chart_id": "tiller_count_trend",
+            "chart_type": "line_chart",
+            "title": "Tiller Count Progression: ISMART NANO UREA vs. Farmer's Practice",
+            "priority": "high",
+            "data_source": "performance_analysis.raw_data",
+            "description": "This chart illustrates the increase in tiller count over time for both treatments, clearly showing ISMART NANO UREA's consistent advantage in promoting tillering.",
+            "chart_data": {
+              "labels": [
+                "10 DAA",
+                "18 DAA"
+              ],
+              "datasets": [
+                {
+                  "label": "Control (FP/Untreated)",
+                  "data": [
+                    16,
+                    19
+                  ],
+                  "backgroundColor": "rgba(231, 76, 60, 0.1)",
+                  "borderColor": "#e74c3c",
+                  "borderWidth": 2,
+                  "tension": 0.1,
+                  "pointBackgroundColor": "#e74c3c",
+                  "pointBorderColor": "#fff",
+                  "pointHoverBackgroundColor": "#fff",
+                  "pointHoverBorderColor": "#e74c3c"
+                },
+                {
+                  "label": "ISMART NANO UREA",
+                  "data": [
+                    18,
+                    20
+                  ],
+                  "backgroundColor": "rgba(39, 174, 96, 0.1)",
+                  "borderColor": "#27ae60",
+                  "borderWidth": 2,
+                  "tension": 0.1,
+                  "pointBackgroundColor": "#27ae60",
+                  "pointBorderColor": "#fff",
+                  "pointHoverBackgroundColor": "#fff",
+                  "pointHoverBorderColor": "#27ae60"
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "plugins": {
+                "legend": {
+                  "position": "top"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Tiller Count Progression: ISMART NANO UREA vs. Farmer's Practice",
+                  "font": {
+                    "size": 16
+                  }
+                },
+                "tooltip": {
+                  "callbacks": {
+                    "label": "function(context) { return context.dataset.label + ': ' + context.raw + ' tillers'; }"
+                  }
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Number of Tillers"
+                  },
+                  "min": 0,
+                  "max": 22
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Days After Application (DAA)"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "average_tiller_comparison",
+            "chart_type": "bar_chart",
+            "title": "ISMART NANO UREA: 8.57% Higher Average Tillers",
+            "priority": "high",
+            "data_source": "performance_analysis.calculated_metrics",
+            "description": "This bar chart directly compares the average tiller count for ISMART NANO UREA against the Farmer's Practice, highlighting the product's 8.57% improvement in tillering.",
+            "chart_data": {
+              "labels": [
+                "Control (FP/Untreated)",
+                "ISMART NANO UREA"
+              ],
+              "datasets": [
+                {
+                  "label": "Average Tillers",
+                  "data": [
+                    17.5,
+                    19
+                  ],
+                  "backgroundColor": [
+                    "#e74c3c",
+                    "#27ae60"
+                  ],
+                  "borderColor": [
+                    "#e74c3c",
+                    "#27ae60"
+                  ],
+                  "borderWidth": 1
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "plugins": {
+                "legend": {
+                  "position": "top"
+                },
+                "title": {
+                  "display": true,
+                  "text": "ISMART NANO UREA: 8.57% Higher Average Tillers",
+                  "font": {
+                    "size": 16
+                  }
+                },
+                "tooltip": {
+                  "callbacks": {
+                    "label": "function(context) { return context.dataset.label + ': ' + context.raw + ' tillers'; }"
+                  }
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Average Tillers"
+                  },
+                  "min": 0,
+                  "max": 20
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Treatment"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "lcc_rating_trend",
+            "chart_type": "line_chart",
+            "title": "Leaf Color Chart (LCC) Rating: Sustained Vigor with ISMART NANO UREA",
+            "priority": "high",
+            "data_source": "performance_analysis.raw_data_notes",
+            "description": "This chart demonstrates ISMART NANO UREA's ability to maintain crop vigor and leaf health, as indicated by the stable LCC rating compared to the control's decline.",
+            "chart_data": {
+              "labels": [
+                "10 DAA",
+                "18 DAA"
+              ],
+              "datasets": [
+                {
+                  "label": "Control (FP/Untreated)",
+                  "data": [
+                    4,
+                    3
+                  ],
+                  "backgroundColor": "rgba(231, 76, 60, 0.1)",
+                  "borderColor": "#e74c3c",
+                  "borderWidth": 2,
+                  "tension": 0.1,
+                  "pointBackgroundColor": "#e74c3c",
+                  "pointBorderColor": "#fff",
+                  "pointHoverBackgroundColor": "#fff",
+                  "pointHoverBorderColor": "#e74c3c"
+                },
+                {
+                  "label": "ISMART NANO UREA",
+                  "data": [
+                    4,
+                    4
+                  ],
+                  "backgroundColor": "rgba(39, 174, 96, 0.1)",
+                  "borderColor": "#27ae60",
+                  "borderWidth": 2,
+                  "tension": 0.1,
+                  "pointBackgroundColor": "#27ae60",
+                  "pointBorderColor": "#fff",
+                  "pointHoverBackgroundColor": "#fff",
+                  "pointHoverBorderColor": "#27ae60"
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "plugins": {
+                "legend": {
+                  "position": "top"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Leaf Color Chart (LCC) Rating: Sustained Vigor with ISMART NANO UREA",
+                  "font": {
+                    "size": 16
+                  }
+                },
+                "tooltip": {
+                  "callbacks": {
+                    "label": "function(context) { return context.dataset.label + ': ' + context.raw + ' (1-4 scale)'; }"
+                  }
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": false,
+                  "title": {
+                    "display": true,
+                    "text": "LCC Rating (1-4 Scale)"
+                  },
+                  "min": 1,
+                  "max": 4,
+                  "ticks": {
+                    "stepSize": 1
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Days After Application (DAA)"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "cooperator_sentiment",
+            "chart_type": "pie_chart",
+            "title": "Cooperator Feedback: 100% Positive Assessment",
+            "priority": "medium",
+            "data_source": "cooperator_feedback.sentiment",
+            "description": "This pie chart summarizes the cooperator's overall sentiment towards ISMART NANO UREA based on their observations of the trial, indicating a strong positive reception.",
+            "chart_data": {
+              "labels": [
+                "Positive",
+                "Neutral",
+                "Negative"
+              ],
+              "datasets": [
+                {
+                  "label": "Feedback Sentiment",
+                  "data": [
+                    100,
+                    0,
+                    0
+                  ],
+                  "backgroundColor": [
+                    "#27ae60",
+                    "#f39c12",
+                    "#e74c3c"
+                  ],
+                  "borderColor": "#fff",
+                  "borderWidth": 1
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "plugins": {
+                "legend": {
+                  "position": "top"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Cooperator Feedback: 100% Positive Assessment",
+                  "font": {
+                    "size": 16
+                  }
+                },
+                "tooltip": {
+                  "callbacks": {
+                    "label": "function(context) { let sum = context.dataset.data.reduce((a, b) => a + b, 0); let percentage = (context.raw * 100 / sum).toFixed(0) + '%'; return context.label + ': ' + percentage; }"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "The charting strategy focuses on visualizing the key positive impacts of ISMART NANO UREA on rice vegetative growth, specifically demonstrating its consistent advantage in tiller count development and superior maintenance of leaf color (LCC rating) over time. These visual summaries directly support the identified opportunities and positive cooperator feedback, providing clear insights into the product's performance despite the absence of critical yield data."
+      },
+      "chunks": [
+        {
+          "chunk_id": "table_0_flat",
+          "content": "Treatment: 1, Product: FP/Untreated, Rate: N/A, Application Method: N/A, Timing/s of application: 31 DAT\nTreatment: 2, Product: Leads Agri, Rate: 50ml, Application Method: FOLIAR, Timing/s of application: N/A",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 0,
+            "row_count": 2
+          },
+          "token_count": 28,
+          "char_count": 208
+        },
+        {
+          "chunk_id": "table_1_flat",
+          "content": "Trt: 1, Product: FP/Untreated, 10 DAA: # of tillers: 16, 18 DAA: 19, LCC: 10 DAA: 4, 18 DAA: 3\nTrt: 2, Product: Leads Agri, 10 DAA: # of tillers: 18, 18 DAA: 20, LCC: 10 DAA: 4, 18 DAA: 4",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 1,
+            "row_count": 2
+          },
+          "token_count": 41,
+          "char_count": 187
+        },
+        {
+          "chunk_id": "table_2_flat",
+          "content": "Product: FP/Untreated, Yield: N/A\nProduct: Leads Agri, Yield: N/A",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 2,
+            "row_count": 2
+          },
+          "token_count": 9,
+          "char_count": 65
+        },
+        {
+          "chunk_id": "text_0",
+          "content": "# Leads Agri Folliar/Biostimulant Demo Form ## Fields - **Name/Position/Area**: JOEL ANOS O. MOLINA / TPS ZAMBALES - **Leads Agri Product (Rate/Timing/No of applications)**: ISMART NANO UREA - **Name of Cooperator**: MICHAEL D. RANGES - **Farm Location**: PI, DIRITA, IBA, ZAMBALES - **Contact Number**: 09/632616034 - **Plot size (sq meter)**: 1000 sqm - **Date of Application**: APRIL 4, 2025 - **Crop/Variety**: RICE / NSIC RC 534 - **Date of Planting**: MARCH 4, 2025 - **Farmers Practice (Product/Rate/Timing)**: FEB. 8, 2024 - **Date of Product Demo Showcase/s**: N/A - **Total Move-out**: N/A - **No of Participants**: N/A - **Name and Signature of Demo Cooperator**: MICHAEL RANGES ## Treatment ## Crop Vigor (whole plot) ## Yield (MT/Ha) ## Notes - **Remarks/Cooperator Feedback/Result of Demo**: At 10 DAA, the results were almost the same for both the treated and untreated. The leaves were both green. However, the treated had more tillers. Meanwhile, at 18 DAA, the leaves of the treated were greener.",
+          "metadata": {
+            "type": "text",
+            "chunk_index": 0
+          },
+          "token_count": 159,
+          "char_count": 1014
+        }
+      ],
+      "processing_metrics": {
+        "chunk_count": 4,
+        "processing_steps": "chunking",
+        "workflow_completed": true,
+        "storage_ready": true
+      },
+      "errors": [],
+      "validation": {
+        "file_validation": {
+          "is_valid": true,
+          "file_type": "image",
+          "format": "PNG",
+          "errors": [
+            "Image validation failed: name 'logger' is not defined"
+          ],
+          "warnings": [],
+          "metadata": {
+            "width": 1048,
+            "height": 622,
+            "format": "PNG",
+            "mode": "RGBA",
+            "file_size_mb": 0.3369874954223633
+          }
+        },
+        "content_validation": {
+          "is_valid_demo": true,
+          "confidence": 0.98,
+          "content_type": "product_demo",
+          "reasoning": "Explicitly titled 'Demo Form' and contains detailed agricultural trial setup, treatment comparisons, preliminary performance metrics (crop vigor), location, cooperator, and crop information, consistent with a product demonstration report.",
+          "detected_elements": {
+            "has_product_info": true,
+            "has_trial_data": true,
+            "has_numeric_results": true,
+            "has_location_info": true
+          },
+          "feedback": "Valid product demo detected. Proceeding."
+        }
+      },
+      "storage_status": "ready_for_approval",
+      "storage_message": "Analysis completed. Use /api/storage/preview to review and /api/storage/approve to store."
+    }
+  ],
+  "cross_report_analysis": {
+    "cross_report_suggestions": []
+  },
+  "analysis_storage_status": "ready_for_approval",
+  "cache_id": "592b5a7c-7a4a-44b8-b56d-90925b348c06"
+}

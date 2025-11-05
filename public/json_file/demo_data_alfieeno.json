@@ -1,0 +1,720 @@
+{
+  "status": "success",
+  "total_reports": 1,
+  "reports": [
+    {
+      "report_number": 1,
+      "file_name": "Leads Agri Demo Protocol SAMPLE FORM.pdf",
+      "form_id": "",
+      "form_type": "Leads Agri Herbicide Demo Form",
+      "extracted_content": "# Leads Agri Herbicide Demo Form\n\n## Fields\n- **Name/Position/Area**: Juan Dela Cruz - TPS - 815\n- **Leads Agri Product (Rate/Timing/No of applications)**: Frontier 200 OD - 100 ml/tl - 12 DAT - 1 App\n- **Name of Cooperator**: Edward Macatula\n- **Farm Location**: Los Banos, Laguna\n- **Contact Number**: 0967 234 0844\n- **Farmers Practice (Product/Rate/Timing)**: Nominee - 30 ml/tl - 8 DAT - 1 App\n- **Plot size (sq meter)**: 1,000\n- **Date of Application**: February 3, 2025\n- **Crop/Variety**: Rice\n- **Date of Planting**: January 22, 2025\n- **Date of Product Demo Showcase/s**: February 10, 2025\n- **No of Participants**: 14\n- **Total Move-out**: Php 22,450\n- **Name and Signature of Demo Cooperator**: Edward Macatula\n\n## Treatment Details\n| Treatment | Product      | Rate        | Application Method | Timing/s of application |\n|----------|--------------|-------------|--------------------|-------------------------|\n| 1        | FP/Untreated | 30 ml/tl    | Foliar             | 7-15 DAT                |\n| 2        | Leads Agri   | 100 ml/tl   | Foliar             | 12-15 DAT               |\n\n## % Control (whole plot) Data\n| Trt | Product      | 3 DAA | 7 DAA | 14 DAA |\n|-----|--------------|-------|-------|--------|\n| 1   | FP/Untreated | 3     | 3     | 3      |\n| 2   | Leads Agri   | 3     | 4     | 4      |\n\n## % Control (whole plot) Categories\n| Rating | Categories  |\n|--------|-------------|\n| 1      | No control  |\n| 2      | Poor        |\n| 3      | Acceptable  |\n| 4      | Excellent   |\n\n## Notes\n- **Remarks/Cooperator Feedback/Result of Demo**: N/A",
+      "analysis": {
+        "template_version": "1.1.0",
+        "model_name": "Juan Dela Cruz - TPS - 815",
+        "status": "success",
+        "product_category": "herbicide",
+        "metrics_detected": [
+          "% Control (Rating Scale)"
+        ],
+        "measurement_intervals": [
+          "3 DAA",
+          "7 DAA",
+          "14 DAA"
+        ],
+        "data_quality": {
+          "completeness_score": 85,
+          "critical_data_present": false,
+          "sample_size_adequate": true,
+          "reliability_notes": "Cooperator feedback and yield data are missing, limiting comprehensive analysis.",
+          "missing_fields": [
+            "cooperator_feedback",
+            "yield_data"
+          ]
+        },
+        "basic_info": {
+          "cooperator": "Edward Macatula",
+          "product": "Frontier 200 OD",
+          "location": "Los Banos, Laguna",
+          "application_date": "2025-02-03",
+          "planting_date": "2025-01-22",
+          "crop": "Rice",
+          "plot_size": "1000 sq meter",
+          "contact": "09672340844",
+          "participants": 14,
+          "total_sales": 22450
+        },
+        "treatment_comparison": {
+          "control": {
+            "description": "Farmer's Practice",
+            "product": "Nominee",
+            "rate": "30 ml/tl",
+            "timing": "8 DAT (general 7-15 DAT)",
+            "method": "Foliar",
+            "applications": "1 App"
+          },
+          "leads_agri": {
+            "product": "Frontier 200 OD",
+            "rate": "100 ml/tl",
+            "timing": "12 DAT (general 12-15 DAT)",
+            "method": "Foliar",
+            "applications": "1 App"
+          },
+          "protocol_assessment": "The comparison appears fair, with both treatments applied as foliar sprays. Leads Agri's application timing (12 DAT) is slightly later than the Farmer's Practice (8 DAT), which is typical for comparing different herbicide application windows. The number of applications is consistent."
+        },
+        "performance_analysis": {
+          "metric_type": "rating_scale",
+          "scale_info": "1-4 scale where 1=No control, 2=Poor, 3=Acceptable, 4=Excellent (Max Rating: 4)",
+          "raw_data": {
+            "control": {
+              "3 DAA": 3,
+              "7 DAA": 3,
+              "14 DAA": 3
+            },
+            "leads_agri": {
+              "3 DAA": 3,
+              "7 DAA": 4,
+              "14 DAA": 4
+            }
+          },
+          "raw_data_notes": "Rating for % Control on a 1-4 scale.",
+          "calculated_metrics": {
+            "control_average": 3,
+            "leads_average": 3.67,
+            "absolute_difference": 0.67,
+            "absolute_difference_unit": "points",
+            "relative_improvement_percent": 16.75,
+            "improvement_interpretation": "Leads Agri achieved an average control rating of 3.67 (Excellent) compared to 3.0 (Acceptable) for the Farmer's Practice. This represents an absolute improvement of 0.67 points on the 1-4 rating scale, which is a 16.75% improvement relative to the scale range. When compared to the control's average rating, Leads Agri's performance is 22.33% higher."
+          },
+          "statistical_assessment": {
+            "improvement_significance": "significant",
+            "significance_basis": "An improvement of 0.67 points on a 1-4 rating scale is considered significant (falling within the 0.5-0.75 point heuristic).",
+            "performance_consistency": "high",
+            "confidence_level": "medium",
+            "notes": "Performance consistency for both treatments is high; control remained stable, while Leads Agri consistently improved and maintained an excellent rating. Confidence level is medium due to single demo site and lack of replication."
+          },
+          "trend_analysis": {
+            "control_trend": "stable",
+            "leads_trend": "improving",
+            "early_performance": "At 3 DAA, both treatments showed 'Acceptable' control (rating of 3).",
+            "late_performance": "By 7 DAA and 14 DAA, Leads Agri maintained an 'Excellent' rating (4), while the Farmer's Practice remained 'Acceptable' (3).",
+            "key_observation": "Leads Agri demonstrated superior and sustained weed control from 7 DAA onwards compared to the Farmer's Practice.",
+            "speed_of_action": "moderate"
+          }
+        },
+        "yield_analysis": {
+          "control_yield": "N/A",
+          "leads_yield": "N/A",
+          "yield_difference_absolute": "N/A",
+          "yield_improvement_percent": 0,
+          "yield_status": "not_measured"
+        },
+        "cooperator_feedback": {
+          "raw_feedback": "N/A",
+          "sentiment": "neutral",
+          "key_highlights": [],
+          "visible_results_timeline": "Not specified",
+          "concerns": [
+            "No specific feedback provided by cooperator."
+          ]
+        },
+        "commercial_metrics": {
+          "demo_date": "2025-02-10",
+          "participants": 14,
+          "total_sales": 22450,
+          "sales_per_participant": 1603.57,
+          "demo_conducted": true,
+          "market_reception": "Positive, indicated by strong sales per participant."
+        },
+        "privacy": {
+          "pii_detected": true,
+          "fields_masked": []
+        },
+        "validation": {
+          "warnings": [],
+          "assumptions": [
+            "Assumed 'ml/tl' means milliliters per tank load, which is a common application unit for small-scale farmer demos."
+          ]
+        },
+        "risk_factors": [
+          {
+            "risk": "Lack of Cooperator Feedback",
+            "data_basis": "The 'Remarks/Cooperator Feedback/Result of Demo' field is 'N/A', indicating no direct qualitative input from the farmer.",
+            "severity": "medium"
+          },
+          {
+            "risk": "Missing Yield Data",
+            "data_basis": "No yield data was collected, which is a critical metric for a complete economic assessment of herbicide performance.",
+            "severity": "medium"
+          },
+          {
+            "risk": "Single Location Demo",
+            "data_basis": "The demo was conducted at a single farm location (Los Banos, Laguna), limiting the generalizability of results.",
+            "severity": "medium"
+          }
+        ],
+        "opportunities": [
+          {
+            "opportunity": "Demonstrated Superior Weed Control",
+            "data_basis": "Leads Agri achieved a significantly higher average control rating (3.67 vs 3.0) and maintained 'Excellent' control from 7 DAA onwards.",
+            "potential": "high"
+          },
+          {
+            "opportunity": "Strong Commercial Interest",
+            "data_basis": "The demo generated Php 22,450 in total sales from 14 participants, equating to Php 1,603.57 per participant, indicating strong immediate market reception.",
+            "potential": "high"
+          },
+          {
+            "opportunity": "Relatively Quick Action",
+            "data_basis": "Improved control was clearly visible and sustained from 7 DAA, providing a good visual demonstration for farmers.",
+            "potential": "medium"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "high",
+            "recommendation": "Conduct follow-up interviews with the cooperator and participating farmers to gather qualitative feedback.",
+            "data_basis": "The 'Remarks/Cooperator Feedback' section is N/A, limiting understanding of farmer perception and specific observations.",
+            "expected_impact": "Provide valuable insights into user experience, ease of use, and specific benefits or concerns, which can be used for marketing and product refinement."
+          },
+          {
+            "priority": "high",
+            "recommendation": "Integrate yield data collection into future herbicide demo protocols.",
+            "data_basis": "Yield data is currently missing, which is a crucial metric to quantify the economic benefit of superior weed control.",
+            "expected_impact": "Strengthen the product's value proposition by demonstrating its direct impact on crop productivity and farmer profitability, enabling more compelling sales arguments."
+          },
+          {
+            "priority": "medium",
+            "recommendation": "Scale up demo activities for Frontier 200 OD in similar rice-growing regions.",
+            "data_basis": "The product showed significant improvement in weed control (0.67 points higher average rating) and generated strong initial sales (Php 1,603.57 per participant).",
+            "expected_impact": "Capitalize on positive initial results and market interest to expand product adoption and sales volume across a wider geographical area."
+          }
+        ],
+        "executive_summary": "Frontier 200 OD achieved an average control rating of 3.67 compared to 3.0 for the Farmer's Practice (0.67 points higher on a 1-4 scale). While cooperator feedback is pending, the demo generated Php 22,450 in sales from 14 participants, indicating strong market interest."
+      },
+      "graph_suggestions": {
+        "suggested_charts": [
+          {
+            "chart_id": "herbicide_efficacy_trend_rice_frontier",
+            "chart_type": "line_chart",
+            "title": "Frontier 200 OD vs. Farmer's Practice: % Control Over Time in Rice",
+            "priority": "high",
+            "data_source": "performance_analysis.raw_data and measurement_intervals",
+            "description": "This chart visually compares the percentage control performance of Frontier 200 OD against the Farmer's Practice (Nominee) at different measurement intervals (Days After Application). It clearly highlights the superior and sustained control achieved by Frontier 200 OD from 7 DAA onwards.",
+            "chart_data": {
+              "labels": [
+                "3 DAA",
+                "7 DAA",
+                "14 DAA"
+              ],
+              "datasets": [
+                {
+                  "label": "Farmer's Practice (Nominee)",
+                  "data": [
+                    3,
+                    3,
+                    3
+                  ],
+                  "backgroundColor": "rgba(231, 76, 60, 0.15)",
+                  "borderColor": "#e74c3c",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                },
+                {
+                  "label": "Frontier 200 OD",
+                  "data": [
+                    3,
+                    4,
+                    4
+                  ],
+                  "backgroundColor": "rgba(39, 174, 96, 0.15)",
+                  "borderColor": "#27ae60",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Frontier 200 OD vs. Farmer's Practice: % Control Over Time in Rice"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "max": 4.5,
+                  "title": {
+                    "display": true,
+                    "text": "Weed Control Rating (1-4 scale)"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Days After Application"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "average_weed_control_comparison",
+            "chart_type": "bar_chart",
+            "title": "Frontier 200 OD Delivers 22.3% Higher Average Control Rating",
+            "priority": "high",
+            "data_source": "performance_analysis.calculated_metrics",
+            "description": "This bar chart compares the average weed control rating of Frontier 200 OD against the Farmer's Practice, clearly demonstrating the overall performance superiority with a 22.3% higher average rating relative to the control's average rating.",
+            "chart_data": {
+              "labels": [
+                "Farmer's Practice (Nominee)",
+                "Frontier 200 OD"
+              ],
+              "datasets": [
+                {
+                  "label": "Average Control Rating",
+                  "data": [
+                    3,
+                    3.67
+                  ],
+                  "backgroundColor": [
+                    "rgba(231, 76, 60, 0.2)",
+                    "rgba(39, 174, 96, 0.2)"
+                  ],
+                  "borderColor": [
+                    "#e74c3c",
+                    "#27ae60"
+                  ],
+                  "borderWidth": 2,
+                  "borderRadius": 6,
+                  "tension": 0.3
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Frontier 200 OD Delivers 22.3% Higher Average Control Rating"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "max": 4.5,
+                  "title": {
+                    "display": true,
+                    "text": "Average Control Rating (1-4 scale)"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Treatment"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "relative_control_improvement",
+            "chart_type": "horizontal_bar_chart",
+            "title": "Frontier 200 OD: Relative Improvement in Control Rating (16.75%)",
+            "priority": "medium",
+            "data_source": "performance_analysis.calculated_metrics.relative_improvement_percent",
+            "description": "This horizontal bar chart emphasizes the 16.75% relative improvement of Frontier 200 OD's control rating over the Farmer's Practice, calculated relative to the 1-4 scale range, providing a concise visualization of the key performance indicator.",
+            "chart_data": {
+              "labels": [
+                "Relative Improvement"
+              ],
+              "datasets": [
+                {
+                  "label": "Improvement (%)",
+                  "data": [
+                    16.75
+                  ],
+                  "backgroundColor": [
+                    "rgba(39, 174, 96, 0.2)"
+                  ],
+                  "borderColor": [
+                    "#27ae60"
+                  ],
+                  "borderWidth": 1,
+                  "borderRadius": 6,
+                  "tension": 0.3
+                }
+              ]
+            },
+            "chart_options": {
+              "indexAxis": "y",
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "display": false
+                },
+                "title": {
+                  "display": true,
+                  "text": "Frontier 200 OD: Relative Improvement in Control Rating (16.75%)"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "x": {
+                  "beginAtZero": true,
+                  "max": 100,
+                  "title": {
+                    "display": true,
+                    "text": "Percentage (%)"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "y": {
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "commercial_impact_sales",
+            "chart_type": "bar_chart",
+            "title": "Strong Immediate Market Reception: Php 22,450 Sales from Demo",
+            "priority": "high",
+            "data_source": "commercial_metrics",
+            "description": "This chart illustrates the immediate commercial success of the demo, showing the total sales generated and sales per participant, indicating strong market interest for Frontier 200 OD despite being a single demo.",
+            "chart_data": {
+              "labels": [
+                "Total Sales (PHP)",
+                "Sales per Participant (PHP)"
+              ],
+              "datasets": [
+                {
+                  "label": "Amount",
+                  "data": [
+                    22450,
+                    1603.57
+                  ],
+                  "backgroundColor": [
+                    "rgba(52, 152, 219, 0.2)",
+                    "rgba(52, 152, 219, 0.2)"
+                  ],
+                  "borderColor": [
+                    "#3498db",
+                    "#3498db"
+                  ],
+                  "borderWidth": 1,
+                  "borderRadius": 6,
+                  "tension": 0.3
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Strong Immediate Market Reception: Php 22,450 Sales from Demo"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Amount (PHP)"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Metric"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "The charting strategy focuses on highlighting Frontier 200 OD's superior weed control performance over time and its significant average improvement compared to the Farmer's Practice. A line chart effectively visualizes the progressive efficacy, while a bar chart quantifies the overall difference. The relative improvement is emphasized using a horizontal bar chart as a key performance indicator. Finally, another bar chart showcases the strong immediate commercial success and market reception from the demo, providing a complete picture of both agronomic and business impact."
+      },
+      "chunks": [
+        {
+          "chunk_id": "table_0_flat",
+          "content": "Treatment: 1, Product: FP/Untreated, Rate: 30 ml/tl, Application Method: Foliar, Timing/s of application: 7-15 DAT\nTreatment: 2, Product: Leads Agri, Rate: 100 ml/tl, Application Method: Foliar, Timing/s of application: 12-15 DAT",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 0,
+            "row_count": 2
+          },
+          "token_count": 31,
+          "char_count": 229
+        },
+        {
+          "chunk_id": "table_1_flat",
+          "content": "Trt: 1, Product: FP/Untreated, 3 DAA: 3, 7 DAA: 3, 14 DAA: 3\nTrt: 2, Product: Leads Agri, 3 DAA: 3, 7 DAA: 4, 14 DAA: 4",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 1,
+            "row_count": 2
+          },
+          "token_count": 27,
+          "char_count": 119
+        },
+        {
+          "chunk_id": "table_2_flat",
+          "content": "Rating: 1, Categories: No control\nRating: 2, Categories: Poor\nRating: 3, Categories: Acceptable\nRating: 4, Categories: Excellent",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 2,
+            "row_count": 4
+          },
+          "token_count": 17,
+          "char_count": 128
+        },
+        {
+          "chunk_id": "text_0",
+          "content": "# Leads Agri Herbicide Demo Form ## Fields - **Name/Position/Area**: Juan Dela Cruz - TPS - 815 - **Leads Agri Product (Rate/Timing/No of applications)**: Frontier 200 OD - 100 ml/tl - 12 DAT - 1 App - **Name of Cooperator**: Edward Macatula - **Farm Location**: Los Banos, Laguna - **Contact Number**: 0967 234 0844 - **Farmers Practice (Product/Rate/Timing)**: Nominee - 30 ml/tl - 8 DAT - 1 App - **Plot size (sq meter)**: 1,000 - **Date of Application**: February 3, 2025 - **Crop/Variety**: Rice - **Date of Planting**: January 22, 2025 - **Date of Product Demo Showcase/s**: February 10, 2025 - **No of Participants**: 14 - **Total Move-out**: Php 22,450 - **Name and Signature of Demo Cooperator**: Edward Macatula ## Treatment Details ## % Control (whole plot) Data ## % Control (whole plot) Categories ## Notes - **Remarks/Cooperator Feedback/Result of Demo**: N/A",
+          "metadata": {
+            "type": "text",
+            "chunk_index": 0
+          },
+          "token_count": 142,
+          "char_count": 873
+        }
+      ],
+      "processing_metrics": {
+        "chunk_count": 4,
+        "processing_steps": "chunking",
+        "workflow_completed": true,
+        "storage_ready": true
+      },
+      "errors": [],
+      "validation": {
+        "file_validation": {
+          "is_valid": true,
+          "file_type": "pdf",
+          "format": "PDF",
+          "errors": [
+            "PDF validation failed: name 'logger' is not defined"
+          ],
+          "warnings": [],
+          "metadata": {
+            "num_pages": 1,
+            "file_size_mb": 0.12120819091796875,
+            "title": "",
+            "author": "LAPC-E. Macatula",
+            "creator": "Microsoft® Excel® LTSC"
+          }
+        },
+        "content_validation": {
+          "is_valid_demo": true,
+          "confidence": 0.98,
+          "content_type": "product_demo",
+          "reasoning": "This document is explicitly titled 'Leads Agri Herbicide Demo Form' and contains comprehensive trial data, product names, performance metrics (% Control), comparison data (Farmers Practice vs. Leads Agri), location, cooperator information, and crop details. It also includes demo-specific details like 'Date of Product Demo Showcase/s' and 'No of Participants'.",
+          "detected_elements": {
+            "has_product_info": true,
+            "has_trial_data": true,
+            "has_numeric_results": true,
+            "has_location_info": true
+          },
+          "feedback": "Valid product demo detected. This document provides detailed information about a product demonstration and its results."
+        }
+      },
+      "storage_status": "ready_for_approval",
+      "storage_message": "Analysis completed. Use /api/storage/preview to review and /api/storage/approve to store."
+    }
+  ],
+  "cross_report_analysis": {
+    "cross_report_suggestions": []
+  },
+  "analysis_storage_status": "ready_for_approval",
+  "cache_id": "6039f1b6-11fe-4c48-8c31-fc122c72efc9"
+}
