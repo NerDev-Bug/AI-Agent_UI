@@ -414,7 +414,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, watchEffect, computed, watch } from "vue";
 import {
     Line,
     Bar,
@@ -451,6 +451,13 @@ ChartJS.register(
     RadialLinearScale
 );
 
+const props = defineProps({
+  analysisData: {
+    type: Object,
+    default: () => ({})
+  }
+});
+
 const reports = ref([]);
 const selectedCooperator = ref("");
 const isLoading = ref(true);
@@ -459,58 +466,53 @@ const chartMap = ref({});
 const currentReport = ref(null);
 const isExporting = ref(false);
 
-onMounted(async () => {
-    try {
-        const response = await fetch("/json_file/pang_dalwahan.json");
-        if (!response.ok) throw new Error("Failed to load JSON file");
-        const data = await response.json();
-        reports.value = data.reports || [];
+watchEffect(() => {
+  if (!props.analysisData || Object.keys(props.analysisData).length === 0) return;
 
-        reports.value.forEach((rep) => {
-            const charts = rep.graph_suggestions?.suggested_charts || [];
-            chartMap.value[rep.form_id] = charts.map((chart) => {
-                let component;
-                const type = chart.chart_type?.toLowerCase() || "";
-                if (type.includes("line")) component = Line;
-                else if (type.includes("horizontal_bar")) component = Bar;
-                else if (type.includes("bar")) component = Bar;
-                else if (type.includes("pie")) component = Pie;
-                else if (type.includes("doughnut")) component = Pie;
-                else if (type.includes("radar")) component = Radar;
-                else if (type.includes("polar")) component = PolarArea;
-                else if (type.includes("scatter")) component = Scatter;
-                else if (type.includes("bubble")) component = Bubble;
-                else component = Bar;
+  try {
+    const rep = props.analysisData;
 
-                let options = chart.chart_options || {};
-                if (type.includes("horizontal_bar")) {
-                    options = { ...options, indexAxis: "y" };
-                }
+    // 🧩 Build chart map for the received report
+    const charts = rep.graph_suggestions?.suggested_charts || [];
+    chartMap.value[rep.form_id] = charts.map((chart) => {
+      let component;
+      const type = chart.chart_type?.toLowerCase() || "";
+      if (type.includes("line")) component = Line;
+      else if (type.includes("horizontal_bar")) component = Bar;
+      else if (type.includes("bar")) component = Bar;
+      else if (type.includes("pie")) component = Pie;
+      else if (type.includes("doughnut")) component = Pie;
+      else if (type.includes("radar")) component = Radar;
+      else if (type.includes("polar")) component = PolarArea;
+      else if (type.includes("scatter")) component = Scatter;
+      else if (type.includes("bubble")) component = Bubble;
+      else component = Bar;
 
-                return {
-                    title: chart.title,
-                    description: chart.description,
-                    component,
-                    chart_data: chart.chart_data,
-                    chart_options: options,
-                };
-            });
-        });
-        // ✅ Restore selected cooperator from localStorage
-        const savedCoop = localStorage.getItem("selectedCooperator");
-        if (savedCoop) {
-            selectedCooperator.value = savedCoop;
-            const match = reports.value.find(
-                (r) => r.analysis?.basic_info?.cooperator === savedCoop
-            );
-            if (match) currentReport.value = match;
-        }
-    } catch (err) {
-        error.value = err.message;
-    } finally {
-        isLoading.value = false;
-    }
+      let options = chart.chart_options || {};
+      if (type.includes("horizontal_bar")) {
+        options = { ...options, indexAxis: "y" };
+      }
+
+      return {
+        title: chart.title,
+        description: chart.description,
+        component,
+        chart_data: chart.chart_data,
+        chart_options: options,
+      };
+    });
+
+    // ✅ Update state dynamically
+    currentReport.value = rep;
+    selectedCooperator.value = rep.analysis?.basic_info?.cooperator || "";
+    isLoading.value = false;
+    error.value = null;
+  } catch (err) {
+    error.value = err.message;
+    isLoading.value = false;
+  }
 });
+
 
 const uniqueCooperators = computed(() => {
     const coops = reports.value
