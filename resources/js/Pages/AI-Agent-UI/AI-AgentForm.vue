@@ -28,7 +28,7 @@
       <img src="/images/FO1.png" alt="Top" class="w-[200px] h-auto relative z-20 -ml-[-60px] mb-[-90px]" />
     </div>
 
-    <div class="min-h-screen flex flex-col items-center justify-center pt-2 relative z-10">
+    <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-2 relative z-10">
       <div class="flex flex-col items-center justify-center mb-14">
         <h1 class="text-xl font-bold text-gray-800 mb-2">Product demo Trials Agents with</h1>
         <img src="/images/title_img.png" alt="AI Agent Logo" class="w-[500px] h-[120px]">
@@ -93,11 +93,11 @@
     </div>
 
     <div>
-      <Header />
+      <Navbarheader />
     </div>
 
     <!-- Context-->
-    <div class="p-8">
+    <div id="AI-AgentContext" class="p-8 pt-24">
       <AIAgentContext />
     </div>
   </div>
@@ -105,7 +105,7 @@
 
 <script setup>
 import AIAgentContext from "./AI-AgentContext.vue";
-import Header from "../Layouts/Header.vue";
+import Navbarheader from "../Layouts/Header.vue";
 import { ref } from "vue";
 
 const isDragging = ref(false);

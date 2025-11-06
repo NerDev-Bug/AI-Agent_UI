@@ -5,14 +5,8 @@
             <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
         </div>
 
-        <!-- Select and Search -->
+        <!-- Select and Export -->
         <div class="flex items-center gap-6 mb-8 px-2">
-            <!-- <div class="flex-1">
-                <label class="block text-sm text-black mb-1">Search:</label>
-                <input v-model="searchQuery" type="text" placeholder="Search by crop, product, or location..."
-                    class="p-2 w-full rounded-md" />
-            </div> -->
-
             <div class="flex-2">
                 <br>
                 <button @click="handleExportClick" :disabled="isExporting"
@@ -42,31 +36,18 @@
         </div>
 
         <!-- Default placeholder shown only when no cooperator selected -->
-        <div v-if="!selectedCooperator && !searchQuery" class="text-black p-6 rounded-lg mt-10">
+        <div v-if="!selectedCooperator" class="text-black p-6 rounded-lg mt-10">
             <div class="flex items-center justify-center">
                 <div class="bg-white w-[1200px] h-[440px] border-md rounded-lg px-4 py-4">
-                    <h3 class="text-3xl font-semibold">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Non,
+                    <h3 class="text-3xl font-semibold">Lorem ipsum dolor sit amet consectetur adipisicing elit. Non,
                         deleniti harum illum assumenda eos culpa quas ab molestias ipsa quisquam totam distinctio est.
                         Assumenda harum quam quasi earum repellendus eos!</h3>
                 </div>
             </div>
         </div>
 
-        <!-- Show form count or no results -->
-        <!-- <div v-if="(selectedCooperator || searchQuery) && !isSearching" class="text-black text-right mb-2">
-            <template v-if="cooperatorReports.length">
-                Form result {{ currentIndex }} of {{ cooperatorReports.length }}
-            </template>
-            <template v-else>
-                <div class="bg-gray-800 text-center text-white p-6 rounded-lg mt-6">
-                    <p class="text-lg font-semibold text-red-400">No results found for your search.</p>
-                </div>
-            </template>
-        </div> -->
-
         <!-- Report Display -->
-        <div v-if="currentReport && (selectedCooperator || searchQuery) && !isSearching"
-            class="p-2 space-y-8">
+        <div v-if="currentReport && selectedCooperator" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -230,7 +211,7 @@
                             </h6>
                             <ul class="space-y-1 text-sm">
                                 <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
-                                }}</li>
+                                    }}</li>
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
                                 </li>
@@ -250,9 +231,9 @@
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
                                 </li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
-                                }}</li>
+                                    }}</li>
                                 <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
-                                }}</li>
+                                    }}</li>
                             </ul>
                         </div>
                     </div>
@@ -343,11 +324,6 @@
                     </ul>
                 </div>
             </div>
-
-            <!-- 🌾 Basic Info + Executive Summary in One Row -->
-            <!-- <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            </div> -->
-
             <!-- Charts + Performance + Opportunities + Risks -->
             <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
                 <!-- Charts -->
@@ -429,22 +405,8 @@
                 </div>
             </div>
         </div>
-
-        <!-- Loading State for Search -->
-        <div v-if="isSearching && searchQuery" class="text-center text-white mt-24">
-            <div class="flex flex-col items-center justify-center">
-                <svg class="animate-spin h-12 w-12 text-white mb-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-                    viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                    </circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                </svg>
-                <p class="text-lg">Searching...</p>
-            </div>
-        </div>
-
         <!-- Loading/Error -->
-        <div v-else-if="!currentReport && !isSearching" class="text-center text-white mt-24">
+        <div v-else-if="!currentReport" class="text-center text-black mt-24">
             <p v-if="isLoading">Loading data...</p>
             <p v-else-if="error">{{ error }}</p>
         </div>
@@ -452,7 +414,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import {
     Line,
     Bar,
@@ -491,15 +453,11 @@ ChartJS.register(
 
 const reports = ref([]);
 const selectedCooperator = ref("");
-const searchQuery = ref("");
 const isLoading = ref(true);
 const error = ref(null);
 const chartMap = ref({});
 const currentReport = ref(null);
-
 const isExporting = ref(false);
-const isSearching = ref(false);
-const searchDebounceTimer = ref(null);
 
 onMounted(async () => {
     try {
@@ -567,134 +525,18 @@ const improvementValue = computed(() => {
             ?.relative_improvement_percent || 0
     );
 });
-
-// Count how many reports exist for the selected cooperator
-const cooperatorReports = computed(() => {
-    const q = searchQuery.value.toLowerCase().trim();
-
-    let filtered = selectedCooperator.value
-        ? reports.value.filter(
-            (r) => r.analysis?.basic_info?.cooperator === selectedCooperator.value
-        )
-        : reports.value;
-
-    if (!q) return filtered;
-
-    return filtered.filter((r) => {
-        const basic = r.analysis?.basic_info || {};
-        const perf = r.analysis?.performance_analysis?.calculated_metrics || {};
-        const summary = r.analysis?.executive_summary || "";
-        const recs = (r.analysis?.recommendations || [])
-            .map(r => `${r.priority} ${r.recommendation} ${r.data_basis} ${r.expected_impact}`)
-            .join(" ");
-        const opps = (r.analysis?.opportunities || [])
-            .map(o => `${o.opportunity} ${o.data_basis} ${o.potential}`)
-            .join(" ");
-        const risks = (r.analysis?.risk_factors || [])
-            .map(rk => `${rk.risk} ${rk.data_basis} ${rk.severity}`)
-            .join(" ");
-        const trend = r.analysis?.performance_analysis?.trend_analysis || {};
-
-        const combined = `
-            ${r.form_type}
-            ${basic.cooperator}
-            ${basic.product}
-            ${basic.location}
-            ${basic.crop}
-            ${basic.application_date}
-            ${basic.planting_date}
-            ${summary}
-            ${recs}
-            ${opps}
-            ${risks}
-            ${trend.control_trend}
-            ${trend.leads_trend}
-            ${trend.early_performance}
-            ${trend.late_performance}
-            ${trend.key_observation}
-            ${perf.relative_improvement_percent}
-            ${perf.absolute_difference}
-            ${perf.leads_average}
-            ${perf.control_average}
-        `.toLowerCase();
-
-        return combined.includes(q);
-    });
-});
-
-const currentIndex = computed(() => {
-    if (!currentReport.value || !selectedCooperator.value) return 0;
-    const sameCoopReports = cooperatorReports.value;
-    return sameCoopReports.findIndex((r) => r.form_id === currentReport.value.form_id) + 1;
-});
-
 watch(selectedCooperator, (newCoop) => {
     if (!newCoop) {
         currentReport.value = null;
         localStorage.removeItem("selectedCooperator");
-        isSearching.value = false;
         return;
     }
 
     localStorage.setItem("selectedCooperator", newCoop);
-
-    const matchingReports = reports.value.filter(
+    const match = reports.value.find(
         (r) => r.analysis?.basic_info?.cooperator === newCoop
     );
-
-    currentReport.value = matchingReports.length > 0 ? matchingReports[0] : null;
-
-    // Always show the first form for that cooperator
-    if (matchingReports.length > 0) {
-        currentReport.value = matchingReports[0];
-    } else {
-        currentReport.value = null;
-    }
-
-    // Clear search loading state when cooperator is selected
-    isSearching.value = false;
-});
-
-// Debounced search query watcher with loading state
-watch(searchQuery, () => {
-    // Clear any existing timer
-    if (searchDebounceTimer.value) {
-        clearTimeout(searchDebounceTimer.value);
-    }
-
-    // If search query is empty, clear loading and report immediately
-    if (!searchQuery.value.trim()) {
-        isSearching.value = false;
-        if (!selectedCooperator.value) {
-            currentReport.value = null;
-        } else {
-            // If cooperator is selected, show that cooperator's report
-            const matchingReports = reports.value.filter(
-                (r) => r.analysis?.basic_info?.cooperator === selectedCooperator.value
-            );
-            currentReport.value = matchingReports.length > 0 ? matchingReports[0] : null;
-        }
-        return;
-    }
-
-    // Show loading state immediately and hide current report
-    isSearching.value = true;
-    currentReport.value = null;
-
-    // Set new timer for 3 seconds
-    searchDebounceTimer.value = setTimeout(() => {
-        const list = cooperatorReports.value;
-        currentReport.value = list.length > 0 ? list[0] : null;
-        isSearching.value = false;
-        searchDebounceTimer.value = null;
-    }, 3000);
-});
-
-// Cleanup timer on unmount
-onUnmounted(() => {
-    if (searchDebounceTimer.value) {
-        clearTimeout(searchDebounceTimer.value);
-    }
+    currentReport.value = match || null;
 });
 
 const exportToPDF = async () => {
@@ -704,7 +546,6 @@ const exportToPDF = async () => {
     }
 
     isExporting.value = true;
-
     try {
         const chartImages = [];
         const chartsData = chartMap.value[currentReport.value.form_id] || [];
@@ -715,29 +556,18 @@ const exportToPDF = async () => {
         const exportScale = 2.5;
 
         canvases.forEach((canvas, index) => {
-            const actualWidth = canvas.width;
-            const actualHeight = canvas.height;
-            const scaleX = (targetWidth * exportScale) / actualWidth;
-            const scaleY = (targetHeight * exportScale) / actualHeight;
-            const scale = Math.min(scaleX, scaleY, 2.5);
-
             const tmpCanvas = document.createElement("canvas");
-            tmpCanvas.width = actualWidth * scale;
-            tmpCanvas.height = actualHeight * scale;
-            const tmpCtx = tmpCanvas.getContext("2d");
-
-            tmpCtx.fillStyle = '#FFFFFF';
-            tmpCtx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            tmpCtx.imageSmoothingEnabled = true;
-            tmpCtx.imageSmoothingQuality = 'high';
-            tmpCtx.textBaseline = 'top';
-            tmpCtx.textAlign = 'left';
-            tmpCtx.drawImage(canvas, 0, 0, actualWidth, actualHeight, 0, 0, tmpCanvas.width, tmpCanvas.height);
+            tmpCanvas.width = targetWidth * exportScale;
+            tmpCanvas.height = targetHeight * exportScale;
+            const ctx = tmpCanvas.getContext("2d");
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+            ctx.drawImage(canvas, 0, 0, tmpCanvas.width, tmpCanvas.height);
 
             chartImages.push({
                 title: chartsData[index]?.title || `Chart ${index + 1}`,
-                description: chartsData[index]?.description || '',
-                data: tmpCanvas.toDataURL("image/png")
+                description: chartsData[index]?.description || "",
+                data: tmpCanvas.toDataURL("image/png"),
             });
         });
 
@@ -749,23 +579,16 @@ const exportToPDF = async () => {
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": csrf,
-                "Accept": "application/pdf"
+                "Accept": "application/pdf",
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
         });
 
         if (!response.ok) throw new Error("Failed to export PDF");
-
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-
-        // ✅ Open PDF in a new tab instead of downloading
-        window.open(url, '_blank');
-
-        // Optional: revoke the URL after some delay
-        setTimeout(() => {
-            window.URL.revokeObjectURL(url);
-        }, 1000);
+        window.open(url, "_blank");
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (error) {
         console.error(error);
         alert("Error exporting PDF. Please try again.");
@@ -774,21 +597,11 @@ const exportToPDF = async () => {
     }
 };
 
-
-const isValidReport = computed(() => {
-    return (
-        currentReport.value &&
-        cooperatorReports.value.some(
-            (r) => r.form_id === currentReport.value.form_id
-        )
-    );
-});
+const isValidReport = computed(() => !!currentReport.value);
 
 const handleExportClick = () => {
     if (!isValidReport.value) {
-        alert(
-            "⚠️ Please select or search for a valid report before exporting to PDF."
-        );
+        alert("⚠️ Please select a valid report before exporting to PDF.");
         return;
     }
     exportToPDF();
