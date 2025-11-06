@@ -2,7 +2,7 @@
   <nav class="text-white rounded-full px-6 py-2 w-[650px] h-10 flex items-center justify-between
            fixed top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300"
     style="background: linear-gradient(to right, #00953F, #005F0F);">
-    <!-- Home -->
+
     <button @click="scrollToSection('home')" :class="[
       'font-semibold px-4 py-1 rounded-full transition',
       activeSection === 'home'
@@ -12,7 +12,6 @@
       Home
     </button>
 
-    <!-- Dashboard -->
     <button @click="scrollToSection('dashboard')" :class="[
       'font-semibold px-4 py-1 rounded-full transition',
       activeSection === 'dashboard'
@@ -22,14 +21,12 @@
       Dashboard
     </button>
 
-    <!-- Search -->
     <button ref="searchBtn" @click="showSearch = !showSearch"
       class="font-semibold px-4 py-1 hover:bg-white hover:text-[#00853F] rounded-full transition relative">
       Search
     </button>
   </nav>
 
-  <!-- Search bar -->
   <div v-if="showSearch" class="absolute z-50" :style="searchBarStyle">
     <input type="text" v-model="searchQuery" placeholder="Type to search..."
       class="w-[250px] rounded-full text-black outline-none shadow-md" />
@@ -43,9 +40,8 @@ const showSearch = ref(false);
 const searchQuery = ref("");
 const searchBtn = ref(null);
 const searchBarStyle = ref({});
-const activeSection = ref("home"); // default active section
+const activeSection = ref("home");
 
-// 🔹 Smooth scroll when clicking nav buttons
 function scrollToSection(section) {
   const el = document.getElementById(section === "home" ? "AI-AgentForm" : "AI-AgentContext");
   if (el) {
@@ -54,7 +50,6 @@ function scrollToSection(section) {
   activeSection.value = section;
 }
 
-// 🔹 Update which section is active based on scroll position
 function handleScroll() {
   const homeSection = document.getElementById("AI-AgentForm");
   const dashboardSection = document.getElementById("AI-AgentContext");
@@ -64,7 +59,6 @@ function handleScroll() {
   const homeTop = homeSection.offsetTop - 150;
   const dashboardTop = dashboardSection.offsetTop - 150;
 
-  // Detect which section is visible
   if (scrollY >= dashboardTop) {
     activeSection.value = "dashboard";
   } else {
@@ -72,7 +66,6 @@ function handleScroll() {
   }
 }
 
-// 🔹 Handle search input position
 function updateSearchBarPosition() {
   if (searchBtn.value) {
     const rect = searchBtn.value.getBoundingClientRect();
