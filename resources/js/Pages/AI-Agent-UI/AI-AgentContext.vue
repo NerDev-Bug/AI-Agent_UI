@@ -9,7 +9,7 @@
         <div class="flex items-center gap-6 mb-8 px-2">
             <div class="flex-2">
                 <br>
-                <button @click="handleExportClick" :disabled="isExporting"
+                <button v-if="currentReport" @click="handleExportClick" :disabled="isExporting"
                     class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
                     <span v-else class="flex flex-row gap-2">
@@ -24,30 +24,19 @@
                 </button>
             </div>
 
-            <div class="ml-auto">
-                <label class="block text-sm text-black mb-1">Select Cooperator:</label>
-                <select v-model="selectedCooperator" class="p-2 rounded-md w-72">
-                    <option value="">-- Choose Cooperator --</option>
-                    <option v-for="coop in uniqueCooperators" :key="coop" :value="coop">
-                        {{ coop }}
+            <div class="ml-auto" v-if="uniqueApplicants.length > 1">
+                <label class="block text-sm text-black mb-1">Select Applicant:</label>
+                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
+                    <option value="">-- Choose Applicant --</option>
+                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
+                        {{ app }}
                     </option>
                 </select>
             </div>
         </div>
 
-        <!-- Default placeholder shown only when no cooperator selected -->
-        <div v-if="!selectedCooperator" class="text-black p-6 rounded-lg mt-10">
-            <div class="flex items-center justify-center">
-                <div class="bg-white w-[1200px] h-[440px] border-md rounded-lg px-4 py-4">
-                    <h3 class="text-3xl font-semibold">Lorem ipsum dolor sit amet consectetur adipisicing elit. Non,
-                        deleniti harum illum assumenda eos culpa quas ab molestias ipsa quisquam totam distinctio est.
-                        Assumenda harum quam quasi earum repellendus eos!</h3>
-                </div>
-            </div>
-        </div>
-
         <!-- Report Display -->
-        <div v-if="currentReport && selectedCooperator" class="p-2 space-y-8">
+        <div v-if="currentReport && applicant" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -212,7 +201,7 @@
                             </h6>
                             <ul class="space-y-1 text-sm">
                                 <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
-                                    }}</li>
+                                }}</li>
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
                                 </li>
@@ -232,9 +221,9 @@
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
                                 </li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
-                                    }}</li>
+                                }}</li>
                                 <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
-                                    }}</li>
+                                }}</li>
                             </ul>
                         </div>
                     </div>
@@ -407,14 +396,67 @@
             </div>
         </div>
         <!-- Loading/Error -->
-        <div v-else-if="!currentReport" class="text-center text-black mt-24">
+        <!-- <div v-else-if="!currentReport" class="text-center text-black mt-24">
             <p v-if="isLoading">Loading data...</p>
             <p v-else-if="error">{{ error }}</p>
+        </div> -->
+        <!-- Loading/Error/Empty Placeholder -->
+        <div v-else-if="!currentReport"
+            class="flex flex-col items-center justify-center h-[440px] mt-10 bg-[#e6e9f7] rounded-lg">
+            <div class="relative flex flex-col items-center justify-center">
+                <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
+                    <span class="text-[#1f3b70] text-7xl font-semibold">?</span>
+                </div>
+
+                <!-- Text Section -->
+                <div class="text-center mt-8">
+                    <h2 class="text-2xl font-semibold text-[#1f3b70]">No Data Found</h2>
+                    <p class="text-gray-600 text-sm mt-2 max-w-md mx-auto">
+                        Upload a file and click the Analyze Demo Form button to show the analyzed result of your
+                        uploaded file.
+                    </p>
+                </div>
+            </div>
         </div>
+
+        <div>
+            <LoadingOverlay :visible="isExporting" />
+        </div>
+
+        <!-- ✅ SweetAlert-style Modal -->
+        <transition name="fade">
+            <div v-if="alertVisible"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
+                <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
+                    'border-green-600': alertType === 'success',
+                    'border-red-600': alertType === 'error',
+                    'border-yellow-500': alertType === 'warning'
+                }">
+                    <div class="text-5xl mb-3" :class="{
+                        'text-green-600': alertType === 'success',
+                        'text-red-600': alertType === 'error',
+                        'text-yellow-500': alertType === 'warning'
+                    }">
+                        {{ alertIcon }}
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">{{ alertTitle }}</h2>
+                    <p class="text-gray-600 mb-5">{{ alertMessage }}</p>
+                    <div class="flex justify-center gap-3">
+                        <button v-if="alertType === 'warning'" @click="confirmAction"
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Yes</button>
+                        <button @click="closeAlert"
+                            class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+                            {{ alertType === 'warning' ? 'Cancel' : 'OK' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script setup>
+import LoadingOverlay from "../Components/LoadingOverlay.vue";
 import { ref, watchEffect, computed, watch } from "vue";
 import {
     Line,
@@ -453,84 +495,120 @@ ChartJS.register(
 );
 
 const props = defineProps({
-  analysisData: {
-    type: Object,
-    default: () => ({})
-  }
+    analysisData: {
+        type: Object,
+        default: () => ({})
+    }
 });
 
 const reports = ref([]);
-const selectedCooperator = ref("");
+const applicant = ref("");
 const isLoading = ref(true);
 const error = ref(null);
 const chartMap = ref({});
 const currentReport = ref(null);
 const isExporting = ref(false);
 
+// 🧩 Custom Alert System
+const alertVisible = ref(false);
+const alertType = ref("success");
+const alertTitle = ref("");
+const alertMessage = ref("");
+const alertIcon = ref("");
+let confirmCallback = null;
+
+function showAlert(type, title, message, onConfirm = null) {
+  alertType.value = type;
+  alertTitle.value = title;
+  alertMessage.value = message;
+  alertVisible.value = true;
+  confirmCallback = onConfirm;
+  alertIcon.value =
+    type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
+}
+function closeAlert() {
+  alertVisible.value = false;
+}
+function confirmAction() {
+  if (confirmCallback) confirmCallback();
+  closeAlert();
+}
+
 watchEffect(() => {
-  console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
-  console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
-  
-  if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
-    console.log("⚠️ AnalysisData is empty, returning early");
-    return;
-  }
+    console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
+    console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
 
-  try {
-    const rep = props.analysisData;
-    console.log("📋 Processing report with form_id:", rep.form_id);
+    if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
+        console.log("⚠️ AnalysisData is empty, returning early");
+        return;
+    }
 
-    // 🧩 Build chart map for the received report
-    const charts = rep.graph_suggestions?.suggested_charts || [];
-    console.log("📊 Charts found:", charts.length);
-    chartMap.value[rep.form_id] = charts.map((chart) => {
-      let component;
-      const type = chart.chart_type?.toLowerCase() || "";
-      if (type.includes("line")) component = Line;
-      else if (type.includes("horizontal_bar")) component = Bar;
-      else if (type.includes("bar")) component = Bar;
-      else if (type.includes("pie")) component = Pie;
-      else if (type.includes("doughnut")) component = Pie;
-      else if (type.includes("radar")) component = Radar;
-      else if (type.includes("polar")) component = PolarArea;
-      else if (type.includes("scatter")) component = Scatter;
-      else if (type.includes("bubble")) component = Bubble;
-      else component = Bar;
+    try {
+        const rep = props.analysisData;
+        console.log("📋 Processing report with form_id:", rep.form_id);
 
-      let options = chart.chart_options || {};
-      if (type.includes("horizontal_bar")) {
-        options = { ...options, indexAxis: "y" };
-      }
+        // 🧩 Build chart map for the received report
+        const charts = rep.graph_suggestions?.suggested_charts || [];
+        console.log("📊 Charts found:", charts.length);
+        chartMap.value[rep.form_id] = charts.map((chart) => {
+            let component;
+            const type = chart.chart_type?.toLowerCase() || "";
+            if (type.includes("line")) component = Line;
+            else if (type.includes("horizontal_bar")) component = Bar;
+            else if (type.includes("bar")) component = Bar;
+            else if (type.includes("pie")) component = Pie;
+            else if (type.includes("doughnut")) component = Pie;
+            else if (type.includes("radar")) component = Radar;
+            else if (type.includes("polar")) component = PolarArea;
+            else if (type.includes("scatter")) component = Scatter;
+            else if (type.includes("bubble")) component = Bubble;
+            else component = Bar;
 
-      return {
-        title: chart.title,
-        description: chart.description,
-        component,
-        chart_data: chart.chart_data,
-        chart_options: options,
-      };
-    });
+            let options = chart.chart_options || {};
+            if (type.includes("horizontal_bar")) {
+                options = { ...options, indexAxis: "y" };
+            }
 
-    // ✅ Update state dynamically
-    currentReport.value = rep;
-    selectedCooperator.value = rep.analysis?.basic_info?.cooperator || "";
-    isLoading.value = false;
-    error.value = null;
-    console.log("✅ Current report set:", currentReport.value);
-    console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
-    console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
-  } catch (err) {
-    error.value = err.message;
-    isLoading.value = false;
-  }
+            return {
+                title: chart.title,
+                description: chart.description,
+                component,
+                chart_data: chart.chart_data,
+                chart_options: options,
+            };
+        });
+
+        // ✅ Update state dynamically
+        currentReport.value = rep;
+        applicant.value = rep.analysis?.basic_info?.applicant || "";
+        isLoading.value = false;
+        error.value = null;
+        console.log("✅ Current report set:", currentReport.value);
+        console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
+        console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
+    } catch (err) {
+        error.value = err.message;
+        isLoading.value = false;
+    }
 });
 
 
-const uniqueCooperators = computed(() => {
-    const coops = reports.value
-        .map((r) => r.analysis?.basic_info?.cooperator)
+const uniqueApplicants = computed(() => {
+    const apps = reports.value
+        .map((r) => r.analysis?.basic_info?.applicant)
         .filter(Boolean);
-    return [...new Set(coops)];
+    return [...new Set(apps)];
+});
+
+// Automatically select the first applicant when there's only one
+watch(uniqueApplicants, (apps) => {
+    if (apps.length === 1) {
+        applicant.value = apps[0];
+        const match = reports.value.find(
+            (r) => r.analysis?.basic_info?.applicant === apps[0]
+        );
+        currentReport.value = match || null;
+    }
 });
 
 const improvementValue = computed(() => {
@@ -539,23 +617,23 @@ const improvementValue = computed(() => {
             ?.relative_improvement_percent || 0
     );
 });
-watch(selectedCooperator, (newCoop) => {
-    if (!newCoop) {
+watch(applicant, (newApplicant) => {
+    if (!newApplicant) {
         currentReport.value = null;
-        localStorage.removeItem("selectedCooperator");
+        localStorage.removeItem("applicant");
         return;
     }
 
-    localStorage.setItem("selectedCooperator", newCoop);
+    localStorage.setItem("applicant", newApplicant);
     const match = reports.value.find(
-        (r) => r.analysis?.basic_info?.cooperator === newCoop
+        (r) => r.analysis?.basic_info?.applicant === newApplicant
     );
     currentReport.value = match || null;
 });
 
 const exportToPDF = async () => {
     if (!currentReport.value) {
-        alert("No report data available to export.");
+        showAlert("error", "Export Failed", "No report data available to export.");
         return;
     }
 
@@ -607,7 +685,7 @@ const exportToPDF = async () => {
             }
             throw new Error(`Failed to export PDF: ${response.status} ${response.statusText}`);
         }
-        
+
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement("a");
@@ -617,9 +695,10 @@ const exportToPDF = async () => {
         link.click();
         document.body.removeChild(link);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
+        showAlert("success", "Export Successful", "Analyze Report was successfully exported to PDF!");
     } catch (error) {
         console.error("PDF Export Error:", error);
-        alert("Error exporting PDF: " + (error.message || "Please try again."));
+        showAlert("error","Error exporting PDF: " + (error.message || "Please try again."));
     } finally {
         isExporting.value = false;
     }
@@ -629,11 +708,20 @@ const isValidReport = computed(() => !!currentReport.value);
 
 const handleExportClick = () => {
     if (!isValidReport.value) {
-        alert("⚠️ Please select a valid report before exporting to PDF.");
+        showAlert("warning","⚠️ Please select a valid report before exporting to PDF.");
         return;
     }
     exportToPDF();
 };
+
+watch(isExporting, (newVal) => {
+    if (newVal) {
+        document.body.style.overflow = 'hidden'; // disable scroll
+    } else {
+        document.body.style.overflow = ''; // restore scroll
+    }
+});
+
 
 </script>
 

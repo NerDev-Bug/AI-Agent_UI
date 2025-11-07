@@ -33,95 +33,111 @@
         <img src="/images/title_img.png" alt="AI Agent Logo" class="w-[500px] h-[120px]">
       </div>
 
-      <!-- Upload Box -->
-      <div
-        class="bg-white w-[360px] h-[260px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-2">
-        <form @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
-          class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
-          :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
-          <input id="fileUpload" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png" @change="handleFileUpload" />
-
-          <!-- Normal Upload Label -->
-          <label for="fileUpload"
-            class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-green-600 transition text-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-12 h-12 mb-2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
-            </svg>
-            <span class="text-sm font-medium">
-              Drag & Drop or Click to Upload<br />
-              <span class="text-xs text-gray-500">(PDF, JPEG, JPG, PNG)</span>
-            </span>
-          </label>
-
-          <!-- ✅ Dragging Indicator -->
-          <transition name="fade">
-            <div v-if="isDragging"
-              class="absolute inset-0 flex flex-col items-center justify-center bg-green-600 bg-opacity-70 rounded-xl text-white text-lg font-semibold z-20 animate-pulse">
-              📂 Drop your file here
-            </div>
-          </transition>
-
-          <!-- Uploading Overlay -->
-          <div v-if="isUploading"
-            class="absolute inset-0 bg-white bg-opacity-70 flex flex-col items-center justify-center rounded-xl z-30">
-            <svg class="animate-spin h-10 w-10 text-green-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-            </svg>
-            <span class="text-sm text-gray-700 font-medium">Uploading...</span>
-          </div>
-        </form>
-
-        <!-- ✅ File Name with View/Delete Icons -->
-        <div v-if="uploadedFile" class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium">
-          <span class="italic truncate max-w-[180px]">{{ uploadedFile.name }}</span>
-
-          <!-- View button -->
-          <button @click="viewFile" title="View File" class="text-green-700 hover:text-green-900 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-              stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          </button>
-
-          <!-- Delete button -->
-          <button @click="deleteFile" title="Delete File" class="text-red-600 hover:text-red-800 transition">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-              stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      <!-- ✅ Conditional success message OR upload box -->
+      <transition name="fade" mode="out-in">
+        <!-- ✅ Success Message -->
+        <div
+          v-if="showSuccessMessage"
+          key="success"
+          class="bg-white w-[360px] h-[260px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center text-center">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+            stroke="currentColor" class="w-16 h-16 text-green-600 mb-3 animate-bounce">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          <h2 class="text-2xl font-bold text-green-700">{{ successMessage }}</h2>
         </div>
 
-        <!-- Analyze / Save / Re-analyze Buttons -->
-        <transition name="fade" mode="out-in">
-          <!-- Analyze Button -->
-          <div v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4">
-            <button @click="startAnalysis"
-              class="bg-[#00853F] w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-[#00953F] transition">
-              Analyze Demo Form
+        <!-- ✅ Upload Form -->
+        <div
+          v-else
+          key="upload"
+          class="bg-white w-[360px] h-[260px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-2">
+          <form @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
+            class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
+            :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
+            <input id="fileUpload" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png" @change="handleFileUpload" />
+
+            <label for="fileUpload"
+              class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-green-600 transition text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-12 h-12 mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
+              </svg>
+              <span class="text-sm font-medium">
+                Drag & Drop or Click to Upload<br />
+                <span class="text-xs text-gray-500">(PDF, JPEG, JPG, PNG)</span>
+              </span>
+            </label>
+
+            <!-- Dragging Indicator -->
+            <transition name="fade">
+              <div v-if="isDragging"
+                class="absolute inset-0 flex flex-col items-center justify-center bg-green-600 bg-opacity-70 rounded-xl text-white text-lg font-semibold z-20 animate-pulse">
+                📂 Drop your file here
+              </div>
+            </transition>
+
+            <!-- Uploading Overlay -->
+            <div v-if="isUploading"
+              class="absolute inset-0 bg-white bg-opacity-70 flex flex-col items-center justify-center rounded-xl z-30">
+              <svg class="animate-spin h-10 w-10 text-green-600 mb-2" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+              </svg>
+              <span class="text-sm text-gray-700 font-medium">Uploading...</span>
+            </div>
+          </form>
+
+          <!-- Uploaded File Info -->
+          <div v-if="uploadedFile" class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium">
+            <span class="italic truncate max-w-[180px]">{{ uploadedFile.name }}</span>
+
+            <!-- View -->
+            <button @click="viewFile" class="text-green-700 hover:text-green-900 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+
+            <!-- Delete -->
+            <button @click="deleteFile" class="text-red-600 hover:text-red-800 transition">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           </div>
 
-          <!-- Save and Re-analyze -->
-          <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
-            class="flex items-center justify-center gap-4 mt-4">
-            <button @click="saveAnalysis"
-              class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
-              Save
-            </button>
-            <button @click="reanalyze"
-              class="bg-red-600 w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-red-700 transition">
-              Re-analyze
-            </button>
-          </div>
-        </transition>
-      </div>
+          <!-- ✅ Buttons -->
+          <transition name="fade" mode="out-in">
+            <!-- Analyze -->
+            <div v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4">
+              <button @click="startAnalysis"
+                class="bg-[#00853F] w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-[#00953F] transition">
+                Analyze Demo Form
+              </button>
+            </div>
+
+            <!-- Save & Reanalyze -->
+            <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
+              class="flex items-center justify-center gap-4 mt-4">
+              <button @click="saveAnalysis"
+                class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
+                Save
+              </button>
+              <button @click="reanalyze"
+                class="bg-red-600 w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-red-700 transition">
+                Re-analyze
+              </button>
+            </div>
+          </transition>
+        </div>
+      </transition>
     </div>
 
     <!-- Navbar -->
@@ -131,8 +147,36 @@
 
     <!-- Context -->
     <div id="AI-AgentContext" class="p-8 pt-24">
-      <AIAgentContext :analysisData="analysisData"/>
+      <AIAgentContext :analysisData="analysisData" />
     </div>
+
+    <!-- ✅ SweetAlert-style Modal -->
+    <transition name="fade">
+      <div v-if="alertVisible" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
+        <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
+          'border-green-600': alertType === 'success',
+          'border-red-600': alertType === 'error',
+          'border-yellow-500': alertType === 'warning'
+        }">
+          <div class="text-5xl mb-3" :class="{
+            'text-green-600': alertType === 'success',
+            'text-red-600': alertType === 'error',
+            'text-yellow-500': alertType === 'warning'
+          }">
+            {{ alertIcon }}
+          </div>
+          <h2 class="text-2xl font-bold mb-2">{{ alertTitle }}</h2>
+          <p class="text-gray-600 mb-5">{{ alertMessage }}</p>
+          <div class="flex justify-center gap-3">
+            <button v-if="alertType === 'warning'" @click="confirmAction"
+              class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Yes</button>
+            <button @click="closeAlert" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+              {{ alertType === 'warning' ? 'Cancel' : 'OK' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -140,6 +184,7 @@
 import AIAgentContext from "./AI-AgentContext.vue";
 import Navbarheader from "../Layouts/Header.vue";
 import { ref } from "vue";
+import axios from "axios";
 
 const isDragging = ref(false);
 const isUploading = ref(false);
@@ -149,10 +194,38 @@ const uploadedFileURL = ref(null);
 const analysisData = ref(null);
 const cacheId = ref(null); // Store cache_id for save operation
 
+const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
+const showSuccessMessage = ref(false); // control showing success box
+
+// 🧩 Custom Alert System
+const alertVisible = ref(false);
+const alertType = ref("success");
+const alertTitle = ref("");
+const alertMessage = ref("");
+const alertIcon = ref("");
+let confirmCallback = null;
+
+function showAlert(type, title, message, onConfirm = null) {
+  alertType.value = type;
+  alertTitle.value = title;
+  alertMessage.value = message;
+  alertVisible.value = true;
+  confirmCallback = onConfirm;
+  alertIcon.value =
+    type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
+}
+function closeAlert() {
+  alertVisible.value = false;
+}
+function confirmAction() {
+  if (confirmCallback) confirmCallback();
+  closeAlert();
+}
+
 // Helper function to extract error message from error object
 function getErrorMessage(err) {
   if (!err) return "Unknown error";
-  
+
   // Try to get error from response data
   if (err.response?.data) {
     const data = err.response.data;
@@ -167,13 +240,13 @@ function getErrorMessage(err) {
     // If data itself is a string
     if (typeof data === "string") return data;
   }
-  
+
   // Fallback to err.message
   if (typeof err.message === "string") return err.message;
   if (typeof err.message === "object") {
     return err.message?.message || JSON.stringify(err.message);
   }
-  
+
   return "An error occurred";
 }
 
@@ -199,7 +272,7 @@ function processFile(file) {
   if (!file) return;
   const validTypes = ["application/pdf", "image/jpeg", "image/png"];
   if (!validTypes.includes(file.type)) {
-    alert("Invalid file type. Only PDF, JPG, JPEG, PNG allowed.");
+    showAlert("error","Invalid file type", "Invalid file type. Only PDF, JPG, JPEG, PNG allowed.");
     return;
   }
   uploadedFile.value = file;
@@ -213,7 +286,7 @@ function processFile(file) {
 // ✅ Analyze button — send file to API
 async function startAnalysis() {
   if (!uploadedFile.value) {
-    alert("Please upload a file first!");
+    showAlert("warning","No file", "Please upload a file first!");
     return;
   }
   isUploading.value = true;
@@ -223,11 +296,11 @@ async function startAnalysis() {
     const { data } = await axios.post("/api/analyze-file", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    
+
     // Debug: Log the response
     console.log("📊 API Response:", data);
     console.log("📊 Analysis data:", data.analysis);
-    
+
     // Store cache_id if available (from full response or nested)
     if (data.cache_id) {
       cacheId.value = data.cache_id;
@@ -236,7 +309,7 @@ async function startAnalysis() {
       cacheId.value = data.analysis.cache_id;
       console.log("✅ Cache ID stored from analysis:", cacheId.value);
     }
-    
+
     // Set the analysis data - backend returns { analysis: {...} }
     if (data.analysis) {
       analysisData.value = data.analysis;
@@ -246,11 +319,16 @@ async function startAnalysis() {
       console.warn("⚠️ No 'analysis' key found, using full response");
       analysisData.value = data;
     }
-    
+
     isAnalyzed.value = true;
+    showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
+
+    // ✅ Show success message instead of form
+    successMessage.value = "Successfully Analyze!";
+    showSuccessMessage.value = true;
   } catch (err) {
     console.error("❌ Analysis error:", err);
-    alert("Analysis failed: " + getErrorMessage(err));
+    showAlert("error","Analyze failed", getErrorMessage(err));
   } finally {
     isUploading.value = false;
   }
@@ -258,34 +336,59 @@ async function startAnalysis() {
 
 // ✅ Re-analyze (re-send the same file)
 async function reanalyze() {
-  isAnalyzed.value = false;
-  analysisData.value = null;
-  cacheId.value = null; // Clear cache_id when re-analyzing
-  await startAnalysis();
+  try {
+    showSuccessMessage.value = false;
+    isAnalyzed.value = false;
+    analysisData.value = null;
+    cacheId.value = null;
+    await startAnalysis();
+    successMessage.value = "Successfully Re-analyze!";
+    showSuccessMessage.value = true;
+  } catch (err) {
+    showAlert("error", "Reanalyze Failed", getErrorMessage(err));
+  }
 }
 
 // ✅ Save button (send confirmation)
 async function saveAnalysis() {
   if (!cacheId.value) {
-    alert("Error: No cache ID found. Please analyze the file first.");
+    showAlert("error", "Missing cache Id","Error: No cache ID found. Please analyze the file first.");
     console.error("❌ No cache_id available for save operation");
     return;
   }
-  
-  try {
-    // Ensure cache_id is a string and approved is boolean true
-    const cacheIdString = String(cacheId.value);
-    console.log("💾 Saving analysis with cache_id:", cacheIdString);
-    const response = await axios.post("/api/confirm-analysis", { 
-      cache_id: cacheIdString,
-      approved: true  // Boolean true as required by API
-    });
-    console.log("✅ Save response:", response.data);
-    alert("Analysis saved successfully!");
-  } catch (err) {
-    console.error("❌ Save error:", err);
-    alert("Save failed: " + getErrorMessage(err));
-  }
+
+ // 🟡 Step 1: Ask for confirmation before saving
+  showAlert(
+    "warning",
+    "Confirm Save",
+    "Are you sure you want to save it? If yes, click 'Yes'. If not, click 'Cancel' and reanalyze it again.",
+    async () => {
+      try {
+        const cacheIdString = String(cacheId.value);
+        console.log("💾 Saving analysis with cache_id:", cacheIdString);
+
+        const response = await axios.post("/api/confirm-analysis", {
+          cache_id: cacheIdString,
+          approved: true,
+        });
+
+        console.log("✅ Save response:", response.data);
+
+        // 🟢 Step 2: Show success message
+        showAlert("success", "Saved Successfully!", "Your analysis has been saved successfully!");
+
+        // 🟢 Step 3: Hide Save & Reanalyze, show Analyze again
+        isAnalyzed.value = false;
+        showSuccessMessage.value = false;
+        uploadedFile.value = null;
+        uploadedFileURL.value = null;
+
+      } catch (err) {
+        console.error("❌ Save error:", err);
+        showAlert("error", "Save Failed", getErrorMessage(err));
+      }
+    }
+  );
 }
 
 // function startAnalysis() {
@@ -304,16 +407,26 @@ function viewFile() {
   }
 }
 
-// ✅ Delete uploaded file
 function deleteFile() {
-  if (confirm("Are you sure you want to delete this file?")) {
-    uploadedFile.value = null;
-    uploadedFileURL.value = null;
-    isAnalyzed.value = false;
-    analysisData.value = null;
-    cacheId.value = null; // Clear cache_id when deleting
-  }
+  showAlert(
+    "warning",
+    "Delete File?",
+    "Are you sure you want to delete this file?",
+    () => {
+      // ✅ Only executes when the user clicks "Yes"
+      if (uploadedFileURL.value) URL.revokeObjectURL(uploadedFileURL.value);
+      uploadedFile.value = null;
+      uploadedFileURL.value = null;
+      isAnalyzed.value = false;
+      analysisData.value = null;
+      cacheId.value = null; // Clear cache_id when deleting
+
+      console.log("🗑️ File deleted successfully");
+      showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
+    }
+  );
 }
+
 </script>
 
 <style scoped>
