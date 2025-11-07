@@ -55,7 +55,7 @@
           <form @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
             class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
             :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
-            <input id="fileUpload" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png" @change="handleFileUpload" />
+            <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png" @change="handleFileUpload" />
 
             <label for="fileUpload"
               class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-green-600 transition text-center">
@@ -193,6 +193,7 @@ const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
 const cacheId = ref(null); // Store cache_id for save operation
+const fileInput = ref(null);
 
 const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
 const showSuccessMessage = ref(false); // control showing success box
@@ -421,6 +422,9 @@ function deleteFile() {
       analysisData.value = null;
       cacheId.value = null; // Clear cache_id when deleting
 
+      // 🧹 Reset input so re-upload works immediately
+      if (fileInput.value) fileInput.value.value = "";
+      
       console.log("🗑️ File deleted successfully");
       showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
     }
