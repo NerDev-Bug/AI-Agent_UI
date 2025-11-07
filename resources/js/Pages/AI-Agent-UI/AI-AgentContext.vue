@@ -59,11 +59,12 @@
                     🌾 Basic Information
                 </h4>
                 <ul class="grid grid-cols-2 gap-x-8 text-gray-700">
+                    <li><b>Applicant:</b> {{ currentReport.analysis.basic_info.applicant }}</li>
+                    <li><b>Application Date:</b> {{ currentReport.analysis.basic_info.application_date }}</li>
                     <li><b>Cooperator:</b> {{ currentReport.analysis.basic_info.cooperator }}</li>
                     <li><b>Product:</b> {{ currentReport.analysis.basic_info.product }}</li>
                     <li><b>Location:</b> {{ currentReport.analysis.basic_info.location }}</li>
                     <li><b>Crop:</b> {{ currentReport.analysis.basic_info.crop }}</li>
-                    <li><b>Application Date:</b> {{ currentReport.analysis.basic_info.application_date }}</li>
                     <li><b>Planting Date:</b> {{ currentReport.analysis.basic_info.planting_date }}</li>
                 </ul>
             </div>
@@ -467,13 +468,21 @@ const currentReport = ref(null);
 const isExporting = ref(false);
 
 watchEffect(() => {
-  if (!props.analysisData || Object.keys(props.analysisData).length === 0) return;
+  console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
+  console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
+  
+  if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
+    console.log("⚠️ AnalysisData is empty, returning early");
+    return;
+  }
 
   try {
     const rep = props.analysisData;
+    console.log("📋 Processing report with form_id:", rep.form_id);
 
     // 🧩 Build chart map for the received report
     const charts = rep.graph_suggestions?.suggested_charts || [];
+    console.log("📊 Charts found:", charts.length);
     chartMap.value[rep.form_id] = charts.map((chart) => {
       let component;
       const type = chart.chart_type?.toLowerCase() || "";
@@ -507,6 +516,9 @@ watchEffect(() => {
     selectedCooperator.value = rep.analysis?.basic_info?.cooperator || "";
     isLoading.value = false;
     error.value = null;
+    console.log("✅ Current report set:", currentReport.value);
+    console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
+    console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
   } catch (err) {
     error.value = err.message;
     isLoading.value = false;
@@ -586,14 +598,28 @@ const exportToPDF = async () => {
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) throw new Error("Failed to export PDF");
+        if (!response.ok) {
+            // Try to get error message from response
+            const contentType = response.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || errorData.message || "Failed to export PDF");
+            }
+            throw new Error(`Failed to export PDF: ${response.status} ${response.statusText}`);
+        }
+        
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        window.open(url, "_blank");
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `Report-${new Date().toISOString().slice(0, 10)}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
         setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (error) {
-        console.error(error);
-        alert("Error exporting PDF. Please try again.");
+        console.error("PDF Export Error:", error);
+        alert("Error exporting PDF: " + (error.message || "Please try again."));
     } finally {
         isExporting.value = false;
     }

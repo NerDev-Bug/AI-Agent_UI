@@ -147,6 +147,35 @@ const isAnalyzed = ref(false);
 const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
+const cacheId = ref(null); // Store cache_id for save operation
+
+// Helper function to extract error message from error object
+function getErrorMessage(err) {
+  if (!err) return "Unknown error";
+  
+  // Try to get error from response data
+  if (err.response?.data) {
+    const data = err.response.data;
+    // If error is a string, return it
+    if (typeof data.error === "string") return data.error;
+    // If error is an object, try to extract message
+    if (typeof data.error === "object" && data.error !== null) {
+      return data.error.message || data.error.error || JSON.stringify(data.error);
+    }
+    // Try message field
+    if (typeof data.message === "string") return data.message;
+    // If data itself is a string
+    if (typeof data === "string") return data;
+  }
+  
+  // Fallback to err.message
+  if (typeof err.message === "string") return err.message;
+  if (typeof err.message === "object") {
+    return err.message?.message || JSON.stringify(err.message);
+  }
+  
+  return "An error occurred";
+}
 
 function onDragOver() {
   isDragging.value = true;
@@ -194,10 +223,34 @@ async function startAnalysis() {
     const { data } = await axios.post("/api/analyze-file", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    analysisData.value = data.analysis; // pass JSON to context
+    
+    // Debug: Log the response
+    console.log("📊 API Response:", data);
+    console.log("📊 Analysis data:", data.analysis);
+    
+    // Store cache_id if available (from full response or nested)
+    if (data.cache_id) {
+      cacheId.value = data.cache_id;
+      console.log("✅ Cache ID stored:", cacheId.value);
+    } else if (data.analysis?.cache_id) {
+      cacheId.value = data.analysis.cache_id;
+      console.log("✅ Cache ID stored from analysis:", cacheId.value);
+    }
+    
+    // Set the analysis data - backend returns { analysis: {...} }
+    if (data.analysis) {
+      analysisData.value = data.analysis;
+      console.log("✅ Analysis data set:", analysisData.value);
+    } else {
+      // Fallback: if structure is different, use the whole data object
+      console.warn("⚠️ No 'analysis' key found, using full response");
+      analysisData.value = data;
+    }
+    
     isAnalyzed.value = true;
   } catch (err) {
-    alert("Analysis failed: " + (err.response?.data?.error || err.message));
+    console.error("❌ Analysis error:", err);
+    alert("Analysis failed: " + getErrorMessage(err));
   } finally {
     isUploading.value = false;
   }
@@ -207,16 +260,31 @@ async function startAnalysis() {
 async function reanalyze() {
   isAnalyzed.value = false;
   analysisData.value = null;
+  cacheId.value = null; // Clear cache_id when re-analyzing
   await startAnalysis();
 }
 
 // ✅ Save button (send confirmation)
 async function saveAnalysis() {
+  if (!cacheId.value) {
+    alert("Error: No cache ID found. Please analyze the file first.");
+    console.error("❌ No cache_id available for save operation");
+    return;
+  }
+  
   try {
-    await axios.post("/api/confirm-analysis", { confirm: "true" });
+    // Ensure cache_id is a string and approved is boolean true
+    const cacheIdString = String(cacheId.value);
+    console.log("💾 Saving analysis with cache_id:", cacheIdString);
+    const response = await axios.post("/api/confirm-analysis", { 
+      cache_id: cacheIdString,
+      approved: true  // Boolean true as required by API
+    });
+    console.log("✅ Save response:", response.data);
     alert("Analysis saved successfully!");
   } catch (err) {
-    alert("Save failed: " + (err.response?.data?.error || err.message));
+    console.error("❌ Save error:", err);
+    alert("Save failed: " + getErrorMessage(err));
   }
 }
 
@@ -242,6 +310,8 @@ function deleteFile() {
     uploadedFile.value = null;
     uploadedFileURL.value = null;
     isAnalyzed.value = false;
+    analysisData.value = null;
+    cacheId.value = null; // Clear cache_id when deleting
   }
 }
 </script>

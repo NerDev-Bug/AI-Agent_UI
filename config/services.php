@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'ai_agent' => [
+        'analyze_url' => env('API_AI_AGENT_URL', 'http://localhost:8002/api/agent'),
+        'confirm_url' => env('API_AI_AGENT_CONFIRM_URL', 'http://localhost:8002/api/storage/approve-simple'),
+        'api_key' => env('AI_AGENT_KEY', ''),
+    ],
+
 ];

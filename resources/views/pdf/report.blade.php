@@ -209,11 +209,12 @@
     <div class="section no-break">
       <h3 class="title-content">Basic Information</h3>
       <div class="info">
+        <p><strong>Applicant:</strong> {{ $report['analysis']['basic_info']['applicant'] ?? '-' }}</p>
+        <p><strong>Application Date:</strong> {{ $report['analysis']['basic_info']['application_date'] ?? '-' }}</p>
         <p><strong>Cooperator:</strong> {{ $report['analysis']['basic_info']['cooperator'] ?? '-' }}</p>
         <p><strong>Product:</strong> {{ $report['analysis']['basic_info']['product'] ?? '-' }}</p>
         <p><strong>Location:</strong> {{ $report['analysis']['basic_info']['location'] ?? '-' }}</p>
-        <p><strong>Crop:</strong> {{ $report['analysis']['basic_info']['crop'] ?? '-' }}</p>
-        <p><strong>Application Date:</strong> {{ $report['analysis']['basic_info']['application_date'] ?? '-' }}</p>
+        <p><strong>Crop:</strong> {{ $report['analysis']['basic_info']['crop'] ?? '-' }}</p>      
         <p><strong>Planting Date:</strong> {{ $report['analysis']['basic_info']['planting_date'] ?? '-' }}</p>
       </div>
     </div>
