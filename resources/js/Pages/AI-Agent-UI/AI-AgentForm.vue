@@ -35,27 +35,27 @@
 
       <!-- ✅ Conditional success message OR upload box -->
       <transition name="fade" mode="out-in">
-        <!-- ✅ Success Message -->
         <div
-          v-if="showSuccessMessage"
-          key="success"
-          class="bg-white w-[360px] h-[260px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-            stroke="currentColor" class="w-16 h-16 text-green-600 mb-3 animate-bounce">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-          <h2 class="text-2xl font-bold text-green-700">{{ successMessage }}</h2>
-        </div>
+          class="bg-white w-[360px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-4 relative">
 
-        <!-- ✅ Upload Form -->
-        <div
-          v-else
-          key="upload"
-          class="bg-white w-[360px] h-[260px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-2">
+          <!-- ✅ Success message ABOVE form -->
+          <transition name="fade">
+            <div v-if="showSuccessMessage"
+              class="absolute -top-10 left-0 right-0 flex flex-col items-center justify-center text-center">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                stroke="currentColor" class="w-10 h-10 text-green-600 mb-1 animate-bounce">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              <h2 class="text-md font-bold text-green-700">{{ successMessage }}</h2>
+            </div>
+          </transition>
+
+          <!-- ✅ Upload Form -->
           <form @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
             class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
             :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
-            <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png" @change="handleFileUpload" />
+            <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png"
+              @change="handleFileUpload" />
 
             <label for="fileUpload"
               class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-green-600 transition text-center">
@@ -91,7 +91,8 @@
           </form>
 
           <!-- Uploaded File Info -->
-          <div v-if="uploadedFile" class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium">
+          <div v-if="uploadedFile"
+            class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium">
             <span class="italic truncate max-w-[180px]">{{ uploadedFile.name }}</span>
 
             <!-- View -->
@@ -273,7 +274,7 @@ function processFile(file) {
   if (!file) return;
   const validTypes = ["application/pdf", "image/jpeg", "image/png"];
   if (!validTypes.includes(file.type)) {
-    showAlert("error","Invalid file type", "Invalid file type. Only PDF, JPG, JPEG, PNG allowed.");
+    showAlert("error", "Invalid file type", "Invalid file type. Only PDF, JPG, JPEG, PNG allowed.");
     return;
   }
   uploadedFile.value = file;
@@ -287,7 +288,7 @@ function processFile(file) {
 // ✅ Analyze button — send file to API
 async function startAnalysis() {
   if (!uploadedFile.value) {
-    showAlert("warning","No file", "Please upload a file first!");
+    showAlert("warning", "No file", "Please upload a file first!");
     return;
   }
   isUploading.value = true;
@@ -329,7 +330,7 @@ async function startAnalysis() {
     showSuccessMessage.value = true;
   } catch (err) {
     console.error("❌ Analysis error:", err);
-    showAlert("error","Analyze failed", getErrorMessage(err));
+    showAlert("error", "Analyze failed", getErrorMessage(err));
   } finally {
     isUploading.value = false;
   }
@@ -353,12 +354,12 @@ async function reanalyze() {
 // ✅ Save button (send confirmation)
 async function saveAnalysis() {
   if (!cacheId.value) {
-    showAlert("error", "Missing cache Id","Error: No cache ID found. Please analyze the file first.");
+    showAlert("error", "Missing cache Id", "Error: No cache ID found. Please analyze the file first.");
     console.error("❌ No cache_id available for save operation");
     return;
   }
 
- // 🟡 Step 1: Ask for confirmation before saving
+  // 🟡 Step 1: Ask for confirmation before saving
   showAlert(
     "warning",
     "Confirm Save",
@@ -424,7 +425,7 @@ function deleteFile() {
 
       // 🧹 Reset input so re-upload works immediately
       if (fileInput.value) fileInput.value.value = "";
-      
+
       console.log("🗑️ File deleted successfully");
       showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
     }
