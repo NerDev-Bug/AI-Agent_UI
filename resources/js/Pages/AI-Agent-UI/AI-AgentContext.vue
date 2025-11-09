@@ -9,7 +9,8 @@
         <div class="flex items-center gap-6 mb-8 px-2">
             <div class="flex-2">
                 <br>
-                <button v-if="currentReport" @click="handleExportClick" :disabled="isExporting"
+                <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
+                <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
                     class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
                     <span v-else class="flex flex-row gap-2">
@@ -498,6 +499,10 @@ const props = defineProps({
     analysisData: {
         type: Object,
         default: () => ({})
+    },
+    isSaved: {
+        type: Boolean,
+        default: false
     }
 });
 

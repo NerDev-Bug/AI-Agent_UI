@@ -38,15 +38,16 @@
         <div
           class="bg-white w-[360px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-4 relative">
 
-          <!-- ✅ Success message ABOVE form -->
+          <!-- ✅ Success message INSIDE card - covers upload area and filename, but NOT buttons -->
           <transition name="fade">
             <div v-if="showSuccessMessage"
-              class="absolute -top-10 left-0 right-0 flex flex-col items-center justify-center text-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                stroke="currentColor" class="w-10 h-10 text-green-600 mb-1 animate-bounce">
+              class="absolute top-0 left-0 right-0 flex flex-col items-center justify-center text-center z-40 pointer-events-none bg-white rounded-t-xl shadow-md"
+              style="height: calc(100% - 70px); bottom: 70px;">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
+                stroke="currentColor" class="w-16 h-16 text-green-600 mb-3 animate-bounce">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              <h2 class="text-md font-bold text-green-700">{{ successMessage }}</h2>
+              <h2 class="text-lg font-bold text-green-700">{{ successMessage }}</h2>
             </div>
           </transition>
 
@@ -92,7 +93,7 @@
 
           <!-- Uploaded File Info -->
           <div v-if="uploadedFile"
-            class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium">
+            class="mt-3 flex items-center justify-center gap-3 text-gray-700 text-sm font-medium relative z-10">
             <span class="italic truncate max-w-[180px]">{{ uploadedFile.name }}</span>
 
             <!-- View -->
@@ -114,10 +115,10 @@
             </button>
           </div>
 
-          <!-- ✅ Buttons -->
+          <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
             <!-- Analyze -->
-            <div v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4">
+            <div v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4 relative z-50">
               <button @click="startAnalysis"
                 class="bg-[#00853F] w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-[#00953F] transition">
                 Analyze Demo Form
@@ -126,7 +127,7 @@
 
             <!-- Save & Reanalyze -->
             <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
-              class="flex items-center justify-center gap-4 mt-4">
+              class="flex items-center justify-center gap-4 mt-4 relative z-50">
               <button @click="saveAnalysis"
                 class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
                 Save
@@ -148,7 +149,7 @@
 
     <!-- Context -->
     <div id="AI-AgentContext" class="p-8 pt-24">
-      <AIAgentContext :analysisData="analysisData" />
+      <AIAgentContext :analysisData="analysisData" :isSaved="isSaved" />
     </div>
 
     <!-- ✅ SweetAlert-style Modal -->
@@ -190,6 +191,7 @@ import axios from "axios";
 const isDragging = ref(false);
 const isUploading = ref(false);
 const isAnalyzed = ref(false);
+const isSaved = ref(false); // Track if analysis has been saved (for Export PDF button)
 const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
@@ -323,6 +325,7 @@ async function startAnalysis() {
     }
 
     isAnalyzed.value = true;
+    isSaved.value = false; // Reset saved state when new analysis is done
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
 
     // ✅ Show success message instead of form
@@ -341,6 +344,7 @@ async function reanalyze() {
   try {
     showSuccessMessage.value = false;
     isAnalyzed.value = false;
+    isSaved.value = false; // Reset saved state when re-analyzing
     analysisData.value = null;
     cacheId.value = null;
     await startAnalysis();
@@ -376,14 +380,21 @@ async function saveAnalysis() {
 
         console.log("✅ Save response:", response.data);
 
-        // 🟢 Step 2: Show success message
-        showAlert("success", "Saved Successfully!", "Your analysis has been saved successfully!");
+        // 🟢 Step 2: Mark as saved (for Export PDF button to appear)
+        isSaved.value = true;
 
-        // 🟢 Step 3: Hide Save & Reanalyze, show Analyze again
-        isAnalyzed.value = false;
+        // 🟢 Step 3: Hide success message and reset to original upload state
         showSuccessMessage.value = false;
-        uploadedFile.value = null;
-        uploadedFileURL.value = null;
+        isAnalyzed.value = false; // Reset to show "Analyze Form" button instead of Save/Re-analyze
+
+        // 🟢 Step 4: Show success alert
+        showAlert("success", "Saved Successfully!", "Your analysis has been saved successfully! You can now export to PDF.");
+
+        // After save:
+        // - Success message disappears (showSuccessMessage = false)
+        // - UI goes back to original state with "Analyze Form" button (isAnalyzed = false)
+        // - Export PDF button appears (isSaved = true)
+        // - File remains uploaded so user can see what was analyzed
 
       } catch (err) {
         console.error("❌ Save error:", err);
@@ -420,6 +431,7 @@ function deleteFile() {
       uploadedFile.value = null;
       uploadedFileURL.value = null;
       isAnalyzed.value = false;
+      isSaved.value = false; // Reset saved state when deleting file
       analysisData.value = null;
       cacheId.value = null; // Clear cache_id when deleting
 
