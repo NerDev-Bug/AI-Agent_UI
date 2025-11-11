@@ -179,12 +179,15 @@
         </div>
       </div>
     </transition>
+
+    <LoadingPage :visible="loadingVisible" :text="loadingText" />
   </div>
 </template>
 
 <script setup>
 import AIAgentContext from "./AI-AgentContext.vue";
 import Navbarheader from "../Layouts/Header.vue";
+import LoadingPage from "../Components/LoadingPage.vue";
 import { ref } from "vue";
 import axios from "axios";
 
@@ -200,6 +203,9 @@ const fileInput = ref(null);
 
 const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
 const showSuccessMessage = ref(false); // control showing success box
+
+const loadingVisible = ref(false); // control LoadingPage visibility
+const loadingText = ref(""); // text to display in LoadingPage
 
 // 🧩 Custom Alert System
 const alertVisible = ref(false);
@@ -293,6 +299,8 @@ async function startAnalysis() {
     showAlert("warning", "No file", "Please upload a file first!");
     return;
   }
+  loadingText.value = "Analyzing file..."; // set overlay text
+  loadingVisible.value = true; // show loading overlay
   isUploading.value = true;
   try {
     const formData = new FormData();
@@ -335,12 +343,15 @@ async function startAnalysis() {
     console.error("❌ Analysis error:", err);
     showAlert("error", "Analyze failed", getErrorMessage(err));
   } finally {
+    loadingVisible.value = false; // hide overlay
     isUploading.value = false;
   }
 }
 
 // ✅ Re-analyze (re-send the same file)
 async function reanalyze() {
+  loadingText.value = "Re-analyzing file...";
+  loadingVisible.value = true;
   try {
     showSuccessMessage.value = false;
     isAnalyzed.value = false;
@@ -352,6 +363,8 @@ async function reanalyze() {
     showSuccessMessage.value = true;
   } catch (err) {
     showAlert("error", "Reanalyze Failed", getErrorMessage(err));
+  } finally {
+    loadingVisible.value = false;
   }
 }
 
@@ -369,6 +382,8 @@ async function saveAnalysis() {
     "Confirm Save",
     "Are you sure you want to save it? If yes, click 'Yes'. If not, click 'Cancel' and reanalyze it again.",
     async () => {
+      loadingText.value = "Saving analysis...";
+      loadingVisible.value = true;
       try {
         const cacheIdString = String(cacheId.value);
         console.log("💾 Saving analysis with cache_id:", cacheIdString);
@@ -399,6 +414,8 @@ async function saveAnalysis() {
       } catch (err) {
         console.error("❌ Save error:", err);
         showAlert("error", "Save Failed", getErrorMessage(err));
+      } finally {
+        loadingVisible.value = false;
       }
     }
   );

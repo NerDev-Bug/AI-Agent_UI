@@ -18,7 +18,7 @@
                 </div>
 
                 <p class="text-green-900 font-semibold text-lg animate-pulse">
-                    Exporting your report... 🌱
+                    {{ text }}
                 </p>
             </div>
         </div>
@@ -31,6 +31,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    text: {
+        type: String,
+        default: "",
+    }
 });
 </script>
 
