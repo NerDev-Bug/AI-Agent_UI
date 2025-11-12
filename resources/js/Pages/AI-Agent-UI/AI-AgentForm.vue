@@ -125,8 +125,8 @@
               </button>
             </div>
 
-            <!-- Save & Reanalyze -->
-            <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
+            <!-- Save & Reanalyze (only show for actual analysis, not search results) -->
+            <div v-else-if="isAnalyzed && !isUploading && !isSearchResult" key="save-reanalyze"
               class="flex items-center justify-center gap-4 mt-4 relative z-50">
               <button @click="saveAnalysis"
                 class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
@@ -195,6 +195,7 @@ const isDragging = ref(false);
 const isUploading = ref(false);
 const isAnalyzed = ref(false);
 const isSaved = ref(false); // Track if analysis has been saved (for Export PDF button)
+const isSearchResult = ref(false); // Track if current data is from search (not actual analysis)
 const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
@@ -353,6 +354,7 @@ async function startAnalysis() {
     }
 
     isAnalyzed.value = true;
+    isSearchResult.value = false; // This is actual analysis, not search
     isSaved.value = false; // Reset saved state when new analysis is done
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
 
@@ -486,6 +488,7 @@ function deleteFile() {
       uploadedFile.value = null;
       uploadedFileURL.value = null;
       isAnalyzed.value = false;
+      isSearchResult.value = false; // Reset search result flag
       isSaved.value = false; // Reset saved state when deleting file
       analysisData.value = null;
       cacheId.value = null; // Clear cache_id when deleting
@@ -508,13 +511,14 @@ function handleSearchResults(searchData) {
     return;
   }
   
-  // Set the search result as analysis data to display in dashboard
-  analysisData.value = searchData;
-  isAnalyzed.value = true; // Show as analyzed so dashboard displays it
-  isSaved.value = false; // Search results are not saved
+  // Don't display search results - just show message
+  // Clear any existing analysis data
+  analysisData.value = null;
+  isAnalyzed.value = false;
+  isSearchResult.value = false;
   
-  // Show success message
-  showAlert("success", "Search Complete", `Found results for: "${searchData._searchQuery || 'your query'}"`);
+  // Show success message only
+  showAlert("success", "Search Complete", `Found ${searchData._totalResults || 1} result(s) for: "${searchData._searchQuery || 'your query'}"`);
 }
 
 </script>
