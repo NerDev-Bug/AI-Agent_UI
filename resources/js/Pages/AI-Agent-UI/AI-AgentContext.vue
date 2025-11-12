@@ -36,31 +36,10 @@
                 </button>
             </div>
 
-            <!-- Search Results Selector (if search result with multiple results) -->
-            <div class="ml-auto" v-if="currentReport?._isSearchResult && currentReport?._searchResults && currentReport._searchResults.length > 1">
-                <label class="block text-sm text-black mb-1">Select Search Result:</label>
-                <select v-model="selectedSearchIndex" @change="onSearchResultChange" class="p-2 rounded-md w-72" :disabled="!currentReport">
-                    <option v-for="(result, index) in currentReport._searchResults" :key="result.form_id" :value="index">
-                        {{ result.file_name || `${result.analysis?.basic_info?.product || 'Result'} - ${result.analysis?.basic_info?.location || ''}` }} 
-                        (Score: {{ (result._searchScore * 100).toFixed(1) }}%)
-                    </option>
-                </select>
-            </div>
-
-            <!-- Applicant Selector (for regular analysis, not search) -->
-            <div class="ml-auto" v-else-if="uniqueApplicants.length > 1 && !currentReport?._isSearchResult">
-                <label class="block text-sm text-black mb-1">Select Applicant:</label>
-                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
-                    <option value="">-- Choose Applicant --</option>
-                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
-                        {{ app }}
-                    </option>
-                </select>
-            </div>
         </div>
 
         <!-- Report Display -->
-        <div v-if="currentReport && (applicant || currentReport?._isSearchResult)" class="p-2 space-y-8">
+        <div v-if="currentReport" :key="currentReport.form_id + (currentReport._searchQuery || '')" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -478,7 +457,6 @@ const error = ref(null);
 const chartMap = ref({});
 const currentReport = ref(null);
 const isExporting = ref(false);
-const selectedSearchIndex = ref(0); // For search results selector
 
 // 🧩 Custom Alert System
 const alertVisible = ref(false);
@@ -508,15 +486,36 @@ function confirmAction() {
 watchEffect(() => {
     console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
     console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
+    console.log("🔍 Is search result:", props.analysisData?._isSearchResult);
+    console.log("🔍 Form ID:", props.analysisData?.form_id);
 
     if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
         console.log("⚠️ AnalysisData is empty, returning early");
+        // Clear current report if data is empty
+        if (currentReport.value) {
+            currentReport.value = null;
+            applicant.value = "";
+            chartMap.value = {};
+        }
         return;
     }
 
     try {
         const rep = props.analysisData;
-        console.log("📋 Processing report with form_id:", rep.form_id);
+        const newFormId = rep.form_id;
+        const currentFormId = currentReport.value?.form_id;
+        
+        console.log("📋 Processing report with form_id:", newFormId);
+        console.log("📋 Current report form_id:", currentFormId);
+        
+        // If it's a different report (different form_id), clear previous data
+        if (currentFormId && currentFormId !== newFormId) {
+            console.log("🔄 Different report detected, clearing previous data");
+            // Clear chart map for old report
+            if (chartMap.value[currentFormId]) {
+                delete chartMap.value[currentFormId];
+            }
+        }
 
         // 🧩 Build chart map for the received report
         const charts = rep.graph_suggestions?.suggested_charts || [];
@@ -549,26 +548,27 @@ watchEffect(() => {
             };
         });
 
-        // ✅ Update state dynamically
-        currentReport.value = rep;
+        // ✅ Update state dynamically - SIMPLIFIED
+        // Clear previous data first
+        chartMap.value = {};
+        currentReport.value = null;
+        
+        // Set applicant
         applicant.value = rep.analysis?.basic_info?.applicant || "";
         
-        // Reset search index if it's a new search result
-        if (rep._isSearchResult && rep._searchResults) {
-            selectedSearchIndex.value = 0; // Default to first result
-            // For search results, set applicant to empty or use product name so it displays
-            if (!applicant.value && rep.analysis?.basic_info?.product) {
-                applicant.value = rep.analysis.basic_info.product;
-            }
-        }
+        // Set current report - Force update by creating DEEP CLONE
+        currentReport.value = JSON.parse(JSON.stringify(rep));
         
         isLoading.value = false;
         error.value = null;
         console.log("✅ Current report set:", currentReport.value);
+        console.log("✅ Report form_id:", currentReport.value?.form_id);
+        console.log("✅ Report applicant:", currentReport.value?.analysis?.basic_info?.applicant);
         console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
         console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
         if (rep._isSearchResult) {
             console.log("✅ Search result with", rep._totalResults || 0, "total results");
+            console.log("✅ Search query:", rep._searchQuery);
         }
     } catch (err) {
         error.value = err.message;
@@ -584,17 +584,6 @@ const uniqueApplicants = computed(() => {
     return [...new Set(apps)];
 });
 
-// Automatically select the first applicant when there's only one
-watch(uniqueApplicants, (apps) => {
-    if (apps.length === 1) {
-        applicant.value = apps[0];
-        const match = reports.value.find(
-            (r) => r.analysis?.basic_info?.applicant === apps[0]
-        );
-        currentReport.value = match || null;
-    }
-});
-
 const improvementValue = computed(() => {
     return (
         currentReport.value?.analysis?.performance_analysis?.calculated_metrics
@@ -602,6 +591,11 @@ const improvementValue = computed(() => {
     );
 });
 watch(applicant, (newApplicant) => {
+    // Skip applicant watch for search results
+    if (currentReport.value?._isSearchResult) {
+        return;
+    }
+    
     if (!newApplicant) {
         currentReport.value = null;
         localStorage.removeItem("applicant");
@@ -706,51 +700,6 @@ watch(isExporting, (newVal) => {
     }
 });
 
-// Handle search result selection change
-function onSearchResultChange() {
-    if (!currentReport.value?._isSearchResult || !currentReport.value._searchResults) return;
-    
-    const selectedResult = currentReport.value._searchResults[selectedSearchIndex.value];
-    if (!selectedResult) return;
-    
-    // Update current report to selected search result
-    currentReport.value = selectedResult;
-    
-    // Rebuild chart map for the selected result
-    const charts = selectedResult.graph_suggestions?.suggested_charts || [];
-    chartMap.value[selectedResult.form_id] = charts.map((chart) => {
-        let component;
-        const type = chart.chart_type?.toLowerCase() || "";
-        if (type.includes("line")) component = Line;
-        else if (type.includes("horizontal_bar")) component = Bar;
-        else if (type.includes("bar")) component = Bar;
-        else if (type.includes("pie")) component = Pie;
-        else if (type.includes("doughnut")) component = Pie;
-        else if (type.includes("radar")) component = Radar;
-        else if (type.includes("polar")) component = PolarArea;
-        else if (type.includes("scatter")) component = Scatter;
-        else if (type.includes("bubble")) component = Bubble;
-        else component = Bar;
-
-        let options = chart.chart_options || {};
-        if (type.includes("horizontal_bar")) {
-            options = { ...options, indexAxis: "y" };
-        }
-
-        return {
-            title: chart.title,
-            description: chart.description,
-            component,
-            chart_data: chart.chart_data,
-            chart_options: options,
-        };
-    });
-    
-    // Update applicant
-    applicant.value = selectedResult.analysis?.basic_info?.applicant || "";
-    
-    console.log("🔄 Switched to search result #", selectedSearchIndex.value);
-}
 
 
 </script>

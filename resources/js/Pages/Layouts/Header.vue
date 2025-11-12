@@ -40,13 +40,14 @@
 
   <!-- Search Input -->
   <div v-if="showSearch" class="absolute z-50" :style="searchBarStyle">
-    <div class="flex items-center gap-2 bg-white rounded-full shadow-lg border-2 border-green-500 p-2">
+    <div class="flex items-center gap-2 bg-white rounded-full shadow-lg border-2 p-2" :class="isSearching ? 'border-blue-500' : 'border-green-500'">
       <input
         type="text"
         v-model="searchQuery"
         @keyup.enter="performSearch"
         placeholder="Search analysis reports..."
-        class="w-[300px] rounded-full text-black outline-none px-4 py-2"
+        :disabled="isSearching"
+        class="w-[300px] rounded-full text-black outline-none px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <button
         @click="performSearch"
@@ -92,6 +93,10 @@
         <span v-if="!isSearching">Search</span>
         <span v-else>Searching...</span>
       </button>
+    </div>
+    <!-- Loading indicator below search bar -->
+    <div v-if="isSearching" class="mt-2 text-center">
+      <p class="text-sm text-blue-600 font-medium animate-pulse">Searching for results...</p>
     </div>
   </div>
 
@@ -228,7 +233,7 @@ async function performSearch() {
   if (!searchQuery.value.trim() || isSearching.value) return;
 
   isSearching.value = true;
-  showSearch.value = false; // Close search input
+  // Keep search bar visible during loading - don't close it yet
 
   try {
     const response = await axios.post("/api/analysis-search", {
@@ -242,10 +247,10 @@ async function performSearch() {
     // Emit search results to parent component
     emit("searchResults", searchData);
     
-    // Scroll to dashboard section
-    scrollToSection("dashboard");
+    // Don't scroll to dashboard - no display needed
     
-    // Clear search query
+    // Close search bar and clear query only after successful search
+    showSearch.value = false;
     searchQuery.value = "";
   } catch (error) {
     console.error("Search error:", error);
@@ -255,6 +260,8 @@ async function performSearch() {
       message: error.response?.data?.error || "Search failed. Please try again.",
       query: searchQuery.value,
     });
+    // Keep search bar open on error so user can retry
+    // Don't close it, just show the error
   } finally {
     isSearching.value = false;
   }
@@ -272,6 +279,11 @@ function transformSearchResultsToAnalysisData(searchResponse) {
     };
   }
 
+  // Log the raw results to verify order
+  console.log("🔍 Raw search results:", searchResponse.results);
+  console.log("🔍 First result applicant:", searchResponse.results[0]?.full_analysis?.basic_info?.applicant || searchResponse.results[0]?.cooperator);
+  console.log("🔍 First result score:", searchResponse.results[0]?.score);
+  
   // Transform ALL search results, not just the first one
   const transformedResults = searchResponse.results.map((result, index) => {
     // full_analysis is the EXACT same JSON structure that was saved
@@ -338,9 +350,17 @@ function transformSearchResultsToAnalysisData(searchResponse) {
     };
   });
 
-  // Return the first result as default, but include all results for selection
+  // Verify first result is the highest score
+  const firstResult = transformedResults[0];
+  console.log("🔍 First transformed result:", firstResult);
+  console.log("🔍 First result applicant:", firstResult?.analysis?.basic_info?.applicant);
+  console.log("🔍 First result form_id:", firstResult?.form_id);
+  console.log("🔍 First result score:", firstResult?._searchScore);
+  
+  // Return the first result as default (should be highest score from backend)
+  // Include all results for selection dropdown
   return {
-    ...transformedResults[0], // Default to first result (highest score)
+    ...firstResult, // Default to first result (highest score from backend)
     _searchResults: transformedResults, // All transformed results for selection
     _isSearchResult: true,
     _searchQuery: searchResponse.query,
