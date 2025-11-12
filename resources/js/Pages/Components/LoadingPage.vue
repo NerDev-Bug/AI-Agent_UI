@@ -1,8 +1,8 @@
 <template>
     <transition name="fade">
         <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
-                <div class="relative w-24 h-24">
+            <div class="bg-white p-12 w-[400px] h-auto rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
+                <div class="relative w-full h-40">
                     <div class="absolute bottom-0 left-0 w-full h-4 bg-green-700 rounded-full"></div>
 
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -13,13 +13,22 @@
 
                     <div class="absolute top-0 left-1/2 transform -translate-x-1/2 animate-breathe">
                         <img src="/images/title_img.png" alt="LeadsAgri Logo"
-                            class="w-16 h-16 object-contain drop-shadow-lg" />
+                            class="w-[320px] h-[70px] drop-shadow-lg" />
                     </div>
                 </div>
 
                 <p class="text-green-900 font-semibold text-lg animate-pulse">
                     {{ text }}
                 </p>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-green-600 h-3 rounded-full transition-all duration-300 ease-linear"
+                        :style="{ width: progress + '%' }"></div>
+                </div>
+
+                <!-- Percentage Label -->
+                <p class="text-sm text-gray-600 font-medium">{{ Math.floor(progress) }}%</p>
             </div>
         </div>
     </transition>
@@ -34,12 +43,15 @@ const props = defineProps({
     text: {
         type: String,
         default: "",
+    },
+    progress: {
+        type: Number,
+        default: 0,
     }
 });
 </script>
 
 <style scoped>
-
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.3s ease;

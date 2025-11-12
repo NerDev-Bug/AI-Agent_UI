@@ -180,7 +180,7 @@
       </div>
     </transition>
 
-    <LoadingPage :visible="loadingVisible" :text="loadingText" />
+    <LoadingPage :visible="loadingVisible" :text="loadingText" :progress="loadingProgress" />
   </div>
 </template>
 
@@ -206,6 +206,8 @@ const showSuccessMessage = ref(false); // control showing success box
 
 const loadingVisible = ref(false); // control LoadingPage visibility
 const loadingText = ref(""); // text to display in LoadingPage
+const loadingProgress = ref(0);
+let progressInterval = null;
 
 // 🧩 Custom Alert System
 const alertVisible = ref(false);
@@ -301,6 +303,15 @@ async function startAnalysis() {
   }
   loadingText.value = "Analyzing file..."; // set overlay text
   loadingVisible.value = true; // show loading overlay
+  loadingProgress.value = 0;
+
+  // Simulate smooth progress
+  progressInterval = setInterval(() => {
+    if (loadingProgress.value < 90) {
+      loadingProgress.value += Math.random() * 5; // simulate increase
+    }
+  }, 400);
+
   isUploading.value = true;
   try {
     const formData = new FormData();
@@ -343,7 +354,12 @@ async function startAnalysis() {
     console.error("❌ Analysis error:", err);
     showAlert("error", "Analyze failed", getErrorMessage(err));
   } finally {
-    loadingVisible.value = false; // hide overlay
+    clearInterval(progressInterval);
+    loadingProgress.value = 100; // complete progress
+    setTimeout(() => {
+      loadingVisible.value = false;
+      loadingProgress.value = 0;
+    }, 600);
     isUploading.value = false;
   }
 }
@@ -352,6 +368,14 @@ async function startAnalysis() {
 async function reanalyze() {
   loadingText.value = "Re-analyzing file...";
   loadingVisible.value = true;
+  loadingProgress.value = 0;
+
+  progressInterval = setInterval(() => {
+    if (loadingProgress.value < 90) {
+      loadingProgress.value += Math.random() * 5;
+    }
+  }, 400);
+
   try {
     showSuccessMessage.value = false;
     isAnalyzed.value = false;
@@ -364,7 +388,12 @@ async function reanalyze() {
   } catch (err) {
     showAlert("error", "Reanalyze Failed", getErrorMessage(err));
   } finally {
-    loadingVisible.value = false;
+    clearInterval(progressInterval);
+    loadingProgress.value = 100;
+    setTimeout(() => {
+      loadingVisible.value = false;
+      loadingProgress.value = 0;
+    }, 600);
   }
 }
 

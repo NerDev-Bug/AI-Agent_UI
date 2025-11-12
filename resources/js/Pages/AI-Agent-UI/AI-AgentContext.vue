@@ -142,6 +142,27 @@
                 </div>
             </div>
 
+            <!-- Charts + Performance + Opportunities + Risks -->
+            <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
+                <!-- Charts -->
+                <h4 class="text-xl font-semibold text-black border-b">
+                    📊 Data Visualizations
+                </h4>
+
+                <div class="grid gap-8 sm:grid-cols-1 lg:grid-cols-2 items-stretch content-start">
+                    <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
+                        class="chart-card bg-white rounded-lg shadow p-4">
+                        <h5 class="text-lg font-semibold mb-2 text-gray-800">
+                            {{ chart.title }}
+                        </h5>
+                        <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
+                        <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                            {{ chart.description }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <!-- ✅ Performance Analysis -->
             <div v-if="currentReport.analysis?.performance_analysis"
                 class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
@@ -202,7 +223,7 @@
                             </h6>
                             <ul class="space-y-1 text-sm">
                                 <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
-                                }}</li>
+                                    }}</li>
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
                                 </li>
@@ -222,9 +243,9 @@
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
                                 </li>
                                 <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
-                                }}</li>
+                                    }}</li>
                                 <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
-                                }}</li>
+                                    }}</li>
                             </ul>
                         </div>
                     </div>
@@ -315,37 +336,6 @@
                     </ul>
                 </div>
             </div>
-            <!-- Charts + Performance + Opportunities + Risks -->
-            <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
-                <!-- Charts -->
-                <h4 class="text-xl font-semibold text-black border-b">
-                    📊 Data Visualizations
-                </h4>
-
-                <div class="grid gap-8 sm:grid-cols-1 lg:grid-cols-2 items-stretch content-start">
-                    <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                        class="chart-card bg-white rounded-lg shadow p-4">
-                        <h5 class="text-lg font-semibold mb-2 text-gray-800">
-                            {{ chart.title }}
-                        </h5>
-                        <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
-                        <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
-                            {{ chart.description }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Executive Summary -->
-            <div v-if="currentReport.analysis?.executive_summary"
-                class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md h-full">
-                <h4 class="text-xl font-semibold text-blue-700 mb-2">
-                    🧾 Executive Summary
-                </h4>
-                <p class="text-gray-700 whitespace-pre-line">
-                    {{ currentReport.analysis.executive_summary }}
-                </p>
-            </div>
 
             <!-- Opportunities + Risks below -->
             <div v-if="
@@ -396,6 +386,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Executive Summary -->
+        <div v-if="currentReport.analysis?.executive_summary"
+            class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md h-full">
+            <h4 class="text-xl font-semibold text-blue-700 mb-2">
+                🧾 Executive Summary
+            </h4>
+            <p class="text-gray-700 whitespace-pre-line">
+                {{ currentReport.analysis.executive_summary }}
+            </p>
+        </div>
+
         <!-- Loading/Error -->
         <!-- <div v-else-if="!currentReport" class="text-center text-black mt-24">
             <p v-if="isLoading">Loading data...</p>
@@ -523,20 +525,20 @@ const alertIcon = ref("");
 let confirmCallback = null;
 
 function showAlert(type, title, message, onConfirm = null) {
-  alertType.value = type;
-  alertTitle.value = title;
-  alertMessage.value = message;
-  alertVisible.value = true;
-  confirmCallback = onConfirm;
-  alertIcon.value =
-    type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
+    alertType.value = type;
+    alertTitle.value = title;
+    alertMessage.value = message;
+    alertVisible.value = true;
+    confirmCallback = onConfirm;
+    alertIcon.value =
+        type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
 }
 function closeAlert() {
-  alertVisible.value = false;
+    alertVisible.value = false;
 }
 function confirmAction() {
-  if (confirmCallback) confirmCallback();
-  closeAlert();
+    if (confirmCallback) confirmCallback();
+    closeAlert();
 }
 
 watchEffect(() => {
@@ -703,7 +705,7 @@ const exportToPDF = async () => {
         showAlert("success", "Export Successful", "Analyze Report was successfully exported to PDF!");
     } catch (error) {
         console.error("PDF Export Error:", error);
-        showAlert("error","Error exporting PDF: " + (error.message || "Please try again."));
+        showAlert("error", "Error exporting PDF: " + (error.message || "Please try again."));
     } finally {
         isExporting.value = false;
     }
@@ -713,7 +715,7 @@ const isValidReport = computed(() => !!currentReport.value);
 
 const handleExportClick = () => {
     if (!isValidReport.value) {
-        showAlert("warning","⚠️ Please select a valid report before exporting to PDF.");
+        showAlert("warning", "⚠️ Please select a valid report before exporting to PDF.");
         return;
     }
     exportToPDF();
