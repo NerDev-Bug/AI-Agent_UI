@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="min-h-screen">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
@@ -142,6 +142,79 @@
                 </div>
             </div>
 
+            <!-- ✅ Performance Analysis + Treatment Details side-by-side -->
+            <div v-if="currentReport.analysis?.performance_analysis"
+                class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
+
+                <!-- Left: Performance Analysis -->
+                <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
+                    <h4 class="text-xl font-semibold text-purple-700 mb-2">
+                        📈 Performance Analysis
+                    </h4>
+                    <p class="text-gray-700 mb-3 italic">
+                        {{ currentReport.analysis.performance_analysis.scale_info }}
+                    </p>
+
+                    <div class="overflow-x-auto mb-4" v-if="currentReport.analysis?.performance_analysis?.raw_data">
+                        <table class="min-w-full text-sm border border-gray-300">
+                            <thead class="bg-purple-100 text-gray-700">
+                                <tr>
+                                    <th class="border px-3 py-2">Time Period</th>
+                                    <th v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
+                                        :key="treatment" class="border px-3 py-2 capitalize">
+                                        {{ treatment === 'control' ? 'Standard Practice' : treatment.replace(/_/g, ' ')
+                                        }}
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-center text-gray-800">
+                                <tr v-for="(daaLabel, index) in Object.keys(currentReport.analysis.performance_analysis.raw_data.control)"
+                                    :key="index">
+                                    <td class="border px-3 py-2 font-semibold">{{ daaLabel }}</td>
+                                    <td v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
+                                        :key="treatment" class="border px-3 py-2">
+                                        {{ values[daaLabel] }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Right: Treatment Details -->
+                <div v-if="currentReport.analysis?.treatment_comparison"
+                    class="bg-white border border-purple-200 rounded-lg p-6 mb-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">🔬 Treatment Details</h5>
+                    <hr class="border-t-2 border-gray-400 my-4" />
+                    <div class="flex flex-col md:flex-row justify-between text-gray-800">
+                        <div class="flex-1 pr-4">
+                            <h6 class="text-lg font-semibold text-green-700 mb-2">Standard Practice</h6>
+                            <ul class="space-y-1 text-sm">
+                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product }}
+                                </li>
+                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
+                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}</li>
+                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}</li>
+                            </ul>
+                        </div>
+                        <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
+                        <div class="flex-1 pl-4">
+                            <h6 class="text-lg font-semibold text-purple-700 mb-2">Leads Agri Treatment</h6>
+                            <ul class="space-y-1 text-sm">
+                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                </li>
+                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}</li>
+                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
+                                </li>
+                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p>{{ currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
+                </div>
+            </div>
+
             <!-- Charts + Performance + Opportunities + Risks -->
             <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
                 <!-- Charts -->
@@ -163,175 +236,41 @@
                 </div>
             </div>
 
-            <!-- ✅ Performance Analysis -->
-            <div v-if="currentReport.analysis?.performance_analysis"
-                class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
-                <h4 class="text-xl font-semibold text-purple-700 mb-2">
-                    📈 Performance Analysis
-                </h4>
-                <p class="text-gray-700 mb-3 italic">
-                    {{ currentReport.analysis.performance_analysis.scale_info }}
-                </p>
-                <div class="overflow-x-auto mb-4" v-if="currentReport.analysis?.performance_analysis?.raw_data">
-                    <table class="min-w-full text-sm border border-gray-300">
-                        <thead class="bg-purple-100 text-gray-700">
-                            <tr>
-                                <!-- First column header -->
-                                <th class="border px-3 py-2">Time Period</th>
-
-                                <!-- Dynamic headers for each treatment -->
-                                <th v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
-                                    :key="treatment" class="border px-3 py-2 capitalize">
-                                    <!-- Rename control -> Standard Practice -->
-                                    {{
-                                        treatment === "control"
-                                            ? "Standard Practice"
-                                            : treatment.replace(/_/g, " ")
-                                    }}
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <tbody class="text-center text-gray-800">
-                            <!-- Create rows dynamically for each DAA -->
-                            <tr v-for="(daaLabel, index) in Object.keys(
-                                currentReport.analysis.performance_analysis.raw_data.control
-                            )" :key="index">
-                                <!-- DAA label -->
-                                <td class="border px-3 py-2 font-semibold">{{ daaLabel }}</td>
-
-                                <!-- Each treatment’s values -->
-                                <td v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
-                                    :key="treatment" class="border px-3 py-2">
-                                    {{ values[daaLabel] }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- 🔬 Treatment Details -->
-                <div v-if="currentReport.analysis?.treatment_comparison"
-                    class="bg-white border border-purple-200 rounded-lg p-6 mb-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">🔬 Treatment Details</h5>
-                    <hr class="border-t-2 border-gray-400 my-4" />
-                    <div class="flex flex-col md:flex-row justify-between text-gray-800">
-                        <!-- Left: Standard Practice -->
-                        <div class="flex-1 pr-4">
-                            <h6 class="text-lg font-semibold text-green-700 mb-2">
-                                Standard Practice
-                            </h6>
-                            <ul class="space-y-1 text-sm">
-                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
-                                }}</li>
-                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
-                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
-                                </li>
-                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
-                        <!-- Right: Leads Agri Treatment -->
-                        <div class="flex-1 pl-4">
-                            <h6 class="text-lg font-semibold text-purple-700 mb-2">
-                                Leads Agri Treatment
-                            </h6>
-                            <ul class="space-y-1 text-sm">
-                                <li><b>Product:</b> {{
-                                    currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
-                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
-                                </li>
-                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
-                                }}</li>
-                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
-                                }}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Statistical Assessment -->
+            <!-- ✅ Separate Statistical Assessment and Trend Summary below -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <div class="bg-white border border-purple-200 rounded-lg p-4 mb-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">
-                        📏 Statistical Assessment
-                    </h5>
-                    <p>
-                        <b>Significance:</b>
-                        {{
-                            currentReport.analysis.performance_analysis.statistical_assessment
-                                .improvement_significance
-                        }}
+                    <h5 class="font-semibold text-purple-700 mb-2">📏 Statistical Assessment</h5>
+                    <p><b>Significance:</b>
+                        {{ currentReport.analysis.performance_analysis.statistical_assessment.improvement_significance
+                        }}</p>
+                    <p><b>Basis:</b>
+                        {{ currentReport.analysis.performance_analysis.statistical_assessment.significance_basis }}</p>
+                    <p><b>Consistency:</b>
+                        {{ currentReport.analysis.performance_analysis.statistical_assessment.performance_consistency }}
                     </p>
-                    <p>
-                        <b>Basis:</b>
-                        {{
-                            currentReport.analysis.performance_analysis.statistical_assessment
-                                .significance_basis
-                        }}
-                    </p>
-                    <p>
-                        <b>Consistency:</b>
-                        {{
-                            currentReport.analysis.performance_analysis.statistical_assessment
-                                .performance_consistency
-                        }}
-                    </p>
-                    <p>
-                        <b>Confidence Level:</b>
-                        {{
-                            currentReport.analysis.performance_analysis.statistical_assessment
-                                .confidence_level
-                        }}
-                    </p>
+                    <p><b>Confidence Level:</b>
+                        {{ currentReport.analysis.performance_analysis.statistical_assessment.confidence_level }}</p>
                     <p class="italic text-gray-600">
-                        {{
-                            currentReport.analysis.performance_analysis.statistical_assessment
-                                .notes
-                        }}
+                        {{ currentReport.analysis.performance_analysis.statistical_assessment.notes }}
                     </p>
                 </div>
 
-                <!-- Trend Summary -->
                 <div class="bg-white border border-purple-200 rounded-lg p-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">
-                        📈 Trend Analysis
-                    </h5>
+                    <h5 class="font-semibold text-purple-700 mb-2">📈 Trend Analysis</h5>
                     <ul class="list-disc ml-6 text-gray-700">
-                        <li>
-                            <b>Control Trend:</b>
-                            {{
-                                currentReport.analysis.performance_analysis.trend_analysis
-                                    .control_trend
-                            }}
+                        <li><b>Control Trend:</b> {{
+                            currentReport.analysis.performance_analysis.trend_analysis.control_trend }}
                         </li>
-                        <li>
-                            <b>Leads Agri Trend:</b>
-                            {{
-                                currentReport.analysis.performance_analysis.trend_analysis
-                                    .leads_trend
-                            }}
+                        <li><b>Leads Agri Trend:</b> {{
+                            currentReport.analysis.performance_analysis.trend_analysis.leads_trend }}
                         </li>
-                        <li>
-                            <b>Early Performance:</b>
-                            {{
-                                currentReport.analysis.performance_analysis.trend_analysis
-                                    .early_performance
-                            }}
-                        </li>
-                        <li>
-                            <b>Late Performance:</b>
-                            {{
-                                currentReport.analysis.performance_analysis.trend_analysis
-                                    .late_performance
-                            }}
-                        </li>
-                        <li>
-                            <b>Observation:</b>
-                            {{
-                                currentReport.analysis.performance_analysis.trend_analysis
-                                    .key_observation
-                            }}
+                        <li><b>Early Performance:</b> {{
+                            currentReport.analysis.performance_analysis.trend_analysis.early_performance }}</li>
+                        <li><b>Late Performance:</b> {{
+                            currentReport.analysis.performance_analysis.trend_analysis.late_performance
+                            }}</li>
+                        <li><b>Observation:</b> {{
+                            currentReport.analysis.performance_analysis.trend_analysis.key_observation }}
                         </li>
                     </ul>
                 </div>
@@ -524,20 +463,20 @@ const alertIcon = ref("");
 let confirmCallback = null;
 
 function showAlert(type, title, message, onConfirm = null) {
-  alertType.value = type;
-  alertTitle.value = title;
-  alertMessage.value = message;
-  alertVisible.value = true;
-  confirmCallback = onConfirm;
-  alertIcon.value =
-    type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
+    alertType.value = type;
+    alertTitle.value = title;
+    alertMessage.value = message;
+    alertVisible.value = true;
+    confirmCallback = onConfirm;
+    alertIcon.value =
+        type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
 }
 function closeAlert() {
-  alertVisible.value = false;
+    alertVisible.value = false;
 }
 function confirmAction() {
-  if (confirmCallback) confirmCallback();
-  closeAlert();
+    if (confirmCallback) confirmCallback();
+    closeAlert();
 }
 
 watchEffect(() => {
@@ -704,7 +643,7 @@ const exportToPDF = async () => {
         showAlert("success", "Export Successful", "Analyze Report was successfully exported to PDF!");
     } catch (error) {
         console.error("PDF Export Error:", error);
-        showAlert("error","Error exporting PDF: " + (error.message || "Please try again."));
+        showAlert("error", "Error exporting PDF: " + (error.message || "Please try again."));
     } finally {
         isExporting.value = false;
     }
@@ -714,7 +653,7 @@ const isValidReport = computed(() => !!currentReport.value);
 
 const handleExportClick = () => {
     if (!isValidReport.value) {
-        showAlert("warning","⚠️ Please select a valid report before exporting to PDF.");
+        showAlert("warning", "⚠️ Please select a valid report before exporting to PDF.");
         return;
     }
     exportToPDF();
