@@ -60,11 +60,11 @@
 
     <!-- No Results -->
     <div v-else-if="searchPerformed && searchResults.length === 0" class="p-3 text-center text-gray-500 text-sm">
-      No results found for "{{ searchQuery }}"
+      No results found for "{{ lastSearchedQuery }}"
     </div>
 
     <!-- Search Results -->
-    <div v-else>
+    <div v-else-if="searchResults.length > 0" class="max-h-[280px] overflow-y-auto">
       <div v-for="(result, index) in searchResults" :key="result.form_id"
            class="px-4 py-2 hover:bg-green-100 cursor-pointer border-b last:border-b-0"
            @click="selectSearchResult(result)">
@@ -137,6 +137,7 @@ const isSearching = ref(false);
 
 const searchResults = ref([]);
 const searchPerformed = ref(false);
+const lastSearchedQuery = ref(""); // Store the last query that was actually searched
 
 const messages = ref([
   { text: "Hello! How can I help you today?", sender: "ai" },
@@ -191,6 +192,24 @@ function updateSearchBarPosition() {
 
 watch(showSearch, (val) => {
   if (val) updateSearchBarPosition();
+  // Reset search state when closing search
+  if (!val) {
+    searchQuery.value = "";
+    searchResults.value = [];
+    searchPerformed.value = false;
+    lastSearchedQuery.value = "";
+  }
+});
+
+// Watch search query changes to reset search state when user types new text
+watch(searchQuery, (newQuery, oldQuery) => {
+  // Only reset if not currently searching and a search was previously performed
+  if (!isSearching.value && searchPerformed.value) {
+    // Reset search results and performed flag when query changes
+    searchResults.value = [];
+    searchPerformed.value = false;
+    lastSearchedQuery.value = "";
+  }
 });
 
 async function performSearch() {
@@ -199,10 +218,12 @@ async function performSearch() {
   isSearching.value = true;
   searchPerformed.value = false;
   searchResults.value = [];
+  const currentQuery = searchQuery.value.trim();
+  lastSearchedQuery.value = currentQuery; // Store the query being searched
 
   try {
     const response = await axios.post("/api/analysis-search", {
-      query: searchQuery.value.trim(),
+      query: currentQuery,
       top_k: 10,
     });
 
@@ -221,7 +242,7 @@ async function performSearch() {
     emit("searchResults", {
       error: true,
       message: error.response?.data?.error || "Search failed. Please try again.",
-      query: searchQuery.value,
+      query: currentQuery,
     });
   } finally {
     isSearching.value = false;
@@ -233,6 +254,8 @@ function selectSearchResult(result) {
   showSearch.value = false;
   searchQuery.value = "";
   searchResults.value = [];
+  searchPerformed.value = false;
+  lastSearchedQuery.value = "";
 }
 
 // Transform search results to match the analysis data format used in dashboard

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class ReportPDFController extends Controller
 {
@@ -12,7 +13,7 @@ class ReportPDFController extends Controller
         try {
             // Check if GD extension is installed
             if (!extension_loaded('gd')) {
-                \Log::error('PHP GD extension is not installed. PDF export requires GD extension.');
+                Log::error('PHP GD extension is not installed. PDF export requires GD extension.');
                 return response()->json([
                     'error' => 'PDF export requires PHP GD extension. Please install/enable the GD extension in your PHP configuration.',
                     'details' => 'The GD extension is needed to process images in PDF files.'
@@ -48,7 +49,7 @@ class ReportPDFController extends Controller
 
             return $pdf->download($filename);
         } catch (\Exception $e) {
-            \Log::error('PDF Export Error: ' . $e->getMessage());
+            Log::error('PDF Export Error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to generate PDF: ' . $e->getMessage(),
                 'details' => 'Please check server logs for more details.'

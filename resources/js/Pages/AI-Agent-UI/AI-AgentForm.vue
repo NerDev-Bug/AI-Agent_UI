@@ -144,7 +144,7 @@
 
     <!-- Navbar -->
     <div>
-      <Navbarheader />
+      <Navbarheader @searchResults="handleSearchResults" />
     </div>
 
     <!-- Context -->
@@ -481,6 +481,67 @@ function deleteFile() {
       showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
     }
   );
+}
+
+// ✅ Handle search results from Header component
+function handleSearchResults(searchResult) {
+  console.log("🔍 Search result received:", searchResult);
+  
+  // Check if it's an error
+  if (searchResult && searchResult.error) {
+    console.error("❌ Search error:", searchResult.message);
+    showAlert("error", "Search Failed", searchResult.message || "No results found.");
+    return;
+  }
+
+  // Check if search result has the required structure
+  if (!searchResult || (!searchResult.analysis && !searchResult._searchResults)) {
+    console.warn("⚠️ Invalid search result structure:", searchResult);
+    // Don't show alert for initial search (when _searchResults exists)
+    if (!searchResult || !searchResult._searchResults) {
+      showAlert("warning", "Invalid Result", "The search result format is invalid.");
+    }
+    return;
+  }
+
+  // ✅ PRIORITY: If it's multiple results (from initial search), do nothing
+  // This means user just performed a search - only show results in dropdown
+  // The user needs to click on a specific result to load it
+  if (searchResult._searchResults) {
+    console.log("📋 Multiple search results available, waiting for user selection...");
+    // Do NOT process or display anything - just show results in dropdown
+    return;
+  }
+
+  // ✅ If it's a single result (from clicking on a search result item)
+  // This means user clicked on a specific result from the dropdown
+  if (searchResult.analysis) {
+    // Ensure the result has all required fields
+    const formattedResult = {
+      form_id: searchResult.form_id || `search_${Date.now()}`,
+      file_name: searchResult.file_name || "Search Result",
+      form_type: searchResult.form_type || "Search Result",
+      report_number: searchResult.report_number || 1,
+      analysis: searchResult.analysis,
+      graph_suggestions: searchResult.graph_suggestions || { suggested_charts: [] },
+      ...searchResult // Include any other properties
+    };
+    
+    // Set the analysis data to display in AI-AgentContext
+    analysisData.value = formattedResult;
+    isSaved.value = true; // Assume search results are from saved analyses
+    
+    // Scroll to dashboard section
+    setTimeout(() => {
+      const dashboardSection = document.getElementById("AI-AgentContext");
+      if (dashboardSection) {
+        dashboardSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 100);
+    
+    console.log("✅ Search result loaded:", analysisData.value);
+    showAlert("success", "Result Loaded", "Search result has been loaded successfully!");
+  }
 }
 
 </script>
