@@ -125,8 +125,8 @@
               </button>
             </div>
 
-            <!-- Save & Reanalyze (only show for actual analysis, not search results) -->
-            <div v-else-if="isAnalyzed && !isUploading && !isSearchResult" key="save-reanalyze"
+            <!-- Save & Reanalyze -->
+            <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
               class="flex items-center justify-center gap-4 mt-4 relative z-50">
               <button @click="saveAnalysis"
                 class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
@@ -144,7 +144,7 @@
 
     <!-- Navbar -->
     <div>
-      <Navbarheader @searchResults="handleSearchResults" />
+      <Navbarheader />
     </div>
 
     <!-- Context -->
@@ -195,7 +195,6 @@ const isDragging = ref(false);
 const isUploading = ref(false);
 const isAnalyzed = ref(false);
 const isSaved = ref(false); // Track if analysis has been saved (for Export PDF button)
-const isSearchResult = ref(false); // Track if current data is from search (not actual analysis)
 const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
@@ -354,7 +353,6 @@ async function startAnalysis() {
     }
 
     isAnalyzed.value = true;
-    isSearchResult.value = false; // This is actual analysis, not search
     isSaved.value = false; // Reset saved state when new analysis is done
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
 
@@ -488,7 +486,6 @@ function deleteFile() {
       uploadedFile.value = null;
       uploadedFileURL.value = null;
       isAnalyzed.value = false;
-      isSearchResult.value = false; // Reset search result flag
       isSaved.value = false; // Reset saved state when deleting file
       analysisData.value = null;
       cacheId.value = null; // Clear cache_id when deleting
@@ -500,25 +497,6 @@ function deleteFile() {
       showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
     }
   );
-}
-
-// Handle search results from Header
-function handleSearchResults(searchData) {
-  console.log("🔍 Search results received:", searchData);
-  
-  if (searchData.error) {
-    showAlert("error", "Search Failed", searchData.message || "No results found for your search.");
-    return;
-  }
-  
-  // Don't display search results - just show message
-  // Clear any existing analysis data
-  analysisData.value = null;
-  isAnalyzed.value = false;
-  isSearchResult.value = false;
-  
-  // Show success message only
-  showAlert("success", "Search Complete", `Found ${searchData._totalResults || 1} result(s) for: "${searchData._searchQuery || 'your query'}"`);
 }
 
 </script>

@@ -2,18 +2,7 @@
     <div class="min-h-screen">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center gap-3">
-                <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials Result</h2>
-                <span
-                    v-if="currentReport?._isSearchResult"
-                    class="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-semibold flex items-center gap-2"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                    </svg>
-                    Search Result
-                </span>
-            </div>
+            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
         </div>
 
         <!-- Select and Export -->
@@ -36,10 +25,19 @@
                 </button>
             </div>
 
+            <div class="ml-auto" v-if="uniqueApplicants.length > 1">
+                <label class="block text-sm text-black mb-1">Select Applicant:</label>
+                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
+                    <option value="">-- Choose Applicant --</option>
+                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
+                        {{ app }}
+                    </option>
+                </select>
+            </div>
         </div>
 
         <!-- Report Display -->
-        <div v-if="currentReport" :key="currentReport.form_id + (currentReport._searchQuery || '')" class="p-2 space-y-8">
+        <div v-if="currentReport && applicant" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -486,36 +484,15 @@ function confirmAction() {
 watchEffect(() => {
     console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
     console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
-    console.log("🔍 Is search result:", props.analysisData?._isSearchResult);
-    console.log("🔍 Form ID:", props.analysisData?.form_id);
 
     if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
         console.log("⚠️ AnalysisData is empty, returning early");
-        // Clear current report if data is empty
-        if (currentReport.value) {
-            currentReport.value = null;
-            applicant.value = "";
-            chartMap.value = {};
-        }
         return;
     }
 
     try {
         const rep = props.analysisData;
-        const newFormId = rep.form_id;
-        const currentFormId = currentReport.value?.form_id;
-        
-        console.log("📋 Processing report with form_id:", newFormId);
-        console.log("📋 Current report form_id:", currentFormId);
-        
-        // If it's a different report (different form_id), clear previous data
-        if (currentFormId && currentFormId !== newFormId) {
-            console.log("🔄 Different report detected, clearing previous data");
-            // Clear chart map for old report
-            if (chartMap.value[currentFormId]) {
-                delete chartMap.value[currentFormId];
-            }
-        }
+        console.log("📋 Processing report with form_id:", rep.form_id);
 
         // 🧩 Build chart map for the received report
         const charts = rep.graph_suggestions?.suggested_charts || [];
@@ -548,28 +525,14 @@ watchEffect(() => {
             };
         });
 
-        // ✅ Update state dynamically - SIMPLIFIED
-        // Clear previous data first
-        chartMap.value = {};
-        currentReport.value = null;
-        
-        // Set applicant
+        // ✅ Update state dynamically
+        currentReport.value = rep;
         applicant.value = rep.analysis?.basic_info?.applicant || "";
-        
-        // Set current report - Force update by creating DEEP CLONE
-        currentReport.value = JSON.parse(JSON.stringify(rep));
-        
         isLoading.value = false;
         error.value = null;
         console.log("✅ Current report set:", currentReport.value);
-        console.log("✅ Report form_id:", currentReport.value?.form_id);
-        console.log("✅ Report applicant:", currentReport.value?.analysis?.basic_info?.applicant);
         console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
         console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
-        if (rep._isSearchResult) {
-            console.log("✅ Search result with", rep._totalResults || 0, "total results");
-            console.log("✅ Search query:", rep._searchQuery);
-        }
     } catch (err) {
         error.value = err.message;
         isLoading.value = false;
@@ -584,6 +547,17 @@ const uniqueApplicants = computed(() => {
     return [...new Set(apps)];
 });
 
+// Automatically select the first applicant when there's only one
+watch(uniqueApplicants, (apps) => {
+    if (apps.length === 1) {
+        applicant.value = apps[0];
+        const match = reports.value.find(
+            (r) => r.analysis?.basic_info?.applicant === apps[0]
+        );
+        currentReport.value = match || null;
+    }
+});
+
 const improvementValue = computed(() => {
     return (
         currentReport.value?.analysis?.performance_analysis?.calculated_metrics
@@ -591,11 +565,6 @@ const improvementValue = computed(() => {
     );
 });
 watch(applicant, (newApplicant) => {
-    // Skip applicant watch for search results
-    if (currentReport.value?._isSearchResult) {
-        return;
-    }
-    
     if (!newApplicant) {
         currentReport.value = null;
         localStorage.removeItem("applicant");
@@ -699,7 +668,6 @@ watch(isExporting, (newVal) => {
         document.body.style.overflow = ''; // restore scroll
     }
 });
-
 
 
 </script>
