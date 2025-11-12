@@ -55,6 +55,7 @@
                     <li><b>Product:</b> {{ currentReport.analysis.basic_info.product }}</li>
                     <li><b>Location:</b> {{ currentReport.analysis.basic_info.location }}</li>
                     <li><b>Crop:</b> {{ currentReport.analysis.basic_info.crop }}</li>
+                    <li><b>Plot Size:</b> {{ currentReport.analysis.basic_info.plot_size }}</li>
                     <li><b>Planting Date:</b> {{ currentReport.analysis.basic_info.planting_date }}</li>
                 </ul>
             </div>
