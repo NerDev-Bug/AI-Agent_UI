@@ -60,7 +60,7 @@ class FastAPIController extends Controller
             // FastAPI backend requires X-API-Key header (see src/deps/security.py)
             $response = Http::withHeaders([
                 'X-API-Key' => $apiKey,
-            ])->timeout(300) // 5 minutes timeout for file analysis
+            ])->timeout(6000) // 5 minutes timeout for file analysis
               ->attach('file', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
               ->post($analyzeUrl);
 
@@ -140,6 +140,58 @@ class FastAPIController extends Controller
             Log::error('AI Agent confirm-analysis error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to connect to analysis service',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Proxy analysis search request to FastAPI
+     */
+    public function analysisSearch(Request $request)
+    {
+        try {
+            // Get base URL and remove /api/agent if present
+            $baseUrl = $this->getAnalyzeUrl();
+            $baseUrl = preg_replace('/\/api\/agent$/', '', $baseUrl);
+            $apiKey = $this->getApiKey();
+
+            // Validate request
+            $request->validate([
+                'query' => 'required|string|min:1',
+                'top_k' => 'sometimes|integer|min:1|max:50'
+            ]);
+
+            $searchUrl = "{$baseUrl}/api/analysis-search";
+            
+            // Send search request to FastAPI with API key authentication
+            $response = Http::withHeaders([
+                'X-API-Key' => $apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(30) // 30 seconds timeout for search
+              ->post($searchUrl, [
+                  'query' => $request->input('query'),
+                  'top_k' => $request->input('top_k', 10)
+              ]);
+
+            if ($response->successful()) {
+                return response()->json($response->json());
+            }
+
+            return response()->json([
+                'error' => $response->json()['detail'] ?? 'Search failed',
+                'status' => $response->status()
+            ], $response->status());
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'messages' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            Log::error('AI Agent analysis-search error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to connect to search service',
                 'message' => $e->getMessage()
             ], 500);
         }

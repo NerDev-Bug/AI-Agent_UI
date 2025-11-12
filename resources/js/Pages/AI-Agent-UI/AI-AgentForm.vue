@@ -144,7 +144,7 @@
 
     <!-- Navbar -->
     <div>
-      <Navbarheader />
+      <Navbarheader @searchResults="handleSearchResults" />
     </div>
 
     <!-- Context -->
@@ -497,6 +497,24 @@ function deleteFile() {
       showAlert("success", "Deleted!", "The uploaded file has been removed successfully.");
     }
   );
+}
+
+// Handle search results from Header
+function handleSearchResults(searchData) {
+  console.log("🔍 Search results received:", searchData);
+  
+  if (searchData.error) {
+    showAlert("error", "Search Failed", searchData.message || "No results found for your search.");
+    return;
+  }
+  
+  // Set the search result as analysis data to display in dashboard
+  analysisData.value = searchData;
+  isAnalyzed.value = true; // Show as analyzed so dashboard displays it
+  isSaved.value = false; // Search results are not saved
+  
+  // Show success message
+  showAlert("success", "Search Complete", `Found results for: "${searchData._searchQuery || 'your query'}"`);
 }
 
 </script>

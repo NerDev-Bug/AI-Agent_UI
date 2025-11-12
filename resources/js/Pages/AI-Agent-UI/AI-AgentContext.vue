@@ -2,7 +2,18 @@
     <div class="min-h-screen">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
+            <div class="flex items-center gap-3">
+                <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
+                <span
+                    v-if="currentReport?._isSearchResult"
+                    class="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-semibold flex items-center gap-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                    </svg>
+                    Search Result
+                </span>
+            </div>
         </div>
 
         <!-- Select and Export -->
@@ -25,7 +36,19 @@
                 </button>
             </div>
 
-            <div class="ml-auto" v-if="uniqueApplicants.length > 1">
+            <!-- Search Results Selector (if search result with multiple results) -->
+            <div class="ml-auto" v-if="currentReport?._isSearchResult && currentReport?._searchResults && currentReport._searchResults.length > 1">
+                <label class="block text-sm text-black mb-1">Select Search Result:</label>
+                <select v-model="selectedSearchIndex" @change="onSearchResultChange" class="p-2 rounded-md w-72" :disabled="!currentReport">
+                    <option v-for="(result, index) in currentReport._searchResults" :key="result.form_id" :value="index">
+                        {{ result.file_name || `${result.analysis?.basic_info?.product || 'Result'} - ${result.analysis?.basic_info?.location || ''}` }} 
+                        (Score: {{ (result._searchScore * 100).toFixed(1) }}%)
+                    </option>
+                </select>
+            </div>
+
+            <!-- Applicant Selector (for regular analysis, not search) -->
+            <div class="ml-auto" v-else-if="uniqueApplicants.length > 1 && !currentReport?._isSearchResult">
                 <label class="block text-sm text-black mb-1">Select Applicant:</label>
                 <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
                     <option value="">-- Choose Applicant --</option>
@@ -37,7 +60,7 @@
         </div>
 
         <!-- Report Display -->
-        <div v-if="currentReport && applicant" class="p-2 space-y-8">
+        <div v-if="currentReport && (applicant || currentReport?._isSearchResult)" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -455,6 +478,7 @@ const error = ref(null);
 const chartMap = ref({});
 const currentReport = ref(null);
 const isExporting = ref(false);
+const selectedSearchIndex = ref(0); // For search results selector
 
 // 🧩 Custom Alert System
 const alertVisible = ref(false);
@@ -528,11 +552,24 @@ watchEffect(() => {
         // ✅ Update state dynamically
         currentReport.value = rep;
         applicant.value = rep.analysis?.basic_info?.applicant || "";
+        
+        // Reset search index if it's a new search result
+        if (rep._isSearchResult && rep._searchResults) {
+            selectedSearchIndex.value = 0; // Default to first result
+            // For search results, set applicant to empty or use product name so it displays
+            if (!applicant.value && rep.analysis?.basic_info?.product) {
+                applicant.value = rep.analysis.basic_info.product;
+            }
+        }
+        
         isLoading.value = false;
         error.value = null;
         console.log("✅ Current report set:", currentReport.value);
         console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
         console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
+        if (rep._isSearchResult) {
+            console.log("✅ Search result with", rep._totalResults || 0, "total results");
+        }
     } catch (err) {
         error.value = err.message;
         isLoading.value = false;
@@ -668,6 +705,52 @@ watch(isExporting, (newVal) => {
         document.body.style.overflow = ''; // restore scroll
     }
 });
+
+// Handle search result selection change
+function onSearchResultChange() {
+    if (!currentReport.value?._isSearchResult || !currentReport.value._searchResults) return;
+    
+    const selectedResult = currentReport.value._searchResults[selectedSearchIndex.value];
+    if (!selectedResult) return;
+    
+    // Update current report to selected search result
+    currentReport.value = selectedResult;
+    
+    // Rebuild chart map for the selected result
+    const charts = selectedResult.graph_suggestions?.suggested_charts || [];
+    chartMap.value[selectedResult.form_id] = charts.map((chart) => {
+        let component;
+        const type = chart.chart_type?.toLowerCase() || "";
+        if (type.includes("line")) component = Line;
+        else if (type.includes("horizontal_bar")) component = Bar;
+        else if (type.includes("bar")) component = Bar;
+        else if (type.includes("pie")) component = Pie;
+        else if (type.includes("doughnut")) component = Pie;
+        else if (type.includes("radar")) component = Radar;
+        else if (type.includes("polar")) component = PolarArea;
+        else if (type.includes("scatter")) component = Scatter;
+        else if (type.includes("bubble")) component = Bubble;
+        else component = Bar;
+
+        let options = chart.chart_options || {};
+        if (type.includes("horizontal_bar")) {
+            options = { ...options, indexAxis: "y" };
+        }
+
+        return {
+            title: chart.title,
+            description: chart.description,
+            component,
+            chart_data: chart.chart_data,
+            chart_options: options,
+        };
+    });
+    
+    // Update applicant
+    applicant.value = selectedResult.analysis?.basic_info?.applicant || "";
+    
+    console.log("🔄 Switched to search result #", selectedSearchIndex.value);
+}
 
 
 </script>

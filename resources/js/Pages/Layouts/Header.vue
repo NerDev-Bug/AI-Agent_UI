@@ -40,13 +40,61 @@
 
   <!-- Search Input -->
   <div v-if="showSearch" class="absolute z-50" :style="searchBarStyle">
-    <input
-      type="text"
-      v-model="searchQuery"
-      placeholder="Type to search..."
-      class="w-[250px] rounded-full text-black outline-none shadow-md"
-    />
+    <div class="flex items-center gap-2 bg-white rounded-full shadow-lg border-2 border-green-500 p-2">
+      <input
+        type="text"
+        v-model="searchQuery"
+        @keyup.enter="performSearch"
+        placeholder="Search analysis reports..."
+        class="w-[300px] rounded-full text-black outline-none px-4 py-2"
+      />
+      <button
+        @click="performSearch"
+        :disabled="isSearching || !searchQuery.trim()"
+        class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+      >
+        <svg
+          v-if="!isSearching"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-5 h-5"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+          />
+        </svg>
+        <svg
+          v-else
+          class="animate-spin h-5 w-5"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            class="opacity-25"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            stroke-width="4"
+          ></circle>
+          <path
+            class="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+          ></path>
+        </svg>
+        <span v-if="!isSearching">Search</span>
+        <span v-else>Searching...</span>
+      </button>
+    </div>
   </div>
+
 
   <!-- Chat Container -->
   <div class="fixed bottom-6 right-6 flex flex-col items-end gap-4 z-50">
@@ -107,6 +155,10 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import axios from "axios";
+
+// Define emits for parent component
+const emit = defineEmits(["searchResults"]);
 
 const showSearch = ref(false);
 const searchQuery = ref("");
@@ -114,6 +166,7 @@ const searchBtn = ref(null);
 const searchBarStyle = ref({});
 const activeSection = ref("home");
 const showChat = ref(false);
+const isSearching = ref(false);
 
 const messages = ref([
   { text: "Hello! How can I help you today?", sender: "ai" },
@@ -169,6 +222,131 @@ function updateSearchBarPosition() {
 watch(showSearch, (val) => {
   if (val) updateSearchBarPosition();
 });
+
+// Search functionality
+async function performSearch() {
+  if (!searchQuery.value.trim() || isSearching.value) return;
+
+  isSearching.value = true;
+  showSearch.value = false; // Close search input
+
+  try {
+    const response = await axios.post("/api/analysis-search", {
+      query: searchQuery.value.trim(),
+      top_k: 10,
+    });
+
+    // Transform search results to match analysis data format
+    const searchData = transformSearchResultsToAnalysisData(response.data);
+    
+    // Emit search results to parent component
+    emit("searchResults", searchData);
+    
+    // Scroll to dashboard section
+    scrollToSection("dashboard");
+    
+    // Clear search query
+    searchQuery.value = "";
+  } catch (error) {
+    console.error("Search error:", error);
+    // Emit error state
+    emit("searchResults", {
+      error: true,
+      message: error.response?.data?.error || "Search failed. Please try again.",
+      query: searchQuery.value,
+    });
+  } finally {
+    isSearching.value = false;
+  }
+}
+
+// Transform search results to match the analysis data format used in dashboard
+// Note: full_analysis from search is the EXACT same JSON structure saved in database
+// Returns ALL search results transformed, not just the first one
+function transformSearchResultsToAnalysisData(searchResponse) {
+  if (!searchResponse.results || searchResponse.results.length === 0) {
+    return {
+      error: true,
+      message: searchResponse.message || "No results found",
+      query: searchResponse.query,
+    };
+  }
+
+  // Transform ALL search results, not just the first one
+  const transformedResults = searchResponse.results.map((result, index) => {
+    // full_analysis is the EXACT same JSON structure that was saved
+    // It already has the complete analysis structure (basic_info, performance_analysis, etc.)
+    if (result.full_analysis && typeof result.full_analysis === 'object' && Object.keys(result.full_analysis).length > 0) {
+      // full_analysis is already the complete analysis object, just wrap it with metadata
+      return {
+        form_id: result.id || `search_${Date.now()}_${index}`,
+        file_name: `${result.product || "Search Result"} - ${result.location || ""}`,
+        form_type: result.form_type || "Search Result",
+        report_number: result.report_number || (index + 1),
+        // full_analysis is the EXACT saved JSON - same format as analysis from upload
+        analysis: result.full_analysis,
+        graph_suggestions: result.graph_suggestions || { suggested_charts: [] },
+        _searchScore: result.score || 0,
+        _searchIndex: index,
+      };
+    }
+    
+    // Fallback: If full_analysis is missing (shouldn't happen if data was saved properly)
+    console.warn(`⚠️ Search result #${index} missing full_analysis, using fallback structure`);
+    return {
+      form_id: result.id || `search_${Date.now()}_${index}`,
+      file_name: `${result.product || "Search Result"} - ${result.location || ""}`,
+      form_type: result.form_type || "Search Result",
+      report_number: result.report_number || (index + 1),
+      analysis: {
+        basic_info: {
+          applicant: result.product || "",
+          application_date: "",
+          cooperator: result.cooperator || "",
+          product: result.product || "",
+          location: result.location || "",
+          crop: result.crop || "",
+          plot_size: "",
+          planting_date: "",
+        },
+        performance_analysis: {
+          calculated_metrics: {
+            control_average: result.control_average || 0,
+            leads_average: result.leads_average || 0,
+            absolute_difference: (result.leads_average || 0) - (result.control_average || 0),
+            relative_improvement_percent: result.improvement_percent || 0,
+          },
+          statistical_assessment: {
+            improvement_significance: result.performance_significance || "moderate",
+            significance_basis: "",
+            performance_consistency: "medium",
+            confidence_level: "medium",
+          },
+          scale_info: "",
+          raw_data: {},
+          trend_analysis: {},
+        },
+        treatment_comparison: {},
+        executive_summary: result.executive_summary || result.summary || "",
+        opportunities: [],
+        risk_factors: [],
+        recommendations: [],
+      },
+      graph_suggestions: result.graph_suggestions || { suggested_charts: [] },
+      _searchScore: result.score || 0,
+      _searchIndex: index,
+    };
+  });
+
+  // Return the first result as default, but include all results for selection
+  return {
+    ...transformedResults[0], // Default to first result (highest score)
+    _searchResults: transformedResults, // All transformed results for selection
+    _isSearchResult: true,
+    _searchQuery: searchResponse.query,
+    _totalResults: transformedResults.length,
+  };
+}
 
 onMounted(() => {
   window.addEventListener("resize", () => {
