@@ -2,7 +2,7 @@
     <div class="min-h-screen">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials Result</h2>
+            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials Result:</h2>
         </div>
 
         <!-- Select and Export -->
