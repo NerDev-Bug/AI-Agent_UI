@@ -27,33 +27,54 @@
     </button>
   </nav>
 
+  <!-- Search Input + Dropdown Panel -->
+<div v-if="showSearch" class="absolute z-50" :style="searchBarStyle">
   <!-- Search Input -->
-  <div v-if="showSearch" class="absolute z-50" :style="searchBarStyle">
-    <div class="flex items-center gap-2 bg-white rounded-full shadow-lg border-2 p-2"
-      :class="isSearching ? 'border-blue-500' : 'border-green-500'">
-      <input type="text" v-model="searchQuery" @keyup.enter="performSearch" placeholder="Search analysis reports..."
-        :disabled="isSearching"
-        class="w-[300px] rounded-full text-black outline-none px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed" />
-      <button @click="performSearch" :disabled="isSearching || !searchQuery.trim()"
-        class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-        <svg v-if="!isSearching" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-          stroke="currentColor" class="w-5 h-5">
-          <path stroke-linecap="round" stroke-linejoin="round"
-            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-        </svg>
-        <svg v-else class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-        </svg>
-        <span v-if="!isSearching">Search</span>
-        <span v-else>Searching...</span>
-      </button>
+  <div class="flex items-center gap-2 bg-white rounded-full shadow-lg border-2 p-2"
+       :class="isSearching ? 'border-blue-500' : 'border-green-500'">
+    <input type="text" v-model="searchQuery" @keyup.enter="performSearch" placeholder="Search analysis reports..."
+           :disabled="isSearching"
+           class="w-[300px] rounded-full text-black outline-none px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed" />
+    <button @click="performSearch" :disabled="isSearching || !searchQuery.trim()"
+            class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+      <svg v-if="!isSearching" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+           stroke="currentColor" class="w-5 h-5">
+        <path stroke-linecap="round" stroke-linejoin="round"
+              d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+      </svg>
+      <svg v-else class="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+      </svg>
+      <span v-if="!isSearching">Search</span>
+      <span v-else>Searching...</span>
+    </button>
+  </div>
+
+  <!-- Dropdown Panel -->
+  <div class="mt-2 w-[350px] bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
+    <!-- Loading State -->
+    <div v-if="isSearching" class="p-3 text-center">
+      <p class="text-blue-600 font-medium animate-pulse text-sm">Searching for results...</p>
     </div>
-    <!-- Loading indicator below search bar -->
-    <div v-if="isSearching" class="mt-2 text-center">
-      <p class="text-sm text-blue-600 font-medium animate-pulse">Searching for results...</p>
+
+    <!-- No Results -->
+    <div v-else-if="searchPerformed && searchResults.length === 0" class="p-3 text-center text-gray-500 text-sm">
+      No results found for "{{ searchQuery }}"
+    </div>
+
+    <!-- Search Results -->
+    <div v-else>
+      <div v-for="(result, index) in searchResults" :key="result.form_id"
+           class="px-4 py-2 hover:bg-green-100 cursor-pointer border-b last:border-b-0"
+           @click="selectSearchResult(result)">
+        <p class="font-semibold text-black">{{ result.analysis.basic_info.applicant || result.file_name }}</p>
+        <p class="text-sm text-gray-600">{{ result.analysis.basic_info.product || result.form_type }} • Score: {{ result._searchScore }}</p>
+      </div>
     </div>
   </div>
+</div>
+
 
 
   <!-- Chat Container -->
@@ -70,11 +91,11 @@
       <!-- Messages -->
       <div ref="chatBody" class="flex-1 overflow-y-auto p-4 bg-white flex flex-col space-y-3">
         <div v-for="(msg, index) in messages" :key="index" :class="[
-      'p-3 rounded-2xl max-w-[75%] break-words',
-      msg.sender === 'ai'
-        ? 'bg-gray-200 text-gray-800 self-start ml-2'
-        : 'bg-green-500 text-white self-end mr-2'
-    ]">
+          'p-3 rounded-2xl max-w-[75%] break-words',
+          msg.sender === 'ai'
+            ? 'bg-gray-200 text-gray-800 self-start ml-2'
+            : 'bg-green-500 text-white self-end mr-2'
+        ]">
           {{ msg.text }}
         </div>
       </div>
@@ -113,6 +134,9 @@ const searchBarStyle = ref({});
 const activeSection = ref("home");
 const showChat = ref(false);
 const isSearching = ref(false);
+
+const searchResults = ref([]);
+const searchPerformed = ref(false);
 
 const messages = ref([
   { text: "Hello! How can I help you today?", sender: "ai" },
@@ -169,12 +193,12 @@ watch(showSearch, (val) => {
   if (val) updateSearchBarPosition();
 });
 
-// Search functionality
 async function performSearch() {
   if (!searchQuery.value.trim() || isSearching.value) return;
 
   isSearching.value = true;
-  // Keep search bar visible during loading - don't close it yet
+  searchPerformed.value = false;
+  searchResults.value = [];
 
   try {
     const response = await axios.post("/api/analysis-search", {
@@ -182,30 +206,33 @@ async function performSearch() {
       top_k: 10,
     });
 
-    // Transform search results to match analysis data format
     const searchData = transformSearchResultsToAnalysisData(response.data);
 
-    // Emit search results to parent component
+    if (searchData._searchResults) {
+      searchResults.value = searchData._searchResults;
+    }
+
     emit("searchResults", searchData);
-
-    // Don't scroll to dashboard - no display needed
-
-    // Close search bar and clear query only after successful search
-    showSearch.value = false;
-    searchQuery.value = "";
+    searchPerformed.value = true;
   } catch (error) {
     console.error("Search error:", error);
-    // Emit error state
+    searchPerformed.value = true;
+    searchResults.value = [];
     emit("searchResults", {
       error: true,
       message: error.response?.data?.error || "Search failed. Please try again.",
       query: searchQuery.value,
     });
-    // Keep search bar open on error so user can retry
-    // Don't close it, just show the error
   } finally {
     isSearching.value = false;
   }
+}
+
+function selectSearchResult(result) {
+  emit("searchResults", result);
+  showSearch.value = false;
+  searchQuery.value = "";
+  searchResults.value = [];
 }
 
 // Transform search results to match the analysis data format used in dashboard
@@ -297,7 +324,7 @@ function transformSearchResultsToAnalysisData(searchResponse) {
   console.log("🔍 First result applicant:", firstResult?.analysis?.basic_info?.applicant);
   console.log("🔍 First result form_id:", firstResult?.form_id);
   console.log("🔍 First result score:", firstResult?._searchScore);
-  
+
   // Return the first result as default (should be highest score from backend)
   // Include all results for selection dropdown
   return {

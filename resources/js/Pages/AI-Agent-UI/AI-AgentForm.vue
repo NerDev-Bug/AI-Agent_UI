@@ -443,12 +443,6 @@ async function saveAnalysis() {
         // 🟢 Step 4: Show success alert
         showAlert("success", "Saved Successfully!", "Your analysis has been saved successfully! You can now export to PDF.");
 
-        // After save:
-        // - Success message disappears (showSuccessMessage = false)
-        // - UI goes back to original state with "Analyze Form" button (isAnalyzed = false)
-        // - Export PDF button appears (isSaved = true)
-        // - File remains uploaded so user can see what was analyzed
-
       } catch (err) {
         console.error("❌ Save error:", err);
         showAlert("error", "Save Failed", getErrorMessage(err));
@@ -458,16 +452,6 @@ async function saveAnalysis() {
     }
   );
 }
-
-// function startAnalysis() {
-//   isAnalyzed.value = true;
-// }
-
-// function reanalyze() {
-//   isAnalyzed.value = false;
-//   uploadedFile.value = null;
-//   uploadedFileURL.value = null;
-// }
 
 function viewFile() {
   if (uploadedFileURL.value) {
