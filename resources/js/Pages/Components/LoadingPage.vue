@@ -3,7 +3,7 @@
         <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-12 w-[400px] h-auto rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
                 <div class="relative w-full h-40">
-                    <div class="absolute bottom-0 left-0 w-full h-4 bg-green-700 rounded-full"></div>
+                    <!-- <div class="absolute bottom-0 left-0 w-full h-4 bg-green-700 rounded-full"></div> -->
 
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         <div class="w-2 h-6 bg-green-500 rounded-full origin-bottom animate-grow delay-[0ms]"></div>

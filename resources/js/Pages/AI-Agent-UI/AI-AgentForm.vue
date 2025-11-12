@@ -307,10 +307,19 @@ async function startAnalysis() {
 
   // Simulate smooth progress
   progressInterval = setInterval(() => {
-    if (loadingProgress.value < 90) {
-      loadingProgress.value += Math.random() * 5; // simulate increase
+  if (loadingProgress.value < 99) { // stop before 100%
+    if (loadingProgress.value < 50) {
+      loadingProgress.value += Math.random() * 1.5; // slow progress 1-50%
+    } else if (loadingProgress.value < 80) {
+      loadingProgress.value += Math.random() * 3;   // medium speed 50-80%
+    } else if (loadingProgress.value < 95) {
+      loadingProgress.value += Math.random() * 1.5; // slow down 80-95%
+    } else {
+      loadingProgress.value += Math.random() * 0.5; // almost stop 95-99%
     }
-  }, 400);
+  }
+}, 300); // slightly faster interval for smoother animation
+
 
   isUploading.value = true;
   try {

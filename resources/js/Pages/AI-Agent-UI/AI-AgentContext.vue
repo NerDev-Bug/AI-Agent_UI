@@ -156,7 +156,7 @@
                     </p>
 
                     <div class="overflow-x-auto mb-4" v-if="currentReport.analysis?.performance_analysis?.raw_data">
-                        <table class="min-w-full text-sm border border-gray-300">
+                        <table class="min-w-full text-md border border-gray-300">
                             <thead class="bg-purple-100 text-gray-700">
                                 <tr>
                                     <th class="border px-3 py-2">Time Period</th>
@@ -211,7 +211,8 @@
                             </ul>
                         </div>
                     </div>
-                    <p>{{ currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
+                    <br>
+                    <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">{{ currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
                 </div>
             </div>
 
