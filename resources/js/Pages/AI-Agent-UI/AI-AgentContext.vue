@@ -3,7 +3,7 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <div class="flex items-center gap-3">
-                <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
+                <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials Result</h2>
                 <span
                     v-if="currentReport?._isSearchResult"
                     class="px-3 py-1 bg-blue-500 text-white rounded-full text-sm font-semibold flex items-center gap-2"
