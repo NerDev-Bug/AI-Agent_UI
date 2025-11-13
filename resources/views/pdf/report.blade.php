@@ -215,6 +215,7 @@
         <p><strong>Product:</strong> {{ $report['analysis']['basic_info']['product'] ?? '-' }}</p>
         <p><strong>Location:</strong> {{ $report['analysis']['basic_info']['location'] ?? '-' }}</p>
         <p><strong>Crop:</strong> {{ $report['analysis']['basic_info']['crop'] ?? '-' }}</p>      
+        <p><strong>Plot size:</strong> {{ $report['analysis']['basic_info']['plot_size'] ?? '-' }}</p>
         <p><strong>Planting Date:</strong> {{ $report['analysis']['basic_info']['planting_date'] ?? '-' }}</p>
       </div>
     </div>
