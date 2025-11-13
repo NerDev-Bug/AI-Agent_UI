@@ -401,7 +401,41 @@
 <script setup>
 import LoadingOverlay from "../Components/LoadingOverlay.vue";
 import { ref, watchEffect, computed, watch } from "vue";
-import ApexCharts from "vue3-apexcharts";
+import {
+    Line,
+    Bar,
+    Pie,
+    Radar,
+    PolarArea,
+    Scatter,
+    Bubble,
+} from "vue-chartjs";
+import {
+    Chart as ChartJS,
+    Title,
+    Tooltip,
+    Legend,
+    LineElement,
+    BarElement,
+    ArcElement,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    RadialLinearScale,
+} from "chart.js";
+
+ChartJS.register(
+    Title,
+    Tooltip,
+    Legend,
+    LineElement,
+    BarElement,
+    ArcElement,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    RadialLinearScale
+);
 
 const props = defineProps({
     analysisData: {
@@ -448,50 +482,68 @@ function confirmAction() {
 }
 
 watchEffect(() => {
-    if (!props.analysisData || Object.keys(props.analysisData).length === 0) return;
+    console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
+    console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
+
+    if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
+        console.log("⚠️ AnalysisData is empty, returning early");
+        return;
+    }
 
     try {
         const rep = props.analysisData;
-        const charts = rep.graph_suggestions?.suggested_charts || [];
+        console.log("📋 Processing report with form_id:", rep.form_id);
 
+        // 🧩 Build chart map for the received report
+        const charts = rep.graph_suggestions?.suggested_charts || [];
+        console.log("📊 Charts found:", charts.length);
         chartMap.value[rep.form_id] = charts.map((chart) => {
-            let apexType = 'bar'; // default
+            let component;
             const type = chart.chart_type?.toLowerCase() || "";
-            if (type.includes("line")) apexType = "line";
-            else if (type.includes("bar")) apexType = "bar";
-            else if (type.includes("horizontal_bar")) apexType = "bar"; // horizontal in options
-            else if (type.includes("pie") || type.includes("doughnut")) apexType = "pie";
-            else if (type.includes("radar")) apexType = "radar";
-            else if (type.includes("polar")) apexType = "polarArea";
-            else if (type.includes("scatter")) apexType = "scatter";
+            if (type.includes("line")) component = Line;
+            else if (type.includes("horizontal_bar")) component = Bar;
+            else if (type.includes("bar")) component = Bar;
+            else if (type.includes("pie")) component = Pie;
+            else if (type.includes("doughnut")) component = Pie;
+            else if (type.includes("radar")) component = Radar;
+            else if (type.includes("polar")) component = PolarArea;
+            else if (type.includes("scatter")) component = Scatter;
+            else if (type.includes("bubble")) component = Bubble;
+            else component = Bar;
 
             let options = chart.chart_options || {};
             if (type.includes("horizontal_bar")) {
-                options.chart = { ...options.chart, stacked: false, toolbar: { show: true } };
-                options.plotOptions = { bar: { horizontal: true } };
+                options = { ...options, indexAxis: "y" };
             }
 
             return {
                 title: chart.title,
                 description: chart.description,
-                component: ApexCharts,
-                chart_data: chart.chart_data?.series || [],
-                chart_options: { ...options, chart: { ...options.chart, type: apexType, height: 350 } },
+                component,
+                chart_data: chart.chart_data,
+                chart_options: options,
             };
         });
 
+        // ✅ Update state dynamically
         currentReport.value = rep;
         applicant.value = rep.analysis?.basic_info?.applicant || "";
         isLoading.value = false;
         error.value = null;
+        console.log("✅ Current report set:", currentReport.value);
+        console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
+        console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
     } catch (err) {
         error.value = err.message;
         isLoading.value = false;
     }
 });
 
+
 const uniqueApplicants = computed(() => {
-    const apps = reports.value.map(r => r.analysis?.basic_info?.applicant).filter(Boolean);
+    const apps = reports.value
+        .map((r) => r.analysis?.basic_info?.applicant)
+        .filter(Boolean);
     return [...new Set(apps)];
 });
 
