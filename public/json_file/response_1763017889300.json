@@ -1,0 +1,894 @@
+{
+  "status": "success",
+  "total_reports": 1,
+  "reports": [
+    {
+      "report_number": 1,
+      "file_name": "JOEL AMOS MOLINA-TPS-ZAMBALES-04-04-2025.png",
+      "form_id": "",
+      "form_type": "Agricultural Demo Form Extraction",
+      "extracted_content": "# Agricultural Demo Form Extraction\n\n## Cooperator Information\n- **Name/Position/Area**: JOEL AMOS O. MOLINA / TPS REZAMPALES\n- **Leads Agri Product**: ISMART NANO UREA\n- **Name of Cooperator**: MICHAEL D. RANGES\n- **Farm Location**: P1, DIRITA, IBA, ZAMBALES\n- **Contact Number**: 09032616039\n- **Plot size**: 1000 sqm\n- **Date of Application**: APRIL 4, 2025\n- **Crop/Variety**: RICE/NSIC RC 534\n- **Date of Planting**: MARCH 4, 2025\n- **Farmers Practice (Product/Rate/Timing)**: FEB. 8,202.\n\n## Treatment Table\n| Treatment | Product | Rate | Application Method | Timing/s of application |\n|-----------|---------|------|--------------------|------------------------|\n| 1         | FP/Untreated |      |                    |                        |\n| 2         | Leads Agri | 50ml | FOLIAR             | 31 DAT                 |\n\n## Crop Vigor Observations\n| Trt | Product      | 10 DAA (# of tillers) | 18 DAA (# of tillers) |\n|-----|--------------|-----------------------|-----------------------|\n| 1   | FP/Untreated | # of tillers : 16     | 19                    |\n| 2   | Leads Agri   | # of tillers : 18     | 20                    |\n\n**LCC Values:**\n| Trt | Product      | 10 DAA (LCC) | 18 DAA (LCC) |\n|-----|--------------|--------------|--------------|\n| 1   | FP/Untreated | 4            | 3            |\n| 2   | Leads Agri   | 4            | 4            |\n\n## Yield Data\n| Product      | Yield (MT/Ha) |\n|--------------|---------------|\n| FP/Untreated |               |\n| Leads Agri   |               |\n\n## Remarks/Cooperator Feedback\nAt 10 DAA, the results were almost the same for both\nthe treated and untreated. The leaves were both\ngreen. However, the treated had more tillers. Meanwhile,\nat 18 DAA, the leaves of the treated were greener.\n\n## Signature Section\n- **Name**: MICHAEL RANGES\n- **Signature**: [SIGNATURE]\n\n## Uncertain Text\n- **Name/Position/Area**: \"REZAMPALES\" - The letter sequence is challenging to decipher definitively, \"REZAMPALES\" is the best interpretation.\n- **Farmers Practice (Product/Rate/Timing)**: \"FEB. 8,202.\" - The year is incomplete, ending in a period.\n- **Crop/Variety**: \"RC\" in \"NSIC RC 534\" - The 'R' is stylized, but \"RC\" is a common abbreviation for Rice Cultivar.",
+      "analysis": {
+        "template_version": "1.1.0",
+        "model_name": "Senior Agricultural Data Analyst",
+        "status": "success",
+        "product_category": "Foliar/Biostimulant",
+        "metrics_detected": [
+          "# of tillers",
+          "LCC Values"
+        ],
+        "measurement_intervals": [
+          "10 DAA",
+          "18 DAA"
+        ],
+        "data_quality": {
+          "completeness_score": 100,
+          "critical_data_present": false,
+          "sample_size_adequate": true,
+          "reliability_notes": "Farmer's Practice details (product, rate, timing) were incomplete and vague. Yield data was not measured.",
+          "missing_fields": [
+            "yield_data"
+          ]
+        },
+        "basic_info": {
+          "applicant": "JOEL AMOS O. MOLINA",
+          "date_of_application": "2025-04-04",
+          "cooperator": "MICHAEL D. RANGES",
+          "product": "ISMART NANO UREA",
+          "location": "P1, DIRITA, IBA, ZAMBALES",
+          "application_date": "2025-04-04",
+          "planting_date": "2025-03-04",
+          "crop": "RICE/NSIC RC 534",
+          "plot_size": "1000 sqm",
+          "contact": "09032616039"
+        },
+        "treatment_comparison": {
+          "control": {
+            "description": "Farmer's Practice / Untreated",
+            "product": "FP/Untreated",
+            "rate": "N/A",
+            "timing": "FEB. 8,202X (Incomplete year)",
+            "method": "N/A",
+            "applications": "N/A"
+          },
+          "leads_agri": {
+            "product": "ISMART NANO UREA",
+            "rate": "50ml",
+            "timing": "31 DAT",
+            "method": "FOLIAR",
+            "applications": "1"
+          },
+          "protocol_assessment": "The Leads Agri treatment was applied as a foliar spray at 31 DAT, which is appropriate for enhancing tillering and vigor in rice. The comparison is fair in terms of environmental conditions, but the details of the Farmer's Practice (FP) are largely absent or incomplete, making it a comparison against an untreated/baseline rather than a detailed FP protocol. The incomplete year 'FEB. 8,202.' for FP timing is a data reliability concern."
+        },
+        "performance_analysis": {
+          "metric_type": "count",
+          "scale_info": "N/A (Count of tillers)",
+          "raw_data": {
+            "control": {
+              "10 DAA": 16,
+              "18 DAA": 19
+            },
+            "leads_agri": {
+              "10 DAA": 18,
+              "18 DAA": 20
+            }
+          },
+          "raw_data_notes": "Number of tillers recorded at 10 and 18 Days After Application.",
+          "calculated_metrics": {
+            "control_average": 17.5,
+            "leads_average": 19,
+            "absolute_difference": 1.5,
+            "absolute_difference_unit": "tillers",
+            "relative_improvement_percent": 8.57,
+            "improvement_interpretation": "Leads Agri treatment resulted in an average of 1.5 more tillers per plant compared to the control, representing an 8.57% increase in tillering."
+          },
+          "statistical_assessment": {
+            "improvement_significance": "moderate",
+            "significance_basis": "An 8.57% increase in tiller count is considered moderate, approaching significant, especially for a biostimulant application.",
+            "performance_consistency": "high",
+            "confidence_level": "medium",
+            "notes": "Leads Agri consistently showed higher tiller counts at both 10 DAA and 18 DAA."
+          },
+          "trend_analysis": {
+            "control_trend": "improving",
+            "leads_trend": "improving",
+            "early_performance": "At 10 DAA, Leads Agri had 18 tillers compared to 16 for the control (12.5% higher).",
+            "late_performance": "At 18 DAA, Leads Agri maintained its lead with 20 tillers compared to 19 for the control (5.26% higher).",
+            "key_observation": "Both treatments showed an increasing trend in tillers, but Leads Agri consistently maintained a higher tiller count throughout the observation period.",
+            "speed_of_action": "fast"
+          },
+          "combined_metrics": [
+            {
+              "metric_type": "count",
+              "scale_info": "N/A (Count of tillers)",
+              "raw_data": {
+                "control": {
+                  "10 DAA": 16,
+                  "18 DAA": 19
+                },
+                "leads_agri": {
+                  "10 DAA": 18,
+                  "18 DAA": 20
+                }
+              },
+              "raw_data_notes": "Number of tillers recorded at 10 and 18 Days After Application.",
+              "calculated_metrics": {
+                "control_average": 17.5,
+                "leads_average": 19,
+                "absolute_difference": 1.5,
+                "absolute_difference_unit": "tillers",
+                "relative_improvement_percent": 8.57,
+                "improvement_interpretation": "Leads Agri treatment resulted in an average of 1.5 more tillers per plant compared to the control, representing an 8.57% increase in tillering."
+              },
+              "statistical_assessment": {
+                "improvement_significance": "moderate",
+                "significance_basis": "An 8.57% increase in tiller count is considered moderate, approaching significant, especially for a biostimulant application.",
+                "performance_consistency": "high",
+                "confidence_level": "medium",
+                "notes": "Leads Agri consistently showed higher tiller counts at both 10 DAA and 18 DAA."
+              },
+              "trend_analysis": {
+                "control_trend": "improving",
+                "leads_trend": "improving",
+                "early_performance": "At 10 DAA, Leads Agri had 18 tillers compared to 16 for the control (12.5% higher).",
+                "late_performance": "At 18 DAA, Leads Agri maintained its lead with 20 tillers compared to 19 for the control (5.26% higher).",
+                "key_observation": "Both treatments showed an increasing trend in tillers, but Leads Agri consistently maintained a higher tiller count throughout the observation period.",
+                "speed_of_action": "fast"
+              }
+            },
+            {
+              "metric_type": "rating_scale",
+              "scale_info": "LCC (Leaf Color Chart) rating on a 1-4 scale, where 1 indicates least green and 4 indicates most green.",
+              "raw_data": {
+                "control": {
+                  "10 DAA": 4,
+                  "18 DAA": 3
+                },
+                "leads_agri": {
+                  "10 DAA": 4,
+                  "18 DAA": 4
+                }
+              },
+              "raw_data_notes": "LCC values recorded at 10 and 18 Days After Application.",
+              "calculated_metrics": {
+                "control_average": 3.5,
+                "leads_average": 4,
+                "absolute_difference": 0.5,
+                "absolute_difference_unit": "points",
+                "relative_improvement_percent": 14.29,
+                "improvement_interpretation": "Leads Agri achieved an average LCC rating of 4.0 compared to 3.5 for the control, an absolute difference of 0.5 points. This represents a 14.29% higher rating than the control, and 12.5% improvement relative to the 1-4 rating scale."
+              },
+              "statistical_assessment": {
+                "improvement_significance": "moderate",
+                "significance_basis": "A 0.5 point improvement on a 1-4 scale is considered moderate significance, indicating a noticeable positive effect on leaf color.",
+                "performance_consistency": "high",
+                "confidence_level": "medium",
+                "notes": "Leads Agri maintained the maximum LCC rating of 4, while the control declined from 4 to 3."
+              },
+              "trend_analysis": {
+                "control_trend": "declining",
+                "leads_trend": "stable",
+                "early_performance": "At 10 DAA, both treatments showed an LCC of 4.",
+                "late_performance": "At 18 DAA, Leads Agri maintained an LCC of 4, while the control's LCC declined to 3, showing a clear divergence.",
+                "key_observation": "Leads Agri prevented the decline in leaf color observed in the control group, maintaining optimal greenness.",
+                "speed_of_action": "moderate"
+              }
+            }
+          ],
+          "total_metrics": 2
+        },
+        "yield_analysis": {
+          "control_yield": "N/A",
+          "leads_yield": "N/A",
+          "yield_difference_absolute": "N/A",
+          "yield_improvement_percent": 0,
+          "yield_status": "not_measured"
+        },
+        "cooperator_feedback": {
+          "raw_feedback": "At 10 DAA, the results were almost the same for both the treated and untreated. The leaves were both green. However, the treated had more tillers. Meanwhile, at 18 DAA, the leaves of the treated were greener.",
+          "sentiment": "positive",
+          "key_highlights": [
+            "More tillers in treated group by 10 DAA",
+            "Greener leaves in treated group by 18 DAA"
+          ],
+          "visible_results_timeline": "Visible tillering difference by 10 DAA, visible leaf color difference by 18 DAA.",
+          "concerns": []
+        },
+        "privacy": {
+          "pii_detected": true,
+          "fields_masked": []
+        },
+        "validation": {
+          "warnings": [
+            "Incomplete year for Farmer's Practice timing (FEB. 8,202.)",
+            "Yield data was not collected, limiting the comprehensive assessment of product impact."
+          ],
+          "assumptions": [
+            "The LCC rating scale is assumed to be 1-4 based on the maximum value provided in the data.",
+            "The applicant 'JOEL AMOS O. MOLINA' is the individual representing Leads Agri and responsible for the demo."
+          ]
+        },
+        "risk_factors": [
+          {
+            "risk": "Incomplete Farmer's Practice details",
+            "data_basis": "The 'Farmers Practice (Product/Rate/Timing)' field was vague ('FEB. 8,202.'), making it difficult to understand the exact baseline for comparison beyond 'untreated'.",
+            "severity": "medium"
+          },
+          {
+            "risk": "Absence of Yield Data",
+            "data_basis": "The 'Yield Data' section explicitly states 'FP/Untreated' and 'Leads Agri' yields are blank, preventing a critical economic and productivity assessment.",
+            "severity": "high"
+          }
+        ],
+        "opportunities": [
+          {
+            "opportunity": "Demonstrated improved crop vigor (tillering & leaf color)",
+            "data_basis": "Leads Agri resulted in 8.57% more tillers and maintained optimal LCC where control declined, indicating enhanced vegetative growth.",
+            "potential": "high"
+          },
+          {
+            "opportunity": "Positive cooperator feedback aligning with data",
+            "data_basis": "Cooperator noted 'more tillers' by 10 DAA and 'greener leaves' by 18 DAA, directly supporting the quantitative observations.",
+            "potential": "high"
+          },
+          {
+            "opportunity": "Early visible results",
+            "data_basis": "Differences in tillering were observed as early as 10 DAA, and leaf color divergence by 18 DAA, suggesting rapid action.",
+            "potential": "medium"
+          }
+        ],
+        "recommendations": [
+          {
+            "priority": "high",
+            "recommendation": "Conduct follow-up trials focusing on yield assessment.",
+            "data_basis": "Despite positive effects on tillering and leaf color, the ultimate impact on yield, which is critical for farmer adoption and economic analysis, is unknown due to missing data.",
+            "expected_impact": "Provide comprehensive data to validate the product's economic benefits, strengthen marketing claims, and support broader adoption."
+          },
+          {
+            "priority": "medium",
+            "recommendation": "Standardize and fully document Farmer's Practice protocols in future demos.",
+            "data_basis": "The current FP details are incomplete and vague, hindering a robust comparison against a clear farmer's baseline.",
+            "expected_impact": "Improve the scientific rigor and comparability of demo results, allowing for more precise assessment of Leads Agri's performance relative to existing practices."
+          },
+          {
+            "priority": "medium",
+            "recommendation": "Leverage current positive feedback and vigor data for initial market positioning.",
+            "data_basis": "The product showed moderate to significant improvements in tillering and LCC, supported by positive cooperator feedback and early visible results.",
+            "expected_impact": "Generate early interest and adoption among farmers who prioritize visible crop health and tillering, while awaiting full yield validation."
+          }
+        ],
+        "executive_summary": "This agricultural demo evaluated Leads Agri's ISMART NANO UREA, a Foliar/Biostimulant, on rice (NSIC RC 534) in Zambales, Philippines, following an application on April 4, 2025. The trial demonstrated compelling improvements in key crop vigor metrics. Leads Agri significantly enhanced tillering, resulting in an average of 19.0 tillers per plant compared to 17.5 for the untreated control, an absolute difference of 1.5 tillers and an 8.57% relative improvement. This moderate to significant increase in tillering was observed as early as 10 DAA. Furthermore, the product maintained superior leaf color, achieving an average LCC rating of 4.0, while the control declined to 3.5, representing a 0.5-point absolute difference and a 14.29% higher rating. This indicates Leads Agri's efficacy in sustaining optimal crop health, particularly in preventing the decline in greenness seen in the control group by 18 DAA. \n\nThe cooperator feedback strongly aligns with these quantitative findings, highlighting 'more tillers' by 10 DAA and 'greener leaves' by 18 DAA, indicating rapid and visible results. While the absence of yield data is a critical limitation to a full economic assessment, the strong performance in vegetative parameters and positive farmer sentiment present significant opportunities for market penetration. Key risks include the vague details of the farmer's practice baseline. Overall, ISMART NANO UREA shows promising potential as a crop enhancer, warranting high-priority follow-up trials to quantify its impact on final yield and solidify its value proposition."
+      },
+      "graph_suggestions": {
+        "suggested_charts": [
+          {
+            "chart_id": "performance_trend",
+            "chart_type": "line_chart",
+            "title": "Tiller Count Trend Over Time (10 DAA vs 18 DAA)",
+            "priority": "high",
+            "data_source": "performance_analysis.raw_data",
+            "description": "This line chart visualizes the tiller count progression from 10 DAA to 18 DAA. Leads Agri consistently shows higher tiller counts (18 at 10 DAA, 20 at 18 DAA) compared to the control (16 at 10 DAA, 19 at 18 DAA), indicating sustained vegetative growth and an 8.57% overall improvement. This helps assess the product's impact on plant establishment and density.",
+            "chart_data": {
+              "labels": [
+                "10 DAA",
+                "18 DAA"
+              ],
+              "datasets": [
+                {
+                  "label": "Control",
+                  "data": [
+                    16,
+                    19
+                  ],
+                  "backgroundColor": "rgba(231, 76, 60, 0.15)",
+                  "borderColor": "#e74c3c",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                },
+                {
+                  "label": "Leads Agri",
+                  "data": [
+                    18,
+                    20
+                  ],
+                  "backgroundColor": "rgba(39, 174, 96, 0.15)",
+                  "borderColor": "#27ae60",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Tiller Count Trend Over Time (10 DAA vs 18 DAA)"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Number of Tillers"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Days After Application (DAA)"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "performance_comparison",
+            "chart_type": "bar_chart",
+            "title": "Tiller Count Comparison: 8.57% Improvement",
+            "priority": "high",
+            "data_source": "performance_analysis.calculated_metrics",
+            "description": "This bar chart compares the average tiller count: Control (17.5 tillers) vs Leads Agri (19.0 tillers), showing a 1.5 tiller absolute difference and an 8.57% relative improvement. This visualization highlights the product's effectiveness in promoting tillering, a key indicator of plant vigor and potential yield.",
+            "chart_data": {
+              "labels": [
+                "Control",
+                "Leads Agri"
+              ],
+              "datasets": [
+                {
+                  "label": "Average Tillers",
+                  "data": [
+                    17.5,
+                    19
+                  ],
+                  "backgroundColor": [
+                    "rgba(231, 76, 60, 0.2)",
+                    "rgba(39, 174, 96, 0.2)"
+                  ],
+                  "borderColor": [
+                    "#e74c3c",
+                    "#27ae60"
+                  ],
+                  "borderWidth": 2,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Tiller Count Comparison: 8.57% Improvement"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Number of Tillers"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Treatment"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "performance_trend",
+            "chart_type": "line_chart",
+            "title": "LCC Values Trend Over Time (10 DAA vs 18 DAA)",
+            "priority": "high",
+            "data_source": "performance_analysis.raw_data",
+            "description": "This line chart tracks Leaf Color Chart (LCC) values from 10 DAA to 18 DAA. Leads Agri maintains an optimal LCC of 4, while the control declines from 4 to 3. This demonstrates the product's ability to sustain leaf greenness, with a 14.29% higher average rating, crucial for photosynthesis and plant health.",
+            "chart_data": {
+              "labels": [
+                "10 DAA",
+                "18 DAA"
+              ],
+              "datasets": [
+                {
+                  "label": "Control",
+                  "data": [
+                    4,
+                    3
+                  ],
+                  "backgroundColor": "rgba(231, 76, 60, 0.15)",
+                  "borderColor": "#e74c3c",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                },
+                {
+                  "label": "Leads Agri",
+                  "data": [
+                    4,
+                    4
+                  ],
+                  "backgroundColor": "rgba(39, 174, 96, 0.15)",
+                  "borderColor": "#27ae60",
+                  "borderWidth": 3,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "LCC Values Trend Over Time (10 DAA vs 18 DAA)"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "LCC Rating (1-4 Scale)"
+                  },
+                  "max": 4,
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Days After Application (DAA)"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "performance_comparison",
+            "chart_type": "bar_chart",
+            "title": "LCC Values Comparison: 14.29% Improvement",
+            "priority": "high",
+            "data_source": "performance_analysis.calculated_metrics",
+            "description": "This bar chart compares average LCC ratings: Control (3.5) vs Leads Agri (4.0), showing a 0.5-point absolute difference and a 14.29% relative improvement. This demonstrates the product's effectiveness in maintaining optimal leaf color, vital for robust photosynthesis and overall plant health.",
+            "chart_data": {
+              "labels": [
+                "Control",
+                "Leads Agri"
+              ],
+              "datasets": [
+                {
+                  "label": "Average LCC Rating",
+                  "data": [
+                    3.5,
+                    4
+                  ],
+                  "backgroundColor": [
+                    "rgba(231, 76, 60, 0.2)",
+                    "rgba(39, 174, 96, 0.2)"
+                  ],
+                  "borderColor": [
+                    "#e74c3c",
+                    "#27ae60"
+                  ],
+                  "borderWidth": 2,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "LCC Values Comparison: 14.29% Improvement"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "bar": {
+                  "borderRadius": 6,
+                  "borderSkipped": false
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "LCC Rating (1-4 Scale)"
+                  },
+                  "max": 4,
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Treatment"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "chart_id": "sentiment_distribution",
+            "chart_type": "doughnut_chart",
+            "title": "Cooperator Sentiment Distribution",
+            "priority": "medium",
+            "data_source": "cooperator_feedback.sentiment",
+            "description": "This doughnut chart represents the cooperator's sentiment towards the trial results. The 'positive' sentiment indicates overall satisfaction, likely driven by the observed improvements in tillering and leaf color, suggesting the product is well-received by the end-user.",
+            "chart_data": {
+              "labels": [
+                "Positive"
+              ],
+              "datasets": [
+                {
+                  "label": "Sentiment",
+                  "data": [
+                    100
+                  ],
+                  "backgroundColor": [
+                    "#27ae60"
+                  ],
+                  "borderColor": "#ffffff",
+                  "borderWidth": 2,
+                  "tension": 0.3,
+                  "borderRadius": 6
+                }
+              ]
+            },
+            "chart_options": {
+              "responsive": true,
+              "maintainAspectRatio": false,
+              "layout": {
+                "padding": {
+                  "top": 8,
+                  "right": 12,
+                  "bottom": 12,
+                  "left": 12
+                }
+              },
+              "plugins": {
+                "legend": {
+                  "position": "bottom"
+                },
+                "title": {
+                  "display": true,
+                  "text": "Cooperator Sentiment Distribution"
+                }
+              },
+              "animation": {
+                "duration": 800,
+                "easing": "easeOutQuart"
+              },
+              "elements": {
+                "line": {
+                  "tension": 0.3,
+                  "borderWidth": 3
+                },
+                "point": {
+                  "radius": 4,
+                  "hoverRadius": 6
+                },
+                "arc": {
+                  "borderRadius": 6
+                }
+              },
+              "scales": {
+                "y": {
+                  "beginAtZero": true,
+                  "title": {
+                    "display": true,
+                    "text": "Percentage"
+                  },
+                  "grid": {
+                    "color": "rgba(0,0,0,0.06)"
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                },
+                "x": {
+                  "title": {
+                    "display": true,
+                    "text": "Category"
+                  },
+                  "grid": {
+                    "display": false
+                  },
+                  "ticks": {
+                    "color": "#555",
+                    "font": {
+                      "size": 12
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "This visualization suite presents key performance metrics from the agricultural demo. It includes line charts for tiller count and LCC trends over time, demonstrating the product's sustained positive impact. Bar charts provide a clear comparison of average tiller counts (8.57% improvement) and LCC ratings (14.29% improvement), highlighting the product's efficacy. A doughnut chart visualizes the cooperator's positive sentiment, reinforcing the observed benefits. These charts collectively illustrate the product's ability to enhance crop vigor and are crucial for understanding its potential value to farmers, despite the absence of yield data."
+      },
+      "chunks": [
+        {
+          "chunk_id": "table_0_flat",
+          "content": "Treatment: 2, Product: Leads Agri, Rate: 50ml, Application Method: FOLIAR, Timing/s of application: 31 DAT",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 0,
+            "row_count": 1
+          },
+          "token_count": 15,
+          "char_count": 106
+        },
+        {
+          "chunk_id": "table_1_flat",
+          "content": "Trt: 1, Product: FP/Untreated, 10 DAA (# of tillers): # of tillers : 16, 18 DAA (# of tillers): 19\nTrt: 2, Product: Leads Agri, 10 DAA (# of tillers): # of tillers : 18, 18 DAA (# of tillers): 20",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 1,
+            "row_count": 2
+          },
+          "token_count": 41,
+          "char_count": 195
+        },
+        {
+          "chunk_id": "table_2_flat",
+          "content": "Trt: 1, Product: FP/Untreated, 10 DAA (LCC): 4, 18 DAA (LCC): 3\nTrt: 2, Product: Leads Agri, 10 DAA (LCC): 4, 18 DAA (LCC): 4",
+          "metadata": {
+            "type": "table_flat",
+            "table_index": 2,
+            "row_count": 2
+          },
+          "token_count": 25,
+          "char_count": 125
+        },
+        {
+          "chunk_id": "text_0",
+          "content": "# Agricultural Demo Form Extraction ## Cooperator Information - **Name/Position/Area**: JOEL AMOS O. MOLINA / TPS REZAMPALES - **Leads Agri Product**: ISMART NANO UREA - **Name of Cooperator**: MICHAEL D. RANGES - **Farm Location**: P1, DIRITA, IBA, ZAMBALES - **Contact Number**: 09032616039 - **Plot size**: 1000 sqm - **Date of Application**: APRIL 4, 2025 - **Crop/Variety**: RICE/NSIC RC 534 - **Date of Planting**: MARCH 4, 2025 - **Farmers Practice (Product/Rate/Timing)**: FEB. 8,202. ## Treatment Table ## Crop Vigor Observations **LCC Values:** ## Yield Data ## Remarks/Cooperator Feedback At 10 DAA, the results were almost the same for both the treated and untreated. The leaves were both green. However, the treated had more tillers. Meanwhile, at 18 DAA, the leaves of the treated were greener. ## Signature Section - **Name**: MICHAEL RANGES - **Signature**: [SIGNATURE] ## Uncertain Text - **Name/Position/Area**: \"REZAMPALES\" - The letter sequence is challenging to decipher definitively, \"REZAMPALES\" is the best interpretation. - **Farmers Practice (Product/Rate/Timing)**: \"FEB. 8,202.\" - The year is incomplete, ending in a period. - **Crop/Variety**: \"RC\" in \"NSIC RC 534\" - The 'R' is stylized, but \"RC\" is a common abbreviation for Rice Cultivar.",
+          "metadata": {
+            "type": "text",
+            "chunk_index": 0
+          },
+          "token_count": 190,
+          "char_count": 1270
+        }
+      ],
+      "processing_metrics": {
+        "chunk_count": 4,
+        "processing_steps": "chunking",
+        "workflow_completed": true,
+        "storage_ready": true
+      },
+      "errors": [],
+      "validation": {
+        "file_validation": {
+          "is_valid": true,
+          "file_type": "image",
+          "format": "PNG",
+          "errors": [
+            "Image validation failed: name 'logger' is not defined"
+          ],
+          "warnings": [],
+          "metadata": {
+            "width": 876,
+            "height": 544,
+            "format": "PNG",
+            "mode": "RGBA",
+            "file_size_mb": 0.3248119354248047
+          }
+        },
+        "content_validation": {
+          "is_valid_demo": true,
+          "confidence": 0.95,
+          "content_type": "product_demo",
+          "reasoning": "The document contains specific product names (ISMART NANO UREA, Leads Agri), trial data (application dates, crop details, plot size), performance metrics (number of tillers, LCC values), comparison data (FP/Untreated vs. Leads Agri), and location/cooperator information. The 'Yield Data' section, while empty, still indicates an intent to collect trial results.",
+          "detected_elements": {
+            "has_product_info": true,
+            "has_trial_data": true,
+            "has_numeric_results": true,
+            "has_location_info": true
+          },
+          "feedback": "Valid product demo detected. Proceeding."
+        }
+      },
+      "storage_status": "ready_for_approval",
+      "storage_message": "Analysis completed. Use /api/storage/preview to review and /api/storage/approve to store."
+    }
+  ],
+  "cross_report_analysis": {
+    "cross_report_suggestions": []
+  },
+  "analysis_storage_status": "ready_for_approval",
+  "cache_id": "164f1c8b-5b5b-417f-af58-872c1ab72cc0"
+}

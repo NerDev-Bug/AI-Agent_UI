@@ -13,9 +13,9 @@ Route::get('/', function (){
 Route::get('/aiform', function () {
     return Inertia::render('AI-Agent-UI/AI-AgentForm');
 });
-// Route::get('/header', function () {
-//     return Inertia::render('Layouts/Header');
-// });
+Route::get('/index', function () {
+    return Inertia::render('AI-Agent-UI/Index');
+});
 
 
 Route::post('/export-report-pdf', [ReportPDFController::class, 'exportPDF']);

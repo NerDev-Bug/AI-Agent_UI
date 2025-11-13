@@ -213,7 +213,8 @@
                         </div>
                     </div>
                     <br>
-                    <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">{{ currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
+                    <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">{{
+                        currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
                 </div>
             </div>
 
@@ -270,7 +271,7 @@
                             currentReport.analysis.performance_analysis.trend_analysis.early_performance }}</li>
                         <li><b>Late Performance:</b> {{
                             currentReport.analysis.performance_analysis.trend_analysis.late_performance
-                            }}</li>
+                        }}</li>
                         <li><b>Observation:</b> {{
                             currentReport.analysis.performance_analysis.trend_analysis.key_observation }}
                         </li>
@@ -499,22 +500,23 @@ watchEffect(() => {
         console.log("📊 Charts found:", charts.length);
         chartMap.value[rep.form_id] = charts.map((chart) => {
             let component;
+            let options = chart.chart_options || {};
             const type = chart.chart_type?.toLowerCase() || "";
             if (type.includes("line")) component = Line;
-            else if (type.includes("horizontal_bar")) component = Bar;
+            else if (type.includes("horizontal_bar")) {
+                component = Bar;
+                options = { ...options, indexAxis: "y" };
+            } 
             else if (type.includes("bar")) component = Bar;
-            else if (type.includes("pie")) component = Pie;
-            else if (type.includes("doughnut")) component = Pie;
+            else if (type.includes("pie") || type.includes("doughnut")) {
+                component = Pie;
+                if (type.includes("doughnut")) options = { ...options, cutout: '50%' };
+            } 
             else if (type.includes("radar")) component = Radar;
             else if (type.includes("polar")) component = PolarArea;
             else if (type.includes("scatter")) component = Scatter;
             else if (type.includes("bubble")) component = Bubble;
             else component = Bar;
-
-            let options = chart.chart_options || {};
-            if (type.includes("horizontal_bar")) {
-                options = { ...options, indexAxis: "y" };
-            }
 
             return {
                 title: chart.title,
