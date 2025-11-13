@@ -1,16 +1,15 @@
 <template>
-    <div class="min-h-screen">
+    <div>
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials Result:</h2>
+            <h2 class="text-3xl font-bold text-black">Agent Products Demo Trials</h2>
         </div>
 
         <!-- Select and Export -->
         <div class="flex items-center gap-6 mb-8 px-2">
             <div class="flex-2">
                 <br>
-                <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
-                <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
+                <button @click="handleExportClick" :disabled="isExporting"
                     class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
                     <span v-else class="flex flex-row gap-2">
@@ -25,19 +24,30 @@
                 </button>
             </div>
 
-            <div class="ml-auto" v-if="uniqueApplicants.length > 1">
-                <label class="block text-sm text-black mb-1">Select Applicant:</label>
-                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
-                    <option value="">-- Choose Applicant --</option>
-                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
-                        {{ app }}
+            <div class="ml-auto">
+                <label class="block text-sm text-black mb-1">Select Cooperator:</label>
+                <select v-model="selectedCooperator" class="p-2 rounded-md w-72">
+                    <option value="">-- Choose Cooperator --</option>
+                    <option v-for="coop in uniqueCooperators" :key="coop" :value="coop">
+                        {{ coop }}
                     </option>
                 </select>
             </div>
         </div>
 
+        <!-- Default placeholder shown only when no cooperator selected -->
+        <div v-if="!selectedCooperator" class="text-black p-6 rounded-lg mt-10">
+            <div class="flex items-center justify-center">
+                <div class="bg-white w-[1200px] h-[440px] border-md rounded-lg px-4 py-4">
+                    <h3 class="text-3xl font-semibold">Lorem ipsum dolor sit amet consectetur adipisicing elit. Non,
+                        deleniti harum illum assumenda eos culpa quas ab molestias ipsa quisquam totam distinctio est.
+                        Assumenda harum quam quasi earum repellendus eos!</h3>
+                </div>
+            </div>
+        </div>
+
         <!-- Report Display -->
-        <div v-if="currentReport && applicant" class="p-2 space-y-8">
+        <div v-if="currentReport && selectedCooperator" class="p-2 space-y-8">
             <h3 class="text-2xl font-bold text-gray-800 mb-1">
                 {{ currentReport.form_type }}
             </h3>
@@ -49,13 +59,11 @@
                     🌾 Basic Information
                 </h4>
                 <ul class="grid grid-cols-2 gap-x-8 text-gray-700">
-                    <li><b>Applicant:</b> {{ currentReport.analysis.basic_info.applicant }}</li>
-                    <li><b>Application Date:</b> {{ currentReport.analysis.basic_info.application_date }}</li>
                     <li><b>Cooperator:</b> {{ currentReport.analysis.basic_info.cooperator }}</li>
                     <li><b>Product:</b> {{ currentReport.analysis.basic_info.product }}</li>
                     <li><b>Location:</b> {{ currentReport.analysis.basic_info.location }}</li>
                     <li><b>Crop:</b> {{ currentReport.analysis.basic_info.crop }}</li>
-                    <li><b>Plot Size:</b> {{ currentReport.analysis.basic_info.plot_size }}</li>
+                    <li><b>Application Date:</b> {{ currentReport.analysis.basic_info.application_date }}</li>
                     <li><b>Planting Date:</b> {{ currentReport.analysis.basic_info.planting_date }}</li>
                 </ul>
             </div>
@@ -143,80 +151,179 @@
                 </div>
             </div>
 
-            <!-- ✅ Performance Analysis + Treatment Details side-by-side -->
+            <!-- ✅ Performance Analysis -->
             <div v-if="currentReport.analysis?.performance_analysis"
-                class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
+                class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
+                <h4 class="text-xl font-semibold text-purple-700 mb-2">
+                    📈 Performance Analysis
+                </h4>
+                <p class="text-gray-700 mb-3 italic">
+                    {{ currentReport.analysis.performance_analysis.scale_info }}
+                </p>
+                <div class="overflow-x-auto mb-4" v-if="currentReport.analysis?.performance_analysis?.raw_data">
+                    <table class="min-w-full text-sm border border-gray-300">
+                        <thead class="bg-purple-100 text-gray-700">
+                            <tr>
+                                <!-- First column header -->
+                                <th class="border px-3 py-2">Time Period</th>
 
-                <!-- Left: Performance Analysis -->
-                <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
-                    <h4 class="text-xl font-semibold text-purple-700 mb-2">
-                        📈 Performance Analysis
-                    </h4>
-                    <p class="text-gray-700 mb-3 italic">
-                        {{ currentReport.analysis.performance_analysis.scale_info }}
-                    </p>
+                                <!-- Dynamic headers for each treatment -->
+                                <th v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
+                                    :key="treatment" class="border px-3 py-2 capitalize">
+                                    <!-- Rename control -> Standard Practice -->
+                                    {{
+                                        treatment === "control"
+                                            ? "Standard Practice"
+                                            : treatment.replace(/_/g, " ")
+                                    }}
+                                </th>
+                            </tr>
+                        </thead>
 
-                    <div class="overflow-x-auto mb-4" v-if="currentReport.analysis?.performance_analysis?.raw_data">
-                        <table class="min-w-full text-md border border-gray-300">
-                            <thead class="bg-purple-100 text-gray-700">
-                                <tr>
-                                    <th class="border px-3 py-2">Time Period</th>
-                                    <th v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
-                                        :key="treatment" class="border px-3 py-2 capitalize">
-                                        {{ treatment === 'control' ? 'Standard Practice' : treatment.replace(/_/g, ' ')
-                                        }}
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-center text-gray-800">
-                                <tr v-for="(daaLabel, index) in Object.keys(currentReport.analysis.performance_analysis.raw_data.control)"
-                                    :key="index">
-                                    <td class="border px-3 py-2 font-semibold">{{ daaLabel }}</td>
-                                    <td v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
-                                        :key="treatment" class="border px-3 py-2">
-                                        {{ values[daaLabel] }}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <tbody class="text-center text-gray-800">
+                            <!-- Create rows dynamically for each DAA -->
+                            <tr v-for="(daaLabel, index) in Object.keys(
+                                currentReport.analysis.performance_analysis.raw_data.control
+                            )" :key="index">
+                                <!-- DAA label -->
+                                <td class="border px-3 py-2 font-semibold">{{ daaLabel }}</td>
+
+                                <!-- Each treatment’s values -->
+                                <td v-for="(values, treatment) in currentReport.analysis.performance_analysis.raw_data"
+                                    :key="treatment" class="border px-3 py-2">
+                                    {{ values[daaLabel] }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
-                <!-- Right: Treatment Details -->
+                <!-- 🔬 Treatment Details -->
                 <div v-if="currentReport.analysis?.treatment_comparison"
                     class="bg-white border border-purple-200 rounded-lg p-6 mb-4">
                     <h5 class="font-semibold text-purple-700 mb-2">🔬 Treatment Details</h5>
                     <hr class="border-t-2 border-gray-400 my-4" />
                     <div class="flex flex-col md:flex-row justify-between text-gray-800">
+                        <!-- Left: Standard Practice -->
                         <div class="flex-1 pr-4">
-                            <h6 class="text-lg font-semibold text-green-700 mb-2">Standard Practice</h6>
+                            <h6 class="text-lg font-semibold text-green-700 mb-2">
+                                Standard Practice
+                            </h6>
                             <ul class="space-y-1 text-sm">
-                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product }}
-                                </li>
+                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
+                                    }}</li>
                                 <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
-                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}</li>
-                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}</li>
+                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                </li>
+                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}
+                                </li>
                             </ul>
                         </div>
                         <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
+                        <!-- Right: Leads Agri Treatment -->
                         <div class="flex-1 pl-4">
-                            <h6 class="text-lg font-semibold text-purple-700 mb-2">Leads Agri Treatment</h6>
+                            <h6 class="text-lg font-semibold text-purple-700 mb-2">
+                                Leads Agri Treatment
+                            </h6>
                             <ul class="space-y-1 text-sm">
-                                <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                <li><b>Product:</b> {{
+                                    currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
+                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
                                 </li>
-                                <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}</li>
-                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
-                                </li>
-                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
-                                </li>
+                                <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
+                                    }}</li>
+                                <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
+                                    }}</li>
                             </ul>
                         </div>
                     </div>
-                    <br>
-                    <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">{{ currentReport.analysis.treatment_comparison.protocol_assessment }}</p>
+                </div>
+
+                <!-- Statistical Assessment -->
+                <div class="bg-white border border-purple-200 rounded-lg p-4 mb-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">
+                        📏 Statistical Assessment
+                    </h5>
+                    <p>
+                        <b>Significance:</b>
+                        {{
+                            currentReport.analysis.performance_analysis.statistical_assessment
+                                .improvement_significance
+                        }}
+                    </p>
+                    <p>
+                        <b>Basis:</b>
+                        {{
+                            currentReport.analysis.performance_analysis.statistical_assessment
+                                .significance_basis
+                        }}
+                    </p>
+                    <p>
+                        <b>Consistency:</b>
+                        {{
+                            currentReport.analysis.performance_analysis.statistical_assessment
+                                .performance_consistency
+                        }}
+                    </p>
+                    <p>
+                        <b>Confidence Level:</b>
+                        {{
+                            currentReport.analysis.performance_analysis.statistical_assessment
+                                .confidence_level
+                        }}
+                    </p>
+                    <p class="italic text-gray-600">
+                        {{
+                            currentReport.analysis.performance_analysis.statistical_assessment
+                                .notes
+                        }}
+                    </p>
+                </div>
+
+                <!-- Trend Summary -->
+                <div class="bg-white border border-purple-200 rounded-lg p-4">
+                    <h5 class="font-semibold text-purple-700 mb-2">
+                        📈 Trend Analysis
+                    </h5>
+                    <ul class="list-disc ml-6 text-gray-700">
+                        <li>
+                            <b>Control Trend:</b>
+                            {{
+                                currentReport.analysis.performance_analysis.trend_analysis
+                                    .control_trend
+                            }}
+                        </li>
+                        <li>
+                            <b>Leads Agri Trend:</b>
+                            {{
+                                currentReport.analysis.performance_analysis.trend_analysis
+                                    .leads_trend
+                            }}
+                        </li>
+                        <li>
+                            <b>Early Performance:</b>
+                            {{
+                                currentReport.analysis.performance_analysis.trend_analysis
+                                    .early_performance
+                            }}
+                        </li>
+                        <li>
+                            <b>Late Performance:</b>
+                            {{
+                                currentReport.analysis.performance_analysis.trend_analysis
+                                    .late_performance
+                            }}
+                        </li>
+                        <li>
+                            <b>Observation:</b>
+                            {{
+                                currentReport.analysis.performance_analysis.trend_analysis
+                                    .key_observation
+                            }}
+                        </li>
+                    </ul>
                 </div>
             </div>
-
             <!-- Charts + Performance + Opportunities + Risks -->
             <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
                 <!-- Charts -->
@@ -238,44 +345,15 @@
                 </div>
             </div>
 
-            <!-- ✅ Separate Statistical Assessment and Trend Summary below -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-                <div class="bg-white border border-purple-200 rounded-lg p-4 mb-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">📏 Statistical Assessment</h5>
-                    <p><b>Significance:</b>
-                        {{ currentReport.analysis.performance_analysis.statistical_assessment.improvement_significance
-                        }}</p>
-                    <p><b>Basis:</b>
-                        {{ currentReport.analysis.performance_analysis.statistical_assessment.significance_basis }}</p>
-                    <p><b>Consistency:</b>
-                        {{ currentReport.analysis.performance_analysis.statistical_assessment.performance_consistency }}
-                    </p>
-                    <p><b>Confidence Level:</b>
-                        {{ currentReport.analysis.performance_analysis.statistical_assessment.confidence_level }}</p>
-                    <p class="italic text-gray-600">
-                        {{ currentReport.analysis.performance_analysis.statistical_assessment.notes }}
-                    </p>
-                </div>
-
-                <div class="bg-white border border-purple-200 rounded-lg p-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">📈 Trend Analysis</h5>
-                    <ul class="list-disc ml-6 text-gray-700">
-                        <li><b>Control Trend:</b> {{
-                            currentReport.analysis.performance_analysis.trend_analysis.control_trend }}
-                        </li>
-                        <li><b>Leads Agri Trend:</b> {{
-                            currentReport.analysis.performance_analysis.trend_analysis.leads_trend }}
-                        </li>
-                        <li><b>Early Performance:</b> {{
-                            currentReport.analysis.performance_analysis.trend_analysis.early_performance }}</li>
-                        <li><b>Late Performance:</b> {{
-                            currentReport.analysis.performance_analysis.trend_analysis.late_performance
-                            }}</li>
-                        <li><b>Observation:</b> {{
-                            currentReport.analysis.performance_analysis.trend_analysis.key_observation }}
-                        </li>
-                    </ul>
-                </div>
+            <!-- Executive Summary -->
+            <div v-if="currentReport.analysis?.executive_summary"
+                class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md h-full">
+                <h4 class="text-xl font-semibold text-blue-700 mb-2">
+                    🧾 Executive Summary
+                </h4>
+                <p class="text-gray-700 whitespace-pre-line">
+                    {{ currentReport.analysis.executive_summary }}
+                </p>
             </div>
 
             <!-- Opportunities + Risks below -->
@@ -326,80 +404,16 @@
                     </p>
                 </div>
             </div>
-
-            <!-- Executive Summary -->
-            <div v-if="currentReport.analysis?.executive_summary"
-                class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md h-full">
-                <h4 class="text-xl font-semibold text-blue-700 mb-2">
-                    🧾 Executive Summary
-                </h4>
-                <p class="text-gray-700 whitespace-pre-line">
-                    {{ currentReport.analysis.executive_summary }}
-                </p>
-            </div>
         </div>
         <!-- Loading/Error -->
-        <!-- <div v-else-if="!currentReport" class="text-center text-black mt-24">
+        <div v-else-if="!currentReport" class="text-center text-black mt-24">
             <p v-if="isLoading">Loading data...</p>
             <p v-else-if="error">{{ error }}</p>
-        </div> -->
-        <!-- Loading/Error/Empty Placeholder -->
-        <div v-else-if="!currentReport"
-            class="flex flex-col items-center justify-center h-[440px] mt-10 bg-[#e6e9f7] rounded-lg">
-            <div class="relative flex flex-col items-center justify-center">
-                <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
-                    <span class="text-[#1f3b70] text-7xl font-semibold">?</span>
-                </div>
-
-                <!-- Text Section -->
-                <div class="text-center mt-8">
-                    <h2 class="text-2xl font-semibold text-[#1f3b70]">No Data Found</h2>
-                    <p class="text-gray-600 text-sm mt-2 max-w-md mx-auto">
-                        Upload a file and click the Analyze Demo Form button to show the analyzed result of your
-                        uploaded file.
-                    </p>
-                </div>
-            </div>
         </div>
-
-        <div>
-            <LoadingOverlay :visible="isExporting" />
-        </div>
-
-        <!-- ✅ SweetAlert-style Modal -->
-        <transition name="fade">
-            <div v-if="alertVisible"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
-                <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
-                    'border-green-600': alertType === 'success',
-                    'border-red-600': alertType === 'error',
-                    'border-yellow-500': alertType === 'warning'
-                }">
-                    <div class="text-5xl mb-3" :class="{
-                        'text-green-600': alertType === 'success',
-                        'text-red-600': alertType === 'error',
-                        'text-yellow-500': alertType === 'warning'
-                    }">
-                        {{ alertIcon }}
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">{{ alertTitle }}</h2>
-                    <p class="text-gray-600 mb-5">{{ alertMessage }}</p>
-                    <div class="flex justify-center gap-3">
-                        <button v-if="alertType === 'warning'" @click="confirmAction"
-                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Yes</button>
-                        <button @click="closeAlert"
-                            class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
-                            {{ alertType === 'warning' ? 'Cancel' : 'OK' }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </transition>
     </div>
 </template>
 
 <script setup>
-import LoadingOverlay from "../Components/LoadingOverlay.vue";
 import { ref, watchEffect, computed, watch } from "vue";
 import {
     Line,
@@ -438,124 +452,84 @@ ChartJS.register(
 );
 
 const props = defineProps({
-    analysisData: {
-        type: Object,
-        default: () => ({})
-    },
-    isSaved: {
-        type: Boolean,
-        default: false
-    }
+  analysisData: {
+    type: Object,
+    default: () => ({})
+  }
 });
 
 const reports = ref([]);
-const applicant = ref("");
+const selectedCooperator = ref("");
 const isLoading = ref(true);
 const error = ref(null);
 const chartMap = ref({});
 const currentReport = ref(null);
 const isExporting = ref(false);
 
-// 🧩 Custom Alert System
-const alertVisible = ref(false);
-const alertType = ref("success");
-const alertTitle = ref("");
-const alertMessage = ref("");
-const alertIcon = ref("");
-let confirmCallback = null;
-
-function showAlert(type, title, message, onConfirm = null) {
-    alertType.value = type;
-    alertTitle.value = title;
-    alertMessage.value = message;
-    alertVisible.value = true;
-    confirmCallback = onConfirm;
-    alertIcon.value =
-        type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
-}
-function closeAlert() {
-    alertVisible.value = false;
-}
-function confirmAction() {
-    if (confirmCallback) confirmCallback();
-    closeAlert();
-}
-
 watchEffect(() => {
-    console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
-    console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
+  console.log("🔍 AI-AgentContext received analysisData:", props.analysisData);
+  console.log("🔍 AnalysisData keys:", props.analysisData ? Object.keys(props.analysisData) : "null/undefined");
+  
+  if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
+    console.log("⚠️ AnalysisData is empty, returning early");
+    return;
+  }
 
-    if (!props.analysisData || Object.keys(props.analysisData).length === 0) {
-        console.log("⚠️ AnalysisData is empty, returning early");
-        return;
-    }
+  try {
+    const rep = props.analysisData;
+    console.log("📋 Processing report with form_id:", rep.form_id);
 
-    try {
-        const rep = props.analysisData;
-        console.log("📋 Processing report with form_id:", rep.form_id);
+    // 🧩 Build chart map for the received report
+    const charts = rep.graph_suggestions?.suggested_charts || [];
+    console.log("📊 Charts found:", charts.length);
+    chartMap.value[rep.form_id] = charts.map((chart) => {
+      let component;
+      const type = chart.chart_type?.toLowerCase() || "";
+      if (type.includes("line")) component = Line;
+      else if (type.includes("horizontal_bar")) component = Bar;
+      else if (type.includes("bar")) component = Bar;
+      else if (type.includes("pie")) component = Pie;
+      else if (type.includes("doughnut")) component = Pie;
+      else if (type.includes("radar")) component = Radar;
+      else if (type.includes("polar")) component = PolarArea;
+      else if (type.includes("scatter")) component = Scatter;
+      else if (type.includes("bubble")) component = Bubble;
+      else component = Bar;
 
-        // 🧩 Build chart map for the received report
-        const charts = rep.graph_suggestions?.suggested_charts || [];
-        console.log("📊 Charts found:", charts.length);
-        chartMap.value[rep.form_id] = charts.map((chart) => {
-            let component;
-            const type = chart.chart_type?.toLowerCase() || "";
-            if (type.includes("line")) component = Line;
-            else if (type.includes("horizontal_bar")) component = Bar;
-            else if (type.includes("bar")) component = Bar;
-            else if (type.includes("pie")) component = Pie;
-            else if (type.includes("doughnut")) component = Pie;
-            else if (type.includes("radar")) component = Radar;
-            else if (type.includes("polar")) component = PolarArea;
-            else if (type.includes("scatter")) component = Scatter;
-            else if (type.includes("bubble")) component = Bubble;
-            else component = Bar;
+      let options = chart.chart_options || {};
+      if (type.includes("horizontal_bar")) {
+        options = { ...options, indexAxis: "y" };
+      }
 
-            let options = chart.chart_options || {};
-            if (type.includes("horizontal_bar")) {
-                options = { ...options, indexAxis: "y" };
-            }
+      return {
+        title: chart.title,
+        description: chart.description,
+        component,
+        chart_data: chart.chart_data,
+        chart_options: options,
+      };
+    });
 
-            return {
-                title: chart.title,
-                description: chart.description,
-                component,
-                chart_data: chart.chart_data,
-                chart_options: options,
-            };
-        });
-
-        // ✅ Update state dynamically
-        currentReport.value = rep;
-        applicant.value = rep.analysis?.basic_info?.applicant || "";
-        isLoading.value = false;
-        error.value = null;
-        console.log("✅ Current report set:", currentReport.value);
-        console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
-        console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
-    } catch (err) {
-        error.value = err.message;
-        isLoading.value = false;
-    }
+    // ✅ Update state dynamically
+    currentReport.value = rep;
+    selectedCooperator.value = rep.analysis?.basic_info?.cooperator || "";
+    isLoading.value = false;
+    error.value = null;
+    console.log("✅ Current report set:", currentReport.value);
+    console.log("✅ Report has analysis:", !!currentReport.value?.analysis);
+    console.log("✅ Report has graph_suggestions:", !!currentReport.value?.graph_suggestions);
+  } catch (err) {
+    error.value = err.message;
+    isLoading.value = false;
+  }
 });
 
 
-const uniqueApplicants = computed(() => {
-    const apps = reports.value
-        .map((r) => r.analysis?.basic_info?.applicant)
+const uniqueCooperators = computed(() => {
+    const coops = reports.value
+        .map((r) => r.analysis?.basic_info?.cooperator)
         .filter(Boolean);
-    return [...new Set(apps)];
-});
-
-// Automatically select the first applicant when there's only one
-watch(uniqueApplicants, (apps) => {
-    if (apps.length === 1) {
-        applicant.value = apps[0];
-        const match = reports.value.find(
-            (r) => r.analysis?.basic_info?.applicant === apps[0]
-        );
-        currentReport.value = match || null;
-    }
+    return [...new Set(coops)];
 });
 
 const improvementValue = computed(() => {
@@ -564,23 +538,23 @@ const improvementValue = computed(() => {
             ?.relative_improvement_percent || 0
     );
 });
-watch(applicant, (newApplicant) => {
-    if (!newApplicant) {
+watch(selectedCooperator, (newCoop) => {
+    if (!newCoop) {
         currentReport.value = null;
-        localStorage.removeItem("applicant");
+        localStorage.removeItem("selectedCooperator");
         return;
     }
 
-    localStorage.setItem("applicant", newApplicant);
+    localStorage.setItem("selectedCooperator", newCoop);
     const match = reports.value.find(
-        (r) => r.analysis?.basic_info?.applicant === newApplicant
+        (r) => r.analysis?.basic_info?.cooperator === newCoop
     );
     currentReport.value = match || null;
 });
 
 const exportToPDF = async () => {
     if (!currentReport.value) {
-        showAlert("error", "Export Failed", "No report data available to export.");
+        alert("No report data available to export.");
         return;
     }
 
@@ -623,29 +597,14 @@ const exportToPDF = async () => {
             body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-            // Try to get error message from response
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || errorData.message || "Failed to export PDF");
-            }
-            throw new Error(`Failed to export PDF: ${response.status} ${response.statusText}`);
-        }
-
+        if (!response.ok) throw new Error("Failed to export PDF");
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Report-${new Date().toISOString().slice(0, 10)}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        window.open(url, "_blank");
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showAlert("success", "Export Successful", "Analyze Report was successfully exported to PDF!");
     } catch (error) {
-        console.error("PDF Export Error:", error);
-        showAlert("error", "Error exporting PDF: " + (error.message || "Please try again."));
+        console.error(error);
+        alert("Error exporting PDF. Please try again.");
     } finally {
         isExporting.value = false;
     }
@@ -655,20 +614,11 @@ const isValidReport = computed(() => !!currentReport.value);
 
 const handleExportClick = () => {
     if (!isValidReport.value) {
-        showAlert("warning", "⚠️ Please select a valid report before exporting to PDF.");
+        alert("⚠️ Please select a valid report before exporting to PDF.");
         return;
     }
     exportToPDF();
 };
-
-watch(isExporting, (newVal) => {
-    if (newVal) {
-        document.body.style.overflow = 'hidden'; // disable scroll
-    } else {
-        document.body.style.overflow = ''; // restore scroll
-    }
-});
-
 
 </script>
 
