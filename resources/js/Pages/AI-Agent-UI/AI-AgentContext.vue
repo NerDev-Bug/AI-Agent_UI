@@ -9,7 +9,7 @@
         <div class="flex items-center gap-6 mb-8 px-2">
             <div class="flex-2">
                 <br>
-                <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
+                <!-- Export PDF button - only show after save (for Quadrant memory storage) -->
                 <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
                     class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
@@ -42,115 +42,124 @@
                 {{ currentReport.form_type }}
             </h3>
 
-            <!-- Basic Info -->
-            <div v-if="currentReport.analysis?.basic_info"
-                class="bg-gray-50 border-l-4 border-green-500 p-4 rounded-md h-full">
-                <h4 class="text-xl font-semibold text-green-700 mb-2">
-                    🌾 Basic Information
-                </h4>
-                <ul class="grid grid-cols-2 gap-x-8 text-gray-700">
-                    <li><b>Applicant:</b> {{ currentReport.analysis.basic_info.applicant }}</li>
-                    <li><b>Application Date:</b> {{ currentReport.analysis.basic_info.application_date }}</li>
-                    <li><b>Cooperator:</b> {{ currentReport.analysis.basic_info.cooperator }}</li>
-                    <li><b>Product:</b> {{ currentReport.analysis.basic_info.product }}</li>
-                    <li><b>Location:</b> {{ currentReport.analysis.basic_info.location }}</li>
-                    <li><b>Crop:</b> {{ currentReport.analysis.basic_info.crop }}</li>
-                    <li><b>Plot Size:</b> {{ currentReport.analysis.basic_info.plot_size }}</li>
-                    <li><b>Planting Date:</b> {{ currentReport.analysis.basic_info.planting_date }}</li>
-                </ul>
-            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div v-if="currentReport.analysis?.basic_info"
+                    class="bg-white shadow rounded-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        Basic Information
+                    </h3>
 
-            <!-- 🌟 Performance Metrics Section -->
-            <div v-if="currentReport.analysis?.performance_analysis"
-                class="bg-white border-l-4 border-purple-600 p-6 rounded-xl shadow-md mt-10">
-                <div class="flex items-center mb-4">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-purple-700 mr-2" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 17v-2a4 4 0 00-4-4H3m0 0a9 9 0 0118 0h-2a4 4 0 00-4 4v2M3 11l1.5-1.5M21 11l-1.5-1.5" />
-                    </svg>
-                    <h4 class="text-xl font-semibold text-purple-700">📈 Performance Metrics</h4>
+                    <div class="grid grid-cols-2 gap-y-3 gap-x-6 text-sm text-gray-700">
+                        <p><span class="font-semibold">Applicant:</span> {{ currentReport.analysis.basic_info.applicant
+                            }}</p>
+                        <p><span class="font-semibold">Application Date:</span> {{
+                            currentReport.analysis.basic_info.application_date }}</p>
+
+                        <p><span class="font-semibold">Cooperator:</span> {{
+                            currentReport.analysis.basic_info.cooperator }}</p>
+                        <p><span class="font-semibold">Product:</span> {{ currentReport.analysis.basic_info.product }}
+                        </p>
+
+                        <p><span class="font-semibold">Location:</span> {{ currentReport.analysis.basic_info.location }}
+                        </p>
+                        <p><span class="font-semibold">Crop:</span> {{ currentReport.analysis.basic_info.crop }}</p>
+
+                        <p><span class="font-semibold">Plot Size:</span> {{ currentReport.analysis.basic_info.plot_size
+                            }}</p>
+                        <p><span class="font-semibold">Planting Date:</span> {{
+                            currentReport.analysis.basic_info.planting_date }}</p>
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center text-gray-800">
-                    <!-- Control Average -->
-                    <div>
-                        <p class="text-sm text-gray-500">Control Average</p>
-                        <p class="text-3xl font-bold">{{
-                            currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(2) }}
-                        </p>
-                    </div>
+                <div v-if="currentReport.analysis?.performance_analysis"
+                    class="bg-white shadow rounded-xl p-6 border border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                        Performance Metrics
+                    </h3>
 
-                    <!-- Leads Agri Average -->
-                    <div>
-                        <p class="text-sm text-gray-500">Leads Agri Average</p>
-                        <p class="text-3xl font-bold">{{
-                            currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(2) }}
-                        </p>
-                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
-                    <!-- Absolute Difference -->
-                    <div>
-                        <p class="text-sm text-gray-500">Absolute Difference</p>
-                        <p class="text-3xl font-bold">
-                            {{
-                                currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
-                            }}
-                            <span class="text-base text-gray-500">
+                        <!-- Control Average -->
+                        <div class="rounded-xl p-5 text-white text-center font-semibold bg-red-500 shadow">
+                            <p class="text-sm opacity-70">Control Average</p>
+                            <p class="text-3xl mt-1">
                                 {{
-                                    currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference_unit
+                                    currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(2)
                                 }}
+                            </p>
+                        </div>
+
+                        <!-- Leads Agri Average -->
+                        <div class="rounded-xl p-5 text-white text-center font-semibold bg-green-500 shadow">
+                            <p class="text-sm opacity-70">Leads Agri Average</p>
+                            <p class="text-3xl mt-1">
+                                {{
+                                    currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(2)
+                                }}
+                            </p>
+                        </div>
+
+                        <!-- Absolute Difference -->
+                        <div class="rounded-xl p-5 text-white text-center font-semibold bg-blue-900 shadow">
+                            <p class="text-sm opacity-70">Absolute Difference</p>
+                            <p class="text-3xl mt-1">
+                                {{
+                                    currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
+                                }}
+                                <span class="text-sm">
+                                    {{
+                                        currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference_unit
+                                    }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <!-- Relative Improvement -->
+                        <div class="rounded-xl p-5 text-white text-center font-semibold bg-blue-600 shadow">
+                            <p class="text-sm opacity-80">Relative Improvement</p>
+
+                            <p :class="[
+                                'text-3xl mt-1',
+                                improvementValue > 0 ? 'text-green-300' :
+                                    improvementValue < 0 ? 'text-red-300' : 'text-yellow-300'
+                            ]">
+                                {{ improvementValue.toFixed(2) }}%
+                            </p>
+
+                            <span :class="[
+                                'inline-flex items-center px-3 py-1 rounded-full text-xs mt-2 font-medium',
+                                improvementValue > 0 ? 'bg-green-200 text-green-700' :
+                                    improvementValue < 0 ? 'bg-red-200 text-red-700' : 'bg-yellow-200 text-yellow-700'
+                            ]">
+                                <template v-if="improvementValue > 0">↑ Improved</template>
+                                <template v-else-if="improvementValue < 0">↓ Decreased</template>
+                                <template v-else>→ No Change</template>
                             </span>
-                        </p>
-                    </div>
+                        </div>
 
-                    <!-- Relative Improvement -->
-                    <div>
-                        <p class="text-sm text-gray-500">Relative Improvement</p>
-                        <p :class="[
-                            'text-3xl font-bold',
-                            improvementValue > 0
-                                ? 'text-green-600'
-                                : improvementValue < 0
-                                    ? 'text-red-600'
-                                    : 'text-yellow-600'
-                        ]">
-                            {{ improvementValue.toFixed(2) }}%
-                        </p>
-                        <span :class="[
-                            'inline-block text-xs px-2 py-0.5 rounded-full mt-1',
-                            improvementValue > 0
-                                ? 'bg-green-100 text-green-700'
-                                : improvementValue < 0
-                                    ? 'bg-red-100 text-red-700'
-                                    : 'bg-yellow-100 text-yellow-700'
-                        ]">
-                            <template v-if="improvementValue > 0">↑ Improved</template>
-                            <template v-else-if="improvementValue < 0">↓ Decreased</template>
-                            <template v-else>→ No Change</template>
-                        </span>
-                    </div>
-
-                    <!-- Significance -->
-                    <div>
-                        <p class="text-sm text-gray-500">Significance</p>
-                        <p class="text-3xl font-bold text-purple-700 capitalize">
-                            {{
-                                currentReport.analysis.performance_analysis.statistical_assessment.improvement_significance
-                            }}
-                        </p>
+                        <!-- Significance -->
+                        <div class="rounded-xl p-5 text-white text-center font-semibold bg-purple-500 shadow">
+                            <p class="text-sm opacity-70">Significance</p>
+                            <p class="text-3xl mt-1 capitalize">
+                                {{
+                                    currentReport.analysis.performance_analysis.statistical_assessment
+                                        .improvement_significance
+                                }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ✅ Performance Analysis + Treatment Details side-by-side -->
+
+            <!-- Performance Analysis + Treatment Details side-by-side -->
             <div v-if="currentReport.analysis?.performance_analysis"
                 class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-10">
 
                 <!-- Left: Performance Analysis -->
                 <div class="bg-purple-50 border-l-4 border-purple-600 p-4 rounded-md">
                     <h4 class="text-xl font-semibold text-purple-700 mb-2">
-                        📈 Performance Analysis
+                        Performance Analysis
                     </h4>
                     <p class="text-gray-700 mb-3 italic">
                         {{ currentReport.analysis.performance_analysis.scale_info }}
@@ -185,7 +194,7 @@
                 <!-- Right: Treatment Details -->
                 <div v-if="currentReport.analysis?.treatment_comparison"
                     class="bg-white border border-purple-200 rounded-lg p-6 mb-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">🔬 Treatment Details</h5>
+                    <h5 class="font-semibold text-purple-700 mb-2">Treatment Details</h5>
                     <hr class="border-t-2 border-gray-400 my-4" />
                     <div class="flex flex-col md:flex-row justify-between text-gray-800">
                         <div class="flex-1 pr-4">
@@ -222,7 +231,7 @@
             <div v-if="chartMap[currentReport.form_id]?.length" class="mt-10 space-y-10">
                 <!-- Charts -->
                 <h4 class="text-xl font-semibold text-black border-b">
-                    📊 Data Visualizations
+                    Data Visualizations
                 </h4>
 
                 <div class="grid gap-8 sm:grid-cols-1 lg:grid-cols-2 items-stretch content-start">
@@ -239,10 +248,10 @@
                 </div>
             </div>
 
-            <!-- ✅ Separate Statistical Assessment and Trend Summary below -->
+            <!-- Separate Statistical Assessment and Trend Summary below -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <div class="bg-white border border-purple-200 rounded-lg p-4 mb-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">📏 Statistical Assessment</h5>
+                    <h5 class="font-semibold text-purple-700 mb-2">Statistical Assessment</h5>
                     <p><b>Significance:</b>
                         {{ currentReport.analysis.performance_analysis.statistical_assessment.improvement_significance
                         }}</p>
@@ -259,7 +268,7 @@
                 </div>
 
                 <div class="bg-white border border-purple-200 rounded-lg p-4">
-                    <h5 class="font-semibold text-purple-700 mb-2">📈 Trend Analysis</h5>
+                    <h5 class="font-semibold text-purple-700 mb-2">Trend Analysis</h5>
                     <ul class="list-disc ml-6 text-gray-700">
                         <li><b>Control Trend:</b> {{
                             currentReport.analysis.performance_analysis.trend_analysis.control_trend }}
@@ -287,7 +296,7 @@
                 <div v-if="currentReport.analysis?.opportunities?.length"
                     class="bg-green-50 border-l-4 border-green-500 p-4 rounded-md">
                     <h4 class="text-xl font-semibold text-green-700 mb-2">
-                        💡 Opportunities
+                        Opportunities
                     </h4>
                     <ul class="list-disc ml-6 space-y-1 text-gray-700">
                         <li v-for="(op, i) in currentReport.analysis.opportunities" :key="i">
@@ -299,7 +308,7 @@
                 <div v-if="currentReport.analysis?.risk_factors?.length"
                     class="bg-red-50 border-l-4 border-red-500 p-4 rounded-md">
                     <h4 class="text-xl font-semibold text-red-700 mb-2">
-                        ⚠️ Risks / Limitations
+                        Risks / Limitations
                     </h4>
                     <ul class="list-disc ml-6 space-y-1 text-gray-700">
                         <li v-for="(risk, i) in currentReport.analysis.risk_factors" :key="i">
@@ -314,7 +323,7 @@
             <div v-if="currentReport.analysis?.recommendations?.length"
                 class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-md">
                 <h4 class="text-xl font-semibold text-yellow-700 mb-2">
-                    🧠 Recommendations
+                    Recommendations
                 </h4>
                 <div v-for="(rec, i) in currentReport.analysis.recommendations" :key="i" class="mb-3">
                     <p class="text-gray-800">
@@ -332,7 +341,7 @@
             <div v-if="currentReport.analysis?.executive_summary"
                 class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-md h-full">
                 <h4 class="text-xl font-semibold text-blue-700 mb-2">
-                    🧾 Executive Summary
+                    Executive Summary
                 </h4>
                 <p class="text-gray-700 whitespace-pre-line">
                     {{ currentReport.analysis.executive_summary }}
@@ -367,7 +376,7 @@
             <LoadingOverlay :visible="isExporting" />
         </div>
 
-        <!-- ✅ SweetAlert-style Modal -->
+        <!-- SweetAlert-style Modal -->
         <transition name="fade">
             <div v-if="alertVisible"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">

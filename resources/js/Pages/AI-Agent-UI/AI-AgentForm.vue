@@ -52,7 +52,7 @@
           </transition>
 
           <!-- ✅ Upload Form -->
-          <form @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
+          <form data-uploadform @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
             class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
             :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
             <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png"
@@ -118,7 +118,7 @@
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
             <!-- Analyze -->
-            <div v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4 relative z-50">
+            <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4 relative z-50">
               <button @click="startAnalysis"
                 class="bg-[#00853F] w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-[#00953F] transition">
                 Analyze Demo Form
@@ -148,9 +148,15 @@
     </div>
 
     <!-- Context -->
-    <div id="AI-AgentContext" class="p-8 pt-24">
+    <div id="AI-AgentContext" class="p-8 pt-24" data-resultssection>
       <AIAgentContext :analysisData="analysisData" :isSaved="isSaved" />
     </div>
+
+    <!-- Tour -->
+    <!-- <Tour ref="tour" />
+    <button @click="startTour" class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 z-[9999]">
+      Start Tour
+    </button> -->
 
     <!-- ✅ SweetAlert-style Modal -->
     <transition name="fade">
@@ -188,6 +194,7 @@
 import AIAgentContext from "./AI-AgentContext.vue";
 import Navbarheader from "../Layouts/Header.vue";
 import LoadingPage from "../Components/LoadingPage.vue";
+import Tour from "../Layouts/Tour.vue";
 import { ref } from "vue";
 import axios from "axios";
 
@@ -542,6 +549,11 @@ function handleSearchResults(searchResult) {
     console.log("✅ Search result loaded:", analysisData.value);
     showAlert("success", "Result Loaded", "Search result has been loaded successfully!");
   }
+}
+
+const tour = ref(null);
+function startTour() {
+  tour.value.start()
 }
 
 </script>
