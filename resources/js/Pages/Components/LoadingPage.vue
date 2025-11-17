@@ -3,8 +3,6 @@
         <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div class="bg-white p-12 w-[400px] h-auto rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
                 <div class="relative w-full h-40">
-                    <!-- <div class="absolute bottom-0 left-0 w-full h-4 bg-green-700 rounded-full"></div> -->
-
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         <div class="w-2 h-6 bg-green-500 rounded-full origin-bottom animate-grow delay-[0ms]"></div>
                         <div class="w-2 h-8 bg-green-400 rounded-full origin-bottom animate-grow delay-[150ms]"></div>
@@ -18,7 +16,7 @@
                 </div>
 
                 <p class="text-green-900 font-semibold text-lg animate-pulse">
-                    {{ text }}
+                    {{ message }}
                 </p>
 
                 <!-- Progress Bar -->
@@ -35,23 +33,184 @@
 </template>
 
 <script setup>
+import { ref, watch, onUnmounted, nextTick } from 'vue';
+import axios from 'axios';
+import { ProgressSimulator } from '../../utils/progressSimulator.js';
+
 const props = defineProps({
     visible: {
         type: Boolean,
         default: false,
     },
-    text: {
+    jobId: {
         type: String,
-        default: "",
+        default: null,
     },
-    progress: {
-        type: Number,
-        default: 0,
+    initialText: {
+        type: String,
+        default: "Processing your file...",
     }
+});
+
+const emit = defineEmits(['complete', 'error']);
+
+const progress = ref(0);
+const message = ref(props.initialText);
+let pollInterval = null;
+let isPolling = false;
+let isRequestInProgress = false;
+let currentJobId = null; // Track current job to prevent duplicate polling
+let progressSimulator = null; // Progress simulator instance
+
+// Initialize progress simulator
+const initProgressSimulator = () => {
+    if (!progressSimulator) {
+        progressSimulator = new ProgressSimulator();
+    }
+    progressSimulator.reset();
+    
+    // Start simulator with callback
+    progressSimulator.start((simulatedProgress, simulatedMessage) => {
+        // Only update if we don't have backend status yet or simulator is ahead
+        if (!isPolling || progress.value < simulatedProgress) {
+            progress.value = simulatedProgress;
+            message.value = simulatedMessage;
+        }
+    });
+};
+
+// Helper function to stop polling
+const stopPolling = () => {
+    if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+    }
+    isPolling = false;
+    currentJobId = null;
+    
+    // Stop progress simulator
+    if (progressSimulator) {
+        progressSimulator.stop();
+    }
+};
+
+// Helper function to start polling
+const startPolling = () => {
+    // Prevent duplicate polling for same job
+    if (isPolling && currentJobId === props.jobId) {
+        return;
+    }
+    
+    // Clear any existing interval first
+    stopPolling();
+    
+    if (!props.jobId || !props.visible) {
+        return;
+    }
+    
+    isPolling = true;
+    currentJobId = props.jobId;
+    
+    // Start progress simulator
+    initProgressSimulator();
+    
+    // Use nextTick to ensure we only start once
+    nextTick(() => {
+        // Double-check we still should poll
+        if (!props.jobId || !props.visible || currentJobId !== props.jobId) {
+            stopPolling();
+            return;
+        }
+        
+        // Poll immediately
+        pollProgress();
+        
+        // Then poll every 2 seconds
+        pollInterval = setInterval(() => {
+            // Double-check before each poll
+            if (currentJobId !== props.jobId || !props.visible) {
+                stopPolling();
+                return;
+            }
+            pollProgress();
+        }, 2000);
+    });
+};
+
+// Poll progress when jobId is provided
+const pollProgress = async () => {
+    // Prevent multiple simultaneous requests
+    if (isRequestInProgress) {
+        return;
+    }
+    
+    if (!props.jobId || !props.visible || currentJobId !== props.jobId) {
+        stopPolling();
+        return;
+    }
+    
+    isRequestInProgress = true;
+    
+    try {
+        const response = await axios.get(`/api/ai-agent/progress/${props.jobId}`);
+        const data = response.data;
+        
+        // Update simulator based on backend status
+        if (data.status && progressSimulator) {
+            progressSimulator.updateFromBackend(data.status);
+        }
+        
+        // Check if job is complete - this handles early completion
+        if (data.status === 'complete') {
+            stopPolling();
+            progress.value = 100; // Jump to 100% immediately
+            message.value = 'Complete!';
+            
+            // Emit complete event with result
+            emit('complete', data.result);
+        } else if (data.status === 'failed') {
+            stopPolling();
+            message.value = 'Processing failed';
+            emit('error', data.message || 'Job failed');
+        }
+        // If still in_progress, simulator continues (max 99%)
+        // Progress will stay at 99% until backend confirms completion
+    } catch (error) {
+        // Handle 404 (job not found) or other errors
+        if (error.response && error.response.status === 404) {
+            stopPolling();
+            message.value = 'Job not found or expired';
+            emit('error', 'Job not found. It may have expired or been cleaned up.');
+        } else {
+            console.error('Progress polling error:', error);
+            // Simulator continues even if API call fails
+        }
+    } finally {
+        isRequestInProgress = false;
+    }
+};
+
+// Single watcher that watches both jobId and visible
+watch(
+    () => [props.jobId, props.visible],
+    ([newJobId, isVisible]) => {
+        if (newJobId && isVisible) {
+            startPolling();
+        } else {
+            stopPolling();
+        }
+    },
+    { immediate: true }
+);
+
+// Cleanup on unmount
+onUnmounted(() => {
+    stopPolling();
 });
 </script>
 
 <style scoped>
+/* ... existing styles ... */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.3s ease;
@@ -63,24 +222,18 @@ const props = defineProps({
 }
 
 @keyframes grow {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: scaleY(0.6);
     }
-
     50% {
         transform: scaleY(1.2);
     }
 }
 
 @keyframes breathe {
-
-    0%,
-    100% {
+    0%, 100% {
         transform: translateX(-50%) scale(0.9);
     }
-
     50% {
         transform: translateX(-50%) scale(1.1);
     }

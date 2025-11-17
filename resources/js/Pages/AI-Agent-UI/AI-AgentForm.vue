@@ -186,7 +186,13 @@
       </div>
     </transition>
 
-    <LoadingPage :visible="loadingVisible" :text="loadingText" :progress="loadingProgress" />
+  <LoadingPage 
+  :visible="loadingVisible" 
+  :job-id="jobId"
+  :initial-text="loadingText"
+  @complete="handleJobComplete"
+  @error="handleJobError"
+/>
   </div>
 </template>
 
@@ -207,6 +213,7 @@ const uploadedFileURL = ref(null);
 const analysisData = ref(null);
 const cacheId = ref(null); // Store cache_id for save operation
 const fileInput = ref(null);
+const jobId = ref(null);
 
 const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
 const showSuccessMessage = ref(false); // control showing success box
@@ -303,44 +310,41 @@ function processFile(file) {
 }
 
 // ✅ Analyze button — send file to API
+// ✅ Analyze button — send file to API with background support
 async function startAnalysis() {
   if (!uploadedFile.value) {
     showAlert("warning", "No file", "Please upload a file first!");
     return;
   }
-  loadingText.value = "Analyzing file..."; // set overlay text
-  loadingVisible.value = true; // show loading overlay
+  
+  loadingText.value = "Analyzing file...";
+  loadingVisible.value = true;
   loadingProgress.value = 0;
-
-  // Simulate smooth progress
-  progressInterval = setInterval(() => {
-  if (loadingProgress.value < 95) { // stop before 100%
-    if (loadingProgress.value < 50) {
-      loadingProgress.value += Math.random() * 1.5; // slow progress 1-50%
-    } else if (loadingProgress.value < 80) {
-      loadingProgress.value += Math.random() * 3;   // medium speed 50-80%
-    } else if (loadingProgress.value < 88) {
-      loadingProgress.value += Math.random() * 1.5; // slow down 80-95%
-    } else {
-      loadingProgress.value += Math.random() * 0.5; // almost stop 95-99%
-    }
-  }
-}, 300); // slightly faster interval for smoother animation
-
 
   isUploading.value = true;
   try {
     const formData = new FormData();
     formData.append("file", uploadedFile.value);
+    formData.append("background", "true"); // ✅ Enable background processing
+    
     const { data } = await axios.post("/api/analyze-file", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
 
-    // Debug: Log the response
     console.log("📊 API Response:", data);
-    console.log("📊 Analysis data:", data.analysis);
 
-    // Store cache_id if available (from full response or nested)
+    // ✅ Check if background job was queued
+    if (data.status === 'queued' && data.job_id) {
+      // Background mode - use LoadingPage with jobId for progress polling
+      jobId.value = data.job_id;
+      loadingText.value = data.message || "Processing started in background...";
+      // LoadingPage component will automatically poll for progress
+      // Don't hide loading yet - wait for job to complete
+      return;
+    }
+
+    // ✅ Synchronous mode (old behavior) - process immediately
+    // Store cache_id if available
     if (data.cache_id) {
       cacheId.value = data.cache_id;
       console.log("✅ Cache ID stored:", cacheId.value);
@@ -349,35 +353,123 @@ async function startAnalysis() {
       console.log("✅ Cache ID stored from analysis:", cacheId.value);
     }
 
-    // Set the analysis data - backend returns { analysis: {...} }
+    // Set the analysis data
     if (data.analysis) {
       analysisData.value = data.analysis;
       console.log("✅ Analysis data set:", analysisData.value);
     } else {
-      // Fallback: if structure is different, use the whole data object
       console.warn("⚠️ No 'analysis' key found, using full response");
       analysisData.value = data;
     }
 
     isAnalyzed.value = true;
-    isSaved.value = false; // Reset saved state when new analysis is done
+    isSaved.value = false;
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
 
-    // ✅ Show success message instead of form
     successMessage.value = "Successfully Analyze!";
     showSuccessMessage.value = true;
+    
+    // Hide loading for synchronous mode
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
   } catch (err) {
     console.error("❌ Analysis error:", err);
     showAlert("error", "Analyze failed", getErrorMessage(err));
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
   } finally {
-    clearInterval(progressInterval);
-    loadingProgress.value = 100; // complete progress
-    setTimeout(() => {
-      loadingVisible.value = false;
-      loadingProgress.value = 0;
-    }, 600);
     isUploading.value = false;
   }
+}
+// ✅ Handle job completion from LoadingPage
+function handleJobComplete(result) {
+  console.log("✅ Job completed with result:", result);
+  
+  try {
+    // Result structure from backend:
+    // {
+    //   job_id: string,
+    //   status: "complete",
+    //   progress: 100,
+    //   message: "Complete!",
+    //   result: {
+    //     analysis: {...},    // The actual report data
+    //     status: "success",
+    //     total_reports: 1,
+    //     cache_id: "..."
+    //   }
+    // }
+    
+    if (!result || (!result.reports && !result.analysis)) {  // ✅ Check for actual data
+      showAlert("error", "Invalid Result", "...");
+      return;
+    }
+    const jobResult = result;  // ✅ Use result directly (no nesting)
+    
+    
+    
+    // ✅ Extract cache_id first (important for save operation)
+    if (jobResult.cache_id) {
+      cacheId.value = jobResult.cache_id;
+      console.log("✅ Cache ID stored:", cacheId.value);
+    }
+    
+    // ✅ Extract analysis data
+    if (jobResult.analysis) {
+      // Backend already formatted it for us
+      analysisData.value = jobResult.analysis;
+      console.log("✅ Analysis data set from formatted result");
+    } else if (jobResult.reports && jobResult.reports.length > 0) {
+      // Fallback: extract from reports array
+      const firstReport = jobResult.reports[0];
+      analysisData.value = firstReport;
+      
+      // Try to get cache_id from report if not already set
+      if (!cacheId.value && firstReport.cache_id) {
+        cacheId.value = firstReport.cache_id;
+      }
+      console.log("✅ Analysis data set from reports array");
+    } else {
+      console.error("❌ No analysis data found in result");
+      showAlert("error", "No Data", "No analysis data found in the result");
+      return;
+    }
+    
+    // ✅ Update UI state
+    isAnalyzed.value = true;
+    isSaved.value = false;
+    
+    // ✅ Show success message
+    successMessage.value = "Successfully Analyzed!";
+    showSuccessMessage.value = true;
+    
+    showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
+    
+    console.log("✅ Final state:", {
+      hasAnalysisData: !!analysisData.value,
+      hasCacheId: !!cacheId.value,
+      cacheId: cacheId.value
+    });
+    
+  } catch (err) {
+    console.error("❌ Error processing job result:", err);
+    showAlert("error", "Processing Error", "Failed to process analysis result");
+  } finally {
+    // ✅ Hide loading and clear job ID
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
+    jobId.value = null;
+  }
+}
+
+// ✅ Handle job error from LoadingPage
+function handleJobError(error) {
+  console.error("❌ Job error:", error);
+  showAlert("error", "Analysis Failed", error || "Background processing failed");
+  loadingVisible.value = false;
+  loadingProgress.value = 0;
+  jobId.value = null;
+  isUploading.value = false;
 }
 
 // ✅ Re-analyze (re-send the same file)
@@ -386,31 +478,23 @@ async function reanalyze() {
   loadingVisible.value = true;
   loadingProgress.value = 0;
 
-  progressInterval = setInterval(() => {
-    if (loadingProgress.value < 90) {
-      loadingProgress.value += Math.random() * 5;
-    }
-  }, 400);
-
   try {
     showSuccessMessage.value = false;
     isAnalyzed.value = false;
-    isSaved.value = false; // Reset saved state when re-analyzing
+    isSaved.value = false;
     analysisData.value = null;
     cacheId.value = null;
-    await startAnalysis();
-    successMessage.value = "Successfully Re-analyze!";
-    showSuccessMessage.value = true;
+    jobId.value = null; 
+    
+    await startAnalysis(); 
+  
   } catch (err) {
     showAlert("error", "Reanalyze Failed", getErrorMessage(err));
-  } finally {
-    clearInterval(progressInterval);
-    loadingProgress.value = 100;
-    setTimeout(() => {
-      loadingVisible.value = false;
-      loadingProgress.value = 0;
-    }, 600);
+    // Only hide on error
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
   }
+
 }
 
 // ✅ Save button (send confirmation)

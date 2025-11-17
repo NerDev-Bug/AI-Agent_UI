@@ -16,6 +16,10 @@ class FastAPIController extends Controller
         return config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/agent'));
     }
 
+    private function getAnalysisSearchURL(): string
+    {
+        return config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/analysis-search'));
+    }
     /**
      * Get Confirm API URL from environment
      */
@@ -38,75 +42,152 @@ class FastAPIController extends Controller
     /**
      * Proxy file analysis request to FastAPI
      */
-    public function analyzeFile(Request $request)
-    {
-        // Increase PHP execution time limit for AI processing (10 minutes)
-        ini_set('max_execution_time', 600);
-        
-        try {
-            $analyzeUrl = $this->getAnalyzeUrl();
-            $apiKey = $this->getApiKey();
+public function analyzeFile(Request $request)
+{
+    ini_set('max_execution_time', 600);
+    
+    try {
+        $analyzeUrl = $this->getAnalyzeUrl();
+        $apiKey = $this->getApiKey();
 
-            // Validate file exists
-            if (!$request->hasFile('file')) {
-                return response()->json([
-                    'error' => 'No file provided'
-                ], 400);
-            }
-
-            $file = $request->file('file');
-
-            // Send file to analyze endpoint with API key authentication
-            // FastAPI backend requires X-API-Key header (see src/deps/security.py)
-            $response = Http::withHeaders([
-                'X-API-Key' => $apiKey,
-            ])->timeout(6000) // 5 minutes timeout for file analysis
-              ->attach('file', file_get_contents($file->getRealPath()), $file->getClientOriginalName())
-              ->post($analyzeUrl);
-
-            if ($response->successful()) {
-                $responseData = $response->json();
-                
-                // Transform FastAPI response to match frontend expectations
-                // FastAPI returns: { "status": "success", "reports": [{ "analysis": {...}, ... }] }
-                // Frontend expects: { "analysis": {...}, ... } (single report object)
-                if (isset($responseData['reports']) && is_array($responseData['reports']) && count($responseData['reports']) > 0) {
-                    // Return the first report with analysis data
-                    $firstReport = $responseData['reports'][0];
-                    
-                    // Transform to match frontend expectations - pass the entire report as analysis
-                    // Frontend expects: { analysis: { analysis: {...}, graph_suggestions: {...}, ... } }
-                    return response()->json([
-                        'analysis' => $firstReport,  // Full report object with analysis, graph_suggestions, etc.
-                        'status' => $responseData['status'] ?? 'success',
-                        'total_reports' => $responseData['total_reports'] ?? 1,
-                        'cache_id' => $responseData['cache_id'] ?? null, // Include cache_id for save operation
-                        'report_metadata' => [
-                            'file_name' => $firstReport['file_name'] ?? 'Unknown',
-                            'form_type' => $firstReport['form_type'] ?? 'Unknown',
-                            'report_number' => $firstReport['report_number'] ?? 1
-                        ]
-                    ]);
-                }
-                
-                // If structure is different, return as-is
-                return response()->json($responseData);
-            }
-
+        if (!$request->hasFile('file')) {
             return response()->json([
-                'error' => $response->json()['detail'] ?? 'Analysis failed',
-                'status' => $response->status()
-            ], $response->status());
-
-        } catch (\Exception $e) {
-            Log::error('AI Agent analyze-file error: ' . $e->getMessage());
-            return response()->json([
-                'error' => 'Failed to connect to analysis service',
-                'message' => $e->getMessage()
-            ], 500);
+                'error' => 'No file provided'
+            ], 400);
         }
-    }
 
+        $file = $request->file('file');
+        $background = $request->input('background', 'false'); // Get as string
+        
+        // ✅ FIXED: Properly send background as query parameter or form field
+        $httpRequest = Http::withHeaders([
+            'X-API-Key' => $apiKey,
+        ])->timeout(600);
+        
+        // Build multipart request
+        $multipart = [
+            [
+                'name' => 'file',
+                'contents' => file_get_contents($file->getRealPath()),
+                'filename' => $file->getClientOriginalName()
+            ]
+        ];
+        
+        // Add background parameter as query param in URL
+        $url = $analyzeUrl;
+        if ($background === 'true') {
+            $url .= '?background=true';
+        }
+        
+        $response = $httpRequest->attach(
+            'file', 
+            file_get_contents($file->getRealPath()), 
+            $file->getClientOriginalName()
+        )->post($url);
+
+        if ($response->successful()) {
+            $responseData = $response->json();
+            
+            // If background mode, return job info immediately
+            if (isset($responseData['status']) && $responseData['status'] === 'queued') {
+                return response()->json([
+                    'status' => 'queued',
+                    'job_id' => $responseData['job_id'],
+                    'session_id' => $responseData['session_id'] ?? null,
+                    'message' => $responseData['message'] ?? 'Processing started in background',
+                    'progress_url' => $responseData['progress_url'] ?? "/api/ai-agent/progress/{$responseData['job_id']}"
+                ]);
+            }
+            
+            // Transform FastAPI response for synchronous mode
+            if (isset($responseData['reports']) && is_array($responseData['reports']) && count($responseData['reports']) > 0) {
+                $firstReport = $responseData['reports'][0];
+                
+                return response()->json([
+                    'analysis' => $firstReport,
+                    'status' => $responseData['status'] ?? 'success',
+                    'total_reports' => $responseData['total_reports'] ?? 1,
+                    'cache_id' => $firstReport['cache_id'] ?? null, // ✅ Extract from first report
+                    'report_metadata' => [
+                        'file_name' => $firstReport['file_name'] ?? 'Unknown',
+                        'form_type' => $firstReport['form_type'] ?? 'Unknown',
+                        'report_number' => $firstReport['report_number'] ?? 1
+                    ]
+                ]);
+            }
+            
+            return response()->json($responseData);
+        }
+
+        return response()->json([
+            'error' => $response->json()['detail'] ?? 'Analysis failed',
+            'status' => $response->status()
+        ], $response->status());
+
+    } catch (\Exception $e) {
+        Log::error('AI Agent analyze-file error: ' . $e->getMessage());
+        return response()->json([
+            'error' => 'Failed to connect to analysis service',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
+public function getProgress($jobId)
+{
+    try {
+        $baseUrl = $this->getAnalyzeUrl();
+        $baseUrl = preg_replace('/\/api\/agent$/', '', $baseUrl);
+        $apiKey = $this->getApiKey();
+
+        $progressUrl = "{$baseUrl}/api/progress/{$jobId}";
+        
+        $response = Http::withHeaders([
+            'X-API-Key' => $apiKey,
+            'Content-Type' => 'application/json',
+        ])->timeout(10)
+          ->get($progressUrl);
+
+        if ($response->successful()) {
+            $data = $response->json();
+            
+            // ✅ Transform result structure to match frontend expectations
+            if (isset($data['result']) && isset($data['result']['reports'])) {
+                // Extract first report and cache_id
+                $reports = $data['result']['reports'];
+                if (!empty($reports)) {
+                    $firstReport = $reports[0];
+                    
+                    // Add cache_id from result if available
+                    if (isset($data['result']['cache_id'])) {
+                        $firstReport['cache_id'] = $data['result']['cache_id'];
+                    }
+                    
+                    $data['result'] = [
+                        'analysis' => $firstReport,
+                        'status' => $data['result']['status'] ?? 'success',
+                        'total_reports' => count($reports),
+                        'cache_id' => $firstReport['cache_id'] ?? null
+                    ];
+                }
+            }
+            
+            return response()->json($data);
+        }
+
+        return response()->json([
+            'error' => $response->json()['detail'] ?? 'Failed to get progress',
+            'status' => $response->status()
+        ], $response->status());
+
+    } catch (\Exception $e) {
+        Log::error('AI Agent get-progress error: ' . $e->getMessage());
+        return response()->json([
+            'error' => 'Failed to get job progress',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
     /**
      * Proxy confirm analysis request to FastAPI
      */
@@ -140,58 +221,6 @@ class FastAPIController extends Controller
             Log::error('AI Agent confirm-analysis error: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to connect to analysis service',
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Proxy analysis search request to FastAPI
-     */
-    public function analysisSearch(Request $request)
-    {
-        try {
-            // Get base URL and remove /api/agent if present
-            $baseUrl = $this->getAnalyzeUrl();
-            $baseUrl = preg_replace('/\/api\/agent$/', '', $baseUrl);
-            $apiKey = $this->getApiKey();
-
-            // Validate request
-            $request->validate([
-                'query' => 'required|string|min:1',
-                'top_k' => 'sometimes|integer|min:1|max:50'
-            ]);
-
-            $searchUrl = "{$baseUrl}/api/analysis-search";
-            
-            // Send search request to FastAPI with API key authentication
-            $response = Http::withHeaders([
-                'X-API-Key' => $apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(30) // 30 seconds timeout for search
-              ->post($searchUrl, [
-                  'query' => $request->input('query'),
-                  'top_k' => $request->input('top_k', 10)
-              ]);
-
-            if ($response->successful()) {
-                return response()->json($response->json());
-            }
-
-            return response()->json([
-                'error' => $response->json()['detail'] ?? 'Search failed',
-                'status' => $response->status()
-            ], $response->status());
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'error' => 'Validation failed',
-                'messages' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            Log::error('AI Agent analysis-search error: ' . $e->getMessage());
-            return response()->json([
-                'error' => 'Failed to connect to search service',
                 'message' => $e->getMessage()
             ], 500);
         }
@@ -263,5 +292,13 @@ class FastAPIController extends Controller
             ], 500);
         }
     }
+
+    /**
+ * Get progress of background job
+ */
+
+
 }
+
+
 
