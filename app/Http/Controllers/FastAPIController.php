@@ -18,7 +18,11 @@ class FastAPIController extends Controller
 
     private function getAnalysisSearchURL(): string
     {
-        return config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/analysis-search'));
+        // ✅ Extract base URL from analyze_url config and append /analysis-search
+        $baseUrl = config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/agent'));
+        // Remove /api/agent or /agent if present, then add /api/analysis-search
+        $baseUrl = preg_replace('/\/api\/agent$|\/agent$/', '', $baseUrl);
+        return rtrim($baseUrl, '/') . '/api/analysis-search';
     }
     /**
      * Get Confirm API URL from environment
@@ -59,9 +63,13 @@ public function analyzeFile(Request $request)
         $file = $request->file('file');
         $background = $request->input('background', 'false'); // Get as string
         
+        // ✅ Get user_id from request header (fallback to "0" for testing)
+        $userId = $request->header('X-User-ID', '0');
+        
         // ✅ FIXED: Properly send background as query parameter or form field
         $httpRequest = Http::withHeaders([
             'X-API-Key' => $apiKey,
+            'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
         ])->timeout(600);
         
         // Build multipart request
@@ -133,7 +141,7 @@ public function analyzeFile(Request $request)
     }
 }
 
-public function getProgress($jobId)
+public function getProgress(Request $request, $jobId)
 {
     try {
         $baseUrl = $this->getAnalyzeUrl();
@@ -142,8 +150,12 @@ public function getProgress($jobId)
 
         $progressUrl = "{$baseUrl}/api/progress/{$jobId}";
         
+        // ✅ Get user_id from request header (fallback to "0" for testing)
+        $userId = $request->header('X-User-ID', '0');
+        
         $response = Http::withHeaders([
             'X-API-Key' => $apiKey,
+            'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
             'Content-Type' => 'application/json',
         ])->timeout(10)
           ->get($progressUrl);
@@ -212,10 +224,14 @@ public function getProgress($jobId)
             $confirmUrl = $this->getConfirmUrl();
             $apiKey = $this->getApiKey();
 
+            // ✅ Get user_id from request header (fallback to "0" for testing)
+            $userId = $request->header('X-User-ID', '0');
+            
             // Send confirmation to approve endpoint with API key authentication
             // FastAPI backend requires X-API-Key header (see src/deps/security.py)
             $response = Http::withHeaders([
                 'X-API-Key' => $apiKey,
+                'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
                 'Content-Type' => 'application/json',
             ])->timeout(300) // 5 minutes timeout for confirmation
               ->post($confirmUrl, $request->all());
@@ -255,8 +271,12 @@ public function getProgress($jobId)
             $method = strtolower($request->method());
             $url = "{$baseUrl}/api/{$endpoint}";
 
+            // ✅ Get user_id from request header (fallback to "0" for testing)
+            $userId = $request->header('X-User-ID', '0');
+            
             $httpRequest = Http::withHeaders([
                 'X-API-Key' => $apiKey,
+                'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
                 'Content-Type' => $request->header('Content-Type', 'application/json'),
             ])->timeout(300); // 5 minutes timeout for proxy requests
 
@@ -306,10 +326,50 @@ public function getProgress($jobId)
     }
 
     /**
- * Get progress of background job
- */
-
-
+     * Proxy analysis search request to FastAPI
+     */
+    public function analysisSearch(Request $request)
+    {
+        try {
+            $searchUrl = $this->getAnalysisSearchURL();
+            $apiKey = $this->getApiKey();
+            
+            // ✅ Get user_id from request header (fallback to "0" for testing)
+            $userId = $request->header('X-User-ID', '0');
+            
+            // ✅ Validate required fields
+            $requestData = $request->all();
+            if (!isset($requestData['query']) || empty($requestData['query'])) {
+                return response()->json([
+                    'error' => 'Query parameter is required',
+                    'detail' => 'The query field is required and cannot be empty'
+                ], 400);
+            }
+            
+            $response = Http::withHeaders([
+                'X-API-Key' => $apiKey,
+                'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
+                'Content-Type' => 'application/json',
+            ])->timeout(60)
+              ->post($searchUrl, $requestData);
+            
+            if ($response->successful()) {
+                return response()->json($response->json());
+            }
+            
+            return response()->json([
+                'error' => $response->json()['detail'] ?? 'Search failed',
+                'status' => $response->status()
+            ], $response->status());
+            
+        } catch (\Exception $e) {
+            Log::error('AI Agent analysis-search error: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Failed to connect to analysis service',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
 
 
