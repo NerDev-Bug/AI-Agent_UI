@@ -11,11 +11,11 @@ export class ProgressSimulator {
     this.currentStage = 0;
     this.isComplete = false; // Track if backend confirmed completion
     this.stages = [
-      { name: "Validating file...", min: 0, max: 5, duration: 3000 },
-      { name: "Extracting content...", min: 5, max: 20, duration: 15000 },
+      { name: "Validating file...", min: 0, max: 5, duration: 5000 },
+      { name: "Extracting content...", min: 5, max: 20, duration: 20000 },
       { name: "Validating content...", min: 20, max: 30, duration: 10000 },
-      { name: "Analyzing data...", min: 30, max: 55, duration: 45000 }, // ✅ SLOWEST - 25 seconds
-      { name: "Evaluating quality...", min: 55, max: 70, duration: 35000 }, // ✅ Slower - 12 seconds
+      { name: "Analyzing data...", min: 30, max: 55, duration: 55000 }, // ✅ SLOWEST - 25 seconds
+      { name: "Evaluating quality...", min: 55, max: 70, duration: 40000 }, // ✅ Slower - 12 seconds
       { name: "Generating graphs...", min: 70, max: 88, duration: 30000 }, // ✅ Slower - 10 seconds
       { name: "Finalizing...", min: 88, max: 99, duration: 10000 }, // Max 99, not 100
     ];
@@ -104,8 +104,10 @@ export class ProgressSimulator {
       return;
     }
 
-    // If backend says failed, stop
+    // If backend says failed, stop immediately
     if (status === 'failed') {
+      this.isComplete = true; // Mark as complete (failed)
+      this.currentProgress = 0; // Reset progress on failure
       this.stop();
       return;
     }

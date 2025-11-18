@@ -36,6 +36,7 @@
 import { ref, watch, onUnmounted, nextTick } from 'vue';
 import axios from 'axios';
 import { ProgressSimulator } from '../../utils/progressSimulator.js';
+import { getUserFriendlyError } from '../../utils/errorMessages.js';
 
 const props = defineProps({
     visible: {
@@ -169,9 +170,24 @@ const pollProgress = async () => {
             // Emit complete event with result
             emit('complete', data.result);
         } else if (data.status === 'failed') {
+            // Job failed - stop polling and show error
             stopPolling();
-            message.value = 'Processing failed';
-            emit('error', data.message || 'Job failed');
+            progress.value = 0; // Reset progress on failure
+            
+            // Get raw error message from backend
+            const rawErrorMessage = data.error || data.message || 'Job processing failed';
+            
+            // Convert to user-friendly message for display
+            const userFriendlyMessage = getUserFriendlyError(rawErrorMessage);
+            message.value = userFriendlyMessage;
+            
+            // Emit error event with both raw (for logging) and friendly (for display) messages
+            emit('error', {
+                message: userFriendlyMessage,  // User-friendly message
+                rawMessage: rawErrorMessage,   // Technical message for debugging
+                jobId: props.jobId,
+                status: 'failed'
+            });
         }
         // If still in_progress, simulator continues (max 99%)
         // Progress will stay at 99% until backend confirms completion
@@ -179,11 +195,33 @@ const pollProgress = async () => {
         // Handle 404 (job not found) or other errors
         if (error.response && error.response.status === 404) {
             stopPolling();
-            message.value = 'Job not found or expired';
-            emit('error', 'Job not found. It may have expired or been cleaned up.');
+            progress.value = 0;
+            const rawErrorMessage = 'Job not found. It may have expired or been cleaned up.';
+            const userFriendlyMessage = getUserFriendlyError(rawErrorMessage);
+            message.value = userFriendlyMessage;
+            emit('error', {
+                message: userFriendlyMessage,
+                rawMessage: rawErrorMessage,
+                jobId: props.jobId,
+                status: 'not_found'
+            });
+        } else if (error.response && error.response.data) {
+            // Handle other API errors with error messages
+            stopPolling();
+            progress.value = 0;
+            const rawErrorMessage = error.response.data.error || error.response.data.message || 'Failed to check job progress';
+            const userFriendlyMessage = getUserFriendlyError(rawErrorMessage);
+            message.value = userFriendlyMessage;
+            emit('error', {
+                message: userFriendlyMessage,
+                rawMessage: rawErrorMessage,
+                jobId: props.jobId,
+                status: 'error'
+            });
         } else {
             console.error('Progress polling error:', error);
-            // Simulator continues even if API call fails
+            // Don't stop polling on network errors - might be temporary
+            // Only stop if it's a clear API error
         }
     } finally {
         isRequestInProgress = false;

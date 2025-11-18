@@ -203,6 +203,7 @@ import LoadingPage from "../Components/LoadingPage.vue";
 import Tour from "../Layouts/Tour.vue";
 import { ref } from "vue";
 import axios from "axios";
+import { getUserFriendlyError, getUserFriendlyErrorTitle } from '../../utils/errorMessages.js';
 
 const isDragging = ref(false);
 const isUploading = ref(false);
@@ -250,30 +251,43 @@ function confirmAction() {
 
 // Helper function to extract error message from error object
 function getErrorMessage(err) {
-  if (!err) return "Unknown error";
+  if (!err) return "An error occurred. Please try again.";
 
+  // Extract raw error message first
+  let rawError = "";
+  
   // Try to get error from response data
   if (err.response?.data) {
     const data = err.response.data;
-    // If error is a string, return it
-    if (typeof data.error === "string") return data.error;
+    // If error is a string, use it
+    if (typeof data.error === "string") {
+      rawError = data.error;
+    }
     // If error is an object, try to extract message
-    if (typeof data.error === "object" && data.error !== null) {
-      return data.error.message || data.error.error || JSON.stringify(data.error);
+    else if (typeof data.error === "object" && data.error !== null) {
+      rawError = data.error.message || data.error.error || JSON.stringify(data.error);
     }
     // Try message field
-    if (typeof data.message === "string") return data.message;
+    else if (typeof data.message === "string") {
+      rawError = data.message;
+    }
     // If data itself is a string
-    if (typeof data === "string") return data;
+    else if (typeof data === "string") {
+      rawError = data;
+    }
   }
 
   // Fallback to err.message
-  if (typeof err.message === "string") return err.message;
-  if (typeof err.message === "object") {
-    return err.message?.message || JSON.stringify(err.message);
+  if (!rawError) {
+    if (typeof err.message === "string") {
+      rawError = err.message;
+    } else if (typeof err.message === "object") {
+      rawError = err.message?.message || JSON.stringify(err.message);
+    }
   }
 
-  return "An error occurred";
+  // Convert to user-friendly message
+  return getUserFriendlyError(rawError || err);
 }
 
 function onDragOver() {
@@ -463,12 +477,34 @@ function handleJobComplete(result) {
 }
 
 // ✅ Handle job error from LoadingPage
-function handleJobError(error) {
-  console.error("❌ Job error:", error);
-  showAlert("error", "Analysis Failed", error || "Background processing failed");
+function handleJobError(errorInfo) {
+  // Log technical error for debugging
+  console.error("❌ Job failed (technical):", errorInfo);
+  
+  // Extract raw error message
+  const rawErrorMessage = typeof errorInfo === 'string' 
+    ? errorInfo 
+    : errorInfo?.message || errorInfo?.error || 'Job processing failed';
+  
+  // Convert to user-friendly message
+  const userFriendlyMessage = getUserFriendlyError(rawErrorMessage);
+  const userFriendlyTitle = getUserFriendlyErrorTitle(rawErrorMessage);
+  
+  // Hide loading page
   loadingVisible.value = false;
   loadingProgress.value = 0;
+  
+  // Reset job ID
   jobId.value = null;
+  
+  // Show user-friendly error alert
+  showAlert(
+    "error", 
+    userFriendlyTitle, 
+    userFriendlyMessage
+  );
+  
+  // Reset upload state if needed
   isUploading.value = false;
 }
 

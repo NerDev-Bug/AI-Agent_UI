@@ -151,7 +151,19 @@ public function getProgress($jobId)
         if ($response->successful()) {
             $data = $response->json();
             
-            // ✅ Transform result structure to match frontend expectations
+            // ✅ Handle failed jobs - pass through error information
+            if (isset($data['status']) && $data['status'] === 'failed') {
+                // Job failed - return error information to frontend
+                return response()->json([
+                    'status' => 'failed',
+                    'error' => $data['error'] ?? $data['message'] ?? 'Job processing failed',
+                    'message' => $data['message'] ?? $data['error'] ?? 'Job processing failed',
+                    'job_id' => $data['job_id'] ?? $jobId,
+                    'progress' => 0
+                ]);
+            }
+            
+            // ✅ Transform result structure to match frontend expectations (only for successful jobs)
             if (isset($data['result']) && isset($data['result']['reports'])) {
                 // Extract first report and cache_id
                 $reports = $data['result']['reports'];
