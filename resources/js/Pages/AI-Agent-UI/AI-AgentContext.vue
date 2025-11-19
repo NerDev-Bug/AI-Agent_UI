@@ -225,109 +225,42 @@
                 </div>
             </div>
 
-            <!-- 📊 Responsive Charts + Treatment Details -->
+            <!-- Responsive Charts + Treatment Details -->
             <div v-if="currentReport.analysis?.performance_analysis || chartMap[currentReport.form_id]?.length"
                 class="flex flex-col gap-6 mt-10 w-full">
 
                 <template v-if="chartMap[currentReport.form_id]">
-                    <div>
-                        <!-- Count charts -->
-                        <div class="hidden">
-                            {{ chartCount = chartMap[currentReport.form_id]?.length || 0 }}
-                        </div>
-                        <!--
-                            ODD chart count (1, 3, 5, 7) → grid (charts + treatment inside grid)
-                            EVEN chart count (2, 4, 6) → grid for charts ONLY + treatment BELOW grid
-                        -->
-                        <div :class="[
-                            'grid gap-6 w-full',
-                            chartCount === 1 ? 'md:grid-cols-2' : // 1 chart: 2 cols (Chart 1 | Treatment Details)
-                                chartCount === 2 ? 'md:grid-cols-2' :
-                                    chartCount === 3 ? 'md:grid-cols-2' : // 3 charts: 2 cols (2x2 grid with Treatment Details)
-                                        chartCount === 5 ? 'md:grid-cols-2 lg:grid-cols-3' : // 5 charts: 3 cols
-                                            chartCount === 7 ? 'md:grid-cols-2 lg:grid-cols-3' : // 7 charts: 3 cols
-                                                chartCount >= 4 && chartCount % 2 === 0 ? 'md:grid-cols-2 lg:grid-cols-3' : // Even 4, 6, 8+
-                                                    chartCount >= 4 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-1'
-                        ]">
-                            <!-- Render CHARTS -->
-                            <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                                class="chart-card bg-white rounded-lg shadow p-4">
-                                <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
-                                    {{ chart.title }}
-                                </h5>
 
-                                <component :is="chart.component" :data="chart.chart_data"
-                                    :options="chart.chart_options" />
+                    <!-- Count charts -->
+                    <div class="hidden">
+                        {{ chartCount = chartMap[currentReport.form_id]?.length || 0 }}
+                    </div>
 
-                                <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
-                                    {{ chart.description }}
-                                </p>
-                            </div>
+                    <!-- 2-column grid ALWAYS -->
+                    <div class="grid gap-6 w-full md:grid-cols-2">
 
-                            <!-- Render Treatment Details INSIDE GRID only if chartCount is ODD (1, 3, 5, 7) -->
-                            <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison" :class="[
-                                'chart-card bg-white rounded-lg shadow p-4',
-                                chartCount === 1 ? '' : // 1 chart: Normal grid item (side by side with chart)
-                                    chartCount === 3 ? '' : // 3 charts: Normal grid item (no span, creates 2x2 grid)
-                                        chartCount === 5 ? 'lg:col-span-1' : // 5 charts: Normal grid item (1 cell in 3-col grid)
-                                            chartCount === 7 ? 'lg:col-span-1' : // 7 charts: Normal grid item (1 cell in 3-col grid)
-                                                '' // Default: normal grid item (no span)
-                            ]">
-                                <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
-                                    Treatment Details
-                                </h5>
-                                <hr class="border-t-2 border-gray-400 my-4" />
+                        <!-- Render CHARTS -->
+                        <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
+                            class="chart-card bg-white rounded-lg shadow p-4">
+                            <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                                {{ chart.title }}
+                            </h5>
 
-                                <div class="flex flex-col md:flex-row justify-between text-gray-800">
-                                    <div class="flex-1 pr-4">
-                                        <h6 class="text-2xl font-semibold text-blue-700 mb-3">
-                                            Standard Practice
-                                        </h6>
-                                        <ul class="space-y-1 text-lg">
-                                            <li><b>Product:</b> {{
-                                                currentReport.analysis.treatment_comparison.control.product }}</li>
-                                            <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate
-                                                }}</li>
-                                            <li><b>Timing:</b> {{
-                                                currentReport.analysis.treatment_comparison.control.timing }}</li>
-                                            <li><b>Method:</b> {{
-                                                currentReport.analysis.treatment_comparison.control.method }}</li>
-                                        </ul>
-                                    </div>
+                            <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
 
-                                    <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
-
-                                    <div class="flex-1 pl-4">
-                                        <h6 class="text-2xl font-semibold text-green-700 mb-3">
-                                            Leads Agri Treatment
-                                        </h6>
-                                        <ul class="space-y-1 text-lg">
-                                            <li><b>Product:</b> {{
-                                                currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
-                                            <li><b>Rate:</b> {{
-                                                currentReport.analysis.treatment_comparison.leads_agri.rate }}</li>
-                                            <li><b>Timing:</b> {{
-                                                currentReport.analysis.treatment_comparison.leads_agri.timing }}</li>
-                                            <li><b>Method:</b> {{
-                                                currentReport.analysis.treatment_comparison.leads_agri.method }}</li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
-                                    {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
-                                </p>
-                            </div>
+                            <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                                {{ chart.description }}
+                            </p>
                         </div>
 
-                        <!-- Treatment Details BELOW GRID only if chartCount is EVEN -->
-                        <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
-                            class="bg-white rounded-lg shadow p-4 mt-6">
+                        <!-- Treatment Details INSIDE grid for ODD counts (1,3,5,7...) -->
+                        <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
+                            class="chart-card bg-white rounded-lg shadow p-4">
+
                             <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                 Treatment Details
                             </h5>
                             <hr class="border-t-2 border-gray-400 my-4" />
-
                             <div class="flex flex-col md:flex-row justify-between text-gray-800">
                                 <div class="flex-1 pr-4">
                                     <h6 class="text-2xl font-semibold text-blue-700 mb-3">
@@ -344,9 +277,7 @@
                                             }}</li>
                                     </ul>
                                 </div>
-
                                 <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
-
                                 <div class="flex-1 pl-4">
                                     <h6 class="text-2xl font-semibold text-green-700 mb-3">
                                         Leads Agri Treatment
@@ -363,11 +294,58 @@
                                     </ul>
                                 </div>
                             </div>
-
-                            <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
+                            <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
                                 {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                             </p>
                         </div>
+                    </div>
+
+                    <!-- Treatment Details BELOW grid for EVEN counts (2,4,6...) -->
+                    <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
+                        class="bg-white rounded-lg shadow p-4 mt-6">
+
+                        <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                            Treatment Details
+                        </h5>
+                        <hr class="border-t-2 border-gray-400 my-4" />
+
+                        <div class="flex flex-col md:flex-row justify-between text-gray-800">
+                            <div class="flex-1 pr-4">
+                                <h6 class="text-2xl font-semibold text-blue-700 mb-3">
+                                    Standard Practice
+                                </h6>
+                                <ul class="space-y-1 text-lg">
+                                    <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
+                                        }}</li>
+                                    <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
+                                    <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                    </li>
+                                    <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
+
+                            <div class="flex-1 pl-4">
+                                <h6 class="text-2xl font-semibold text-green-700 mb-3">
+                                    Leads Agri Treatment
+                                </h6>
+                                <ul class="space-y-1 text-lg">
+                                    <li><b>Product:</b> {{
+                                        currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
+                                    <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
+                                    </li>
+                                    <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
+                                        }}</li>
+                                    <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
+                                        }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
+                            {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
+                        </p>
                     </div>
                 </template>
             </div>
@@ -690,7 +668,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 y: {
                                     ...options.scales?.y,
-                                    max: newMax, 
+                                    max: newMax,
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
                                 },
                             },
@@ -711,7 +689,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 x: {
                                     ...options.scales?.x,
-                                    max: newMax, 
+                                    max: newMax,
                                     beginAtZero: options.scales?.x?.beginAtZero ?? true,
                                 },
                             },
@@ -731,7 +709,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 y: {
                                     ...options.scales?.y,
-                                    max: newMax, 
+                                    max: newMax,
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
                                 },
                             },
