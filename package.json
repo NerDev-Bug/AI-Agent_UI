@@ -21,6 +21,7 @@
         "vue": "^3.4.0"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^7.1.0",
         "apexcharts": "^5.3.6",
         "chart.js": "^4.5.1",
         "html2canvas": "^1.4.1",
