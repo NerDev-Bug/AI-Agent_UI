@@ -332,7 +332,7 @@
             </div>
 
 
-            <div class="flex justify-between grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[900px_350px] gap-6 mt-6">
                 <!-- 🌍 World Map Card (No Data State) -->
                 <div
                     class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[900px]">
