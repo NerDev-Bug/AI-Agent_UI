@@ -332,70 +332,85 @@
             </div>
 
 
-            <!-- Main White Container -->
-            <div class="bg-white p-8 rounded-xl shadow-lg w-full mt-6">
-                <!-- Opportunities Row -->
-                <div class="flex items-center justify-between py-4 border-b last:border-none">
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl">🎯</div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-black">Opportunities</h4>
-                            <p class="text-gray-600 text-sm">
-                                {{ currentReport.analysis.opportunities.length }} available
-                            </p>
-                        </div>
-                    </div>
-                    <button @click="showOpportunitiesModal = true">
-                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
-                    </button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <!-- 🌍 World Map Card (No Data State) -->
+                <div
+                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px]">
+                    <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
+                    <p class="text-gray-500 text-lg font-medium">No data found</p>
                 </div>
 
-                <!-- Risks Row -->
-                <div class="flex items-center justify-between py-4 border-b last:border-none">
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl">⚠️</div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-black">Risks & Limitations</h4>
-                            <p class="text-gray-600 text-sm">
-                                {{ currentReport.analysis.risk_factors.length }} identified
-                            </p>
+                <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h2 class="text-xl font-semibold mb-4">Analysis Overview</h2>
+                    <!-- Opportunities -->
+                    <div class="flex justify-between items-center py-4 border-b">
+                        <div class="flex items-center gap-4">
+                            <div class="text-3xl">🎯</div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Opportunities</h4>
+                                <p class="text-gray-500 text-sm">
+                                    {{ currentReport.analysis.opportunities.length }} available
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <button @click="showRiskLimitationsModal = true">
-                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
-                    </button>
-                </div>
 
-                <!-- Recommendations Row -->
-                <div class="flex items-center justify-between py-4 border-b last:border-none">
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl">💡</div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-black">Recommendations</h4>
-                            <p class="text-gray-600 text-sm">
-                                {{ currentReport.analysis.recommendations.length }} provided
-                            </p>
-                        </div>
+                        <button @click="showOpportunitiesModal = true">
+                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        </button>
                     </div>
-                    <button @click="showRecommendationsModal = true">
-                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
-                    </button>
-                </div>
 
-                <!-- Executive Summary Row -->
-                <div class="flex items-center justify-between py-4">
-                    <div class="flex items-center gap-4">
-                        <div class="text-3xl">📊</div>
-                        <div>
-                            <h4 class="text-xl font-semibold text-black">Executive Summary</h4>
-                            <p class="text-gray-600 text-sm">Overview available</p>
+                    <!-- Risks -->
+                    <div class="flex justify-between items-center py-4 border-b">
+                        <div class="flex items-center gap-4">
+                            <div class="text-3xl">⚠️</div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Risks & Limitations</h4>
+                                <p class="text-gray-500 text-sm">
+                                    {{ currentReport.analysis.risk_factors.length }} identified
+                                </p>
+                            </div>
                         </div>
+
+                        <button @click="showRiskLimitationsModal = true">
+                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        </button>
                     </div>
-                    <button @click="showExecutiveSummaryModal = true">
-                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
-                    </button>
+
+                    <!-- Recommendations -->
+                    <div class="flex justify-between items-center py-4 border-b">
+                        <div class="flex items-center gap-4">
+                            <div class="text-3xl">💡</div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Recommendations</h4>
+                                <p class="text-gray-500 text-sm">
+                                    {{ currentReport.analysis.recommendations.length }} provided
+                                </p>
+                            </div>
+                        </div>
+
+                        <button @click="showRecommendationsModal = true">
+                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        </button>
+                    </div>
+
+                    <!-- Executive Summary -->
+                    <div class="flex justify-between items-center py-4">
+                        <div class="flex items-center gap-4">
+                            <div class="text-3xl">📊</div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Executive Summary</h4>
+                                <p class="text-gray-500 text-sm">Overview available</p>
+                            </div>
+                        </div>
+
+                        <button @click="showExecutiveSummaryModal = true">
+                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
+
         </div>
         <!-- Loading/Error -->
         <!-- <div v-else-if="!currentReport" class="text-center text-black mt-24">
