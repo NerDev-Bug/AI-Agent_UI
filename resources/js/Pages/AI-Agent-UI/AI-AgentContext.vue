@@ -132,6 +132,36 @@
             <!-- Performance Metrics Section -->
             <div v-if="currentReport.analysis?.performance_analysis" class="p-6 w-full">
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+                    <!-- Season -->
+                    <div
+                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                        <!-- Season Badge (top right) -->
+                        <div :class="[
+                            'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1 rounded-full capitalize',
+                            currentReport.analysis.performance_analysis.statistical_assessment.season === 'Dry'
+                                ? 'bg-yellow-400'
+                                : 'bg-sky-400'
+                        ]">
+                            {{
+                                currentReport.analysis.performance_analysis
+                                    .statistical_assessment.season
+                            }}
+                        </div>
+                        <!-- Season Icon -->
+                        <div class="w-20 h-20 mb-3">
+                            <img v-if="currentReport.analysis.performance_analysis.statistical_assessment.season === 'Dry'"
+                                src="/images/sun.png" alt="Dry season" class="w-full h-full object-contain" />
+
+                            <img v-else-if="currentReport.analysis.performance_analysis.statistical_assessment.season === 'Wet'"
+                                src="/images/cloud_with_rain.png" alt="Wet season"
+                                class="w-full h-full object-contain" />
+
+                            <!-- Optional fallback for other values -->
+                            <img v-else src="/images/sun.png" alt="Season" class="w-full h-full object-contain" />
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">Season</p>
+                    </div>
+
                     <!-- Relative Improvement -->
                     <div
                         class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center relative">
@@ -154,12 +184,10 @@
                             <span>→</span>
                             <span>No Change</span>
                         </span>
-
                         <!-- Main Value -->
                         <p class="text-3xl font-semibold text-black mt-6">
                             {{ improvementValue.toFixed(2) }}%
                         </p>
-
                         <!-- Label -->
                         <p class="text-sm text-gray-500 mt-2">Relative Improvement</p>
                     </div>
@@ -237,15 +265,14 @@
                             </div>
 
                             <!-- Render Treatment Details INSIDE GRID only if chartCount is ODD (1, 3, 5, 7) -->
-                            <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
-                                :class="[
-                                    'chart-card bg-white rounded-lg shadow p-4',
-                                    chartCount === 1 ? '' : // 1 chart: Normal grid item (side by side with chart)
-                                        chartCount === 3 ? '' : // 3 charts: Normal grid item (no span, creates 2x2 grid)
-                                            chartCount === 5 ? 'lg:col-span-1' : // 5 charts: Normal grid item (1 cell in 3-col grid)
-                                                chartCount === 7 ? 'lg:col-span-1' : // 7 charts: Normal grid item (1 cell in 3-col grid)
-                                                    '' // Default: normal grid item (no span)
-                                ]">
+                            <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison" :class="[
+                                'chart-card bg-white rounded-lg shadow p-4',
+                                chartCount === 1 ? '' : // 1 chart: Normal grid item (side by side with chart)
+                                    chartCount === 3 ? '' : // 3 charts: Normal grid item (no span, creates 2x2 grid)
+                                        chartCount === 5 ? 'lg:col-span-1' : // 5 charts: Normal grid item (1 cell in 3-col grid)
+                                            chartCount === 7 ? 'lg:col-span-1' : // 7 charts: Normal grid item (1 cell in 3-col grid)
+                                                '' // Default: normal grid item (no span)
+                            ]">
                                 <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                     Treatment Details
                                 </h5>
@@ -260,7 +287,7 @@
                                             <li><b>Product:</b> {{
                                                 currentReport.analysis.treatment_comparison.control.product }}</li>
                                             <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate
-                                            }}</li>
+                                                }}</li>
                                             <li><b>Timing:</b> {{
                                                 currentReport.analysis.treatment_comparison.control.timing }}</li>
                                             <li><b>Method:</b> {{
@@ -312,9 +339,9 @@
                                         <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}
                                         </li>
                                         <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing
-                                        }}</li>
+                                            }}</li>
                                         <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method
-                                        }}</li>
+                                            }}</li>
                                     </ul>
                                 </div>
 
@@ -328,7 +355,7 @@
                                         <li><b>Product:</b> {{
                                             currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
                                         <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate
-                                        }}</li>
+                                            }}</li>
                                         <li><b>Timing:</b> {{
                                             currentReport.analysis.treatment_comparison.leads_agri.timing }}</li>
                                         <li><b>Method:</b> {{
@@ -347,79 +374,102 @@
 
 
             <div class="grid grid-cols-1 lg:grid-cols-[880px_330px] gap-6 mt-6">
-                <!-- 🌍 World Map Card (No Data State) -->
+                <!-- World Map Card (No Data State) -->
                 <div
                     class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[880px]">
                     <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
                     <p class="text-gray-500 text-lg font-medium">No data found</p>
                 </div>
 
-                <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
+                <!-- Key Findings & Strategic Insights -->
                 <div class="bg-white p-8 rounded-xl shadow-lg w-[350px]">
                     <h2 class="text-xl font-semibold mb-4">Key Findings & Strategic Insights</h2>
+
+                    <!-- Reusable Item Class -->
+                    <style>
+                        .insight-item {
+                            @apply flex justify-between items-center p-4 rounded-xl mb-3 transition-all duration-300 relative cursor-pointer;
+                        }
+
+                        .insight-item:hover {
+                            background: linear-gradient(to right, #00853F, #4CAF50);
+                            color: white !important;
+                        }
+
+                        /* Show the button only on hover */
+                        .insight-item .see-more {
+                            opacity: 0;
+                            transition: opacity 0.3s;
+                        }
+
+                        .insight-item:hover .see-more {
+                            opacity: 1;
+                        }
+                    </style>
+
                     <!-- Opportunities -->
-                    <div class="flex justify-between items-center py-4 border-b">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl">🎯</div>
+                    <div class="insight-item" @click="showOpportunitiesModal = true">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">🎯</div>
                             <div>
                                 <h4 class="text-lg font-semibold">Opportunities</h4>
-                                <p class="text-gray-500 text-sm">
+                                <p class="text-gray-500 text-sm insight-sub">
                                     {{ currentReport.analysis.opportunities.length }} available
                                 </p>
                             </div>
                         </div>
 
-                        <button @click="showOpportunitiesModal = true">
-                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                            See more
                         </button>
                     </div>
 
-                    <!-- Risks -->
-                    <div class="flex justify-between items-center py-4 border-b">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl">⚠️</div>
+                    <!-- Risks & Limitations -->
+                    <div class="insight-item border border-blue-400" @click="showRiskLimitationsModal = true">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">⚠️</div>
                             <div>
                                 <h4 class="text-lg font-semibold">Risks & Limitations</h4>
-                                <p class="text-gray-500 text-sm">
+                                <p class="text-gray-500 text-sm insight-sub">
                                     {{ currentReport.analysis.risk_factors.length }} identified
                                 </p>
                             </div>
                         </div>
 
-                        <button @click="showRiskLimitationsModal = true">
-                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        <button class="see-more bg-white text-blue-600 text-xs px-3 py-1 rounded-full">
+                            See more
                         </button>
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="flex justify-between items-center py-4 border-b">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl">💡</div>
+                    <div class="insight-item bg-gray-100" @click="showRecommendationsModal = true">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">💡</div>
                             <div>
                                 <h4 class="text-lg font-semibold">Recommendations</h4>
-                                <p class="text-gray-500 text-sm">
+                                <p class="text-gray-500 text-sm insight-sub">
                                     {{ currentReport.analysis.recommendations.length }} provided
                                 </p>
                             </div>
                         </div>
 
-                        <button @click="showRecommendationsModal = true">
-                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                            See more
                         </button>
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="flex justify-between items-center py-4">
-                        <div class="flex items-center gap-4">
-                            <div class="text-3xl">📊</div>
+                    <div class="insight-item bg-gray-100" @click="showExecutiveSummaryModal = true">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">📊</div>
                             <div>
                                 <h4 class="text-lg font-semibold">Executive Summary</h4>
-                                <p class="text-gray-500 text-sm">Overview available</p>
+                                <p class="text-gray-500 text-sm insight-sub">Overview available</p>
                             </div>
                         </div>
 
-                        <button @click="showExecutiveSummaryModal = true">
-                            <i class="fa-solid fa-eye text-xl text-gray-500 hover:text-black"></i>
+                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                            See more
                         </button>
                     </div>
                 </div>
