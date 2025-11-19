@@ -332,16 +332,16 @@
             </div>
 
 
-            <div class="grid grid-cols-1 lg:grid-cols-[900px_350px] gap-6 mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[880px_330px] gap-6 mt-6">
                 <!-- 🌍 World Map Card (No Data State) -->
                 <div
-                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[900px]">
+                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[880px]">
                     <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
                     <p class="text-gray-500 text-lg font-medium">No data found</p>
                 </div>
 
                 <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
-                <div class="bg-white p-8 rounded-xl shadow-lg w-[350px]">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-[330px]">
                     <h2 class="text-xl font-semibold mb-4">Analysis Overview</h2>
                     <!-- Opportunities -->
                     <div class="flex justify-between items-center py-4 border-b">
