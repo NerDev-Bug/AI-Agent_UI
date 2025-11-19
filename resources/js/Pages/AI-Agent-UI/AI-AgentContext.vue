@@ -102,7 +102,7 @@
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Control Average -->
                         <div
-                            class="bg-red-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
+                            class="bg-[linear-gradient(#1E3E8B,#346BF1)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
                             <p class="text-5xl font-bold mb-4">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(
@@ -115,7 +115,7 @@
 
                         <!-- Leads Agri Average -->
                         <div
-                            class="bg-green-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
+                            class="bg-[linear-gradient(#00853F,#4CAF50)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
                             <p class="text-5xl font-bold mb-4">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(
@@ -130,57 +130,61 @@
             </div>
 
             <!-- Performance Metrics Section -->
-            <div v-if="currentReport.analysis?.performance_analysis"
-                class="bg-white p-6 -mt-4 rounded-xl shadow-md w-full">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+            <div v-if="currentReport.analysis?.performance_analysis" class="p-6 w-full">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
                     <!-- Relative Improvement -->
-                    <div class="bg-blue-600 text-white p-6 rounded-3xl shadow flex flex-col justify-between relative">
-                        <div class="flex items-center justify-between mb-4">
-                            <p class="text-3xl font-bold text-white">
-                                {{ improvementValue.toFixed(2) }}%
-                            </p>
-                            <span v-if="improvementValue > 0"
-                                class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                                <span>↑</span>
-                                <span>Improved</span>
-                            </span>
-                            <span v-else-if="improvementValue < 0"
-                                class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                                <span>↓</span>
-                                <span>Decreased</span>
-                            </span>
-                            <span v-else
-                                class="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                                <span>→</span>
-                                <span>No Change</span>
-                            </span>
-                        </div>
-                        <p class="text-sm text-white">
-                            Relative Improvement
+                    <div
+                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center relative">
+
+                        <!-- Status badge -->
+                        <span v-if="improvementValue > 0"
+                            class="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            <span>↑</span>
+                            <span>Improved</span>
+                        </span>
+
+                        <span v-else-if="improvementValue < 0"
+                            class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            <span>↓</span>
+                            <span>Decreased</span>
+                        </span>
+
+                        <span v-else
+                            class="absolute top-4 left-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            <span>→</span>
+                            <span>No Change</span>
+                        </span>
+
+                        <!-- Main Value -->
+                        <p class="text-3xl font-semibold text-black mt-6">
+                            {{ improvementValue.toFixed(2) }}%
                         </p>
+
+                        <!-- Label -->
+                        <p class="text-sm text-gray-500 mt-2">Relative Improvement</p>
                     </div>
 
                     <!-- Significance -->
-                    <div class="bg-purple-600 text-white p-6 rounded-3xl shadow flex flex-col justify-between">
-                        <p class="text-3xl font-bold text-white capitalize mb-4">
+                    <div
+                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                        <p class="text-3xl font-semibold text-black capitalize">
                             {{
                                 currentReport.analysis.performance_analysis
                                     .statistical_assessment
                                     .improvement_significance
                             }}
                         </p>
-                        <p class="text-sm text-white">Significance</p>
+                        <p class="text-sm text-gray-500 mt-2">Significance</p>
                     </div>
 
                     <!-- Absolute Difference -->
-                    <div class="bg-blue-900 text-white p-6 rounded-3xl shadow flex flex-col justify-between">
-                        <p class="text-3xl font-bold text-white mb-4">
+                    <div
+                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                        <p class="text-3xl font-semibold text-black">
                             {{
-                                currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(
-                                    2
-                                )
+                                currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
                             }}
-                            <span class="text-base text-white">
+                            <span class="text-base text-gray-700">
                                 {{
                                     currentReport.analysis.performance_analysis
                                         .calculated_metrics
@@ -188,7 +192,7 @@
                                 }}
                             </span>
                         </p>
-                        <p class="text-sm text-white">Absolute Difference</p>
+                        <p class="text-sm text-gray-500 mt-2">Absolute Difference</p>
                     </div>
                 </div>
             </div>
@@ -342,7 +346,7 @@
 
                 <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
                 <div class="bg-white p-8 rounded-xl shadow-lg w-[350px]">
-                    <h2 class="text-xl font-semibold mb-4">Analysis Overview</h2>
+                    <h2 class="text-xl font-semibold mb-4">Key Findings & Strategic Insights</h2>
                     <!-- Opportunities -->
                     <div class="flex justify-between items-center py-4 border-b">
                         <div class="flex items-center gap-4">
