@@ -372,7 +372,6 @@
                 </template>
             </div>
 
-
             <div class="grid grid-cols-1 lg:grid-cols-[840px_390px] gap-6 mt-6">
                 <!-- World Map Card (No Data State) -->
                 <div
@@ -660,7 +659,6 @@ watchEffect(() => {
         const rep = props.analysisData;
         console.log("📋 Processing report with form_id:", rep.form_id);
 
-        // 🧩 Build chart map for the received report
         const charts = rep.graph_suggestions?.suggested_charts || [];
         console.log("📊 Charts found:", charts.length);
         chartMap.value[rep.form_id] = charts.map((chart) => {
@@ -668,11 +666,10 @@ watchEffect(() => {
             let options = chart.chart_options || {};
             const type = chart.chart_type?.toLowerCase() || "";
 
-            // Add 1 to max value for line and bar charts y-axis
             if (type.includes("line") || type.includes("bar")) {
                 const chartData = chart.chart_data;
                 if (chartData && chartData.datasets) {
-                    // Find the maximum value across all datasets
+
                     let maxValue = 0;
                     chartData.datasets.forEach((dataset) => {
                         if (dataset.data && Array.isArray(dataset.data)) {
@@ -683,7 +680,6 @@ watchEffect(() => {
                         }
                     });
 
-                    // Add 1 to max value for y-axis
                     const newMax = maxValue + 1;
 
                     if (type.includes("line")) {
@@ -694,7 +690,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 y: {
                                     ...options.scales?.y,
-                                    max: newMax, // Override any existing max value
+                                    max: newMax, 
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
                                 },
                             },
@@ -715,7 +711,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 x: {
                                     ...options.scales?.x,
-                                    max: newMax, // Override any existing max value
+                                    max: newMax, 
                                     beginAtZero: options.scales?.x?.beginAtZero ?? true,
                                 },
                             },
@@ -735,7 +731,7 @@ watchEffect(() => {
                                 ...options.scales,
                                 y: {
                                     ...options.scales?.y,
-                                    max: newMax, // Override any existing max value
+                                    max: newMax, 
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
                                 },
                             },
@@ -749,7 +745,7 @@ watchEffect(() => {
                         };
                     }
                 } else {
-                    // Fallback if no data structure found
+
                     if (type.includes("line")) {
                         component = Line;
                         options = {
@@ -791,7 +787,7 @@ watchEffect(() => {
                 }
             } else if (type.includes("pie") || type.includes("doughnut")) {
                 component = Pie;
-                // Remove scales completely for pie/doughnut charts as they don't use axes
+
                 const { scales, ...optionsWithoutScales } = options;
                 options = {
                     ...optionsWithoutScales,
@@ -811,8 +807,6 @@ watchEffect(() => {
             else if (type.includes("bubble")) component = Bubble;
             else component = Bar;
 
-            // Disable title in chart options (title is shown via h5 tag instead)
-            // Only apply this if not already set (for pie/doughnut charts, it's already set above)
             if (!type.includes("pie") && !type.includes("doughnut")) {
                 options = {
                     ...options,
@@ -835,7 +829,6 @@ watchEffect(() => {
             };
         });
 
-        // ✅ Update state dynamically
         currentReport.value = rep;
         applicant.value = rep.analysis?.basic_info?.applicant || "";
         isLoading.value = false;
@@ -1028,7 +1021,15 @@ canvas {
 
 /* Insight Item Styles */
 .insight-item {
-    @apply flex justify-between items-center p-4 rounded-xl mb-3 transition-all duration-300 relative cursor-pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 0.75rem;
+    transition: all 300ms;
+    position: relative;
+    cursor: pointer;
 }
 
 .insight-item:hover {
