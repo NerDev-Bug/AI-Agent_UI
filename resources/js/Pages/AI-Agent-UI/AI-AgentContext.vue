@@ -373,42 +373,20 @@
             </div>
 
 
-            <div class="grid grid-cols-1 lg:grid-cols-[880px_330px] gap-6 mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[840px_390px] gap-6 mt-6">
                 <!-- World Map Card (No Data State) -->
                 <div
-                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[880px]">
+                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[840px]">
                     <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
                     <p class="text-gray-500 text-lg font-medium">No data found</p>
                 </div>
 
                 <!-- Key Findings & Strategic Insights -->
-                <div class="bg-white p-8 rounded-xl shadow-lg w-[350px]">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-[390px]">
                     <h2 class="text-xl font-semibold mb-4">Key Findings & Strategic Insights</h2>
 
-                    <!-- Reusable Item Class -->
-                    <style>
-                        .insight-item {
-                            @apply flex justify-between items-center p-4 rounded-xl mb-3 transition-all duration-300 relative cursor-pointer;
-                        }
-
-                        .insight-item:hover {
-                            background: linear-gradient(to right, #00853F, #4CAF50);
-                            color: white !important;
-                        }
-
-                        /* Show the button only on hover */
-                        .insight-item .see-more {
-                            opacity: 0;
-                            transition: opacity 0.3s;
-                        }
-
-                        .insight-item:hover .see-more {
-                            opacity: 1;
-                        }
-                    </style>
-
                     <!-- Opportunities -->
-                    <div class="insight-item" @click="showOpportunitiesModal = true">
+                    <div class="insight-item bg-gray-100" @click="showOpportunitiesModal = true">
                         <div class="flex items-center gap-3">
                             <div class="text-2xl">🎯</div>
                             <div>
@@ -425,30 +403,13 @@
                     </div>
 
                     <!-- Risks & Limitations -->
-                    <div class="insight-item border border-blue-400" @click="showRiskLimitationsModal = true">
+                    <div class="insight-item bg-gray-100" @click="showRiskLimitationsModal = true">
                         <div class="flex items-center gap-3">
                             <div class="text-2xl">⚠️</div>
                             <div>
                                 <h4 class="text-lg font-semibold">Risks & Limitations</h4>
                                 <p class="text-gray-500 text-sm insight-sub">
                                     {{ currentReport.analysis.risk_factors.length }} identified
-                                </p>
-                            </div>
-                        </div>
-
-                        <button class="see-more bg-white text-blue-600 text-xs px-3 py-1 rounded-full">
-                            See more
-                        </button>
-                    </div>
-
-                    <!-- Recommendations -->
-                    <div class="insight-item bg-gray-100" @click="showRecommendationsModal = true">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">💡</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">Recommendations</h4>
-                                <p class="text-gray-500 text-sm insight-sub">
-                                    {{ currentReport.analysis.recommendations.length }} provided
                                 </p>
                             </div>
                         </div>
@@ -465,6 +426,23 @@
                             <div>
                                 <h4 class="text-lg font-semibold">Executive Summary</h4>
                                 <p class="text-gray-500 text-sm insight-sub">Overview available</p>
+                            </div>
+                        </div>
+
+                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                            See more
+                        </button>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="insight-item bg-gray-100" @click="showRecommendationsModal = true">
+                        <div class="flex items-center gap-3">
+                            <div class="text-2xl">💡</div>
+                            <div>
+                                <h4 class="text-lg font-semibold">Recommendations</h4>
+                                <p class="text-gray-500 text-sm insight-sub">
+                                    {{ currentReport.analysis.recommendations.length }} provided
+                                </p>
                             </div>
                         </div>
 
@@ -1046,5 +1024,25 @@ canvas {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+/* Insight Item Styles */
+.insight-item {
+    @apply flex justify-between items-center p-4 rounded-xl mb-3 transition-all duration-300 relative cursor-pointer;
+}
+
+.insight-item:hover {
+    background: linear-gradient(to right, #00853F, #4CAF50);
+    color: white !important;
+}
+
+/* Show the button only on hover */
+.insight-item .see-more {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.insight-item:hover .see-more {
+    opacity: 1;
 }
 </style>
