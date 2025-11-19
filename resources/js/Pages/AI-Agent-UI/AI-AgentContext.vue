@@ -12,33 +12,15 @@
             <div class="flex-2">
                 <br />
                 <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
-                <button
-                    v-if="currentReport && isSaved"
-                    @click="handleExportClick"
-                    :disabled="isExporting"
-                    class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2"
-                >
+                <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
+                    class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
                     <span v-else class="flex flex-row gap-2">
-                        <svg
-                            class="animate-spin h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                        >
-                            <circle
-                                class="opacity-25"
-                                cx="12"
-                                cy="12"
-                                r="10"
-                                stroke="currentColor"
-                                stroke-width="4"
-                            ></circle>
-                            <path
-                                class="opacity-75"
-                                fill="currentColor"
-                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                            ></path>
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
                         </svg>
                         Exporting...
                     </span>
@@ -46,20 +28,10 @@
             </div>
 
             <div class="ml-auto" v-if="uniqueApplicants.length > 1">
-                <label class="block text-sm text-black mb-1"
-                    >Select Applicant:</label
-                >
-                <select
-                    v-model="applicant"
-                    class="p-2 rounded-md w-72"
-                    :disabled="!currentReport"
-                >
+                <label class="block text-sm text-black mb-1">Select Applicant:</label>
+                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
                     <option value="">-- Choose Applicant --</option>
-                    <option
-                        v-for="app in uniqueApplicants"
-                        :key="app"
-                        :value="app"
-                    >
+                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
                         {{ app }}
                     </option>
                 </select>
@@ -74,14 +46,13 @@
 
             <!-- Basic Info -->
             <div class="flex gap-4 w-full">
-                <div
-                    v-if="currentReport.analysis?.basic_info"
-                    class="bg-white border-l-4 p-8 rounded-xl h-full w-[1400px] animate-slideInLeft"
-                >
+                <div v-if="currentReport.analysis?.basic_info"
+                    class="bg-white border-l-4 p-8 rounded-xl h-full w-[1400px] animate-slideInLeft">
                     <h4 class="text-2xl font-semibold text-black mb-6 md:mb-8">
                         Basic Information
                     </h4>
-                    <ul class="text-sm md:text-lg grid grid-cols-2 gap-x-8 text-gray-700 before:absolute before:inset-0 before:animate-typewriter">
+                    <ul
+                        class="text-sm md:text-lg grid grid-cols-2 gap-x-8 text-gray-700 before:absolute before:inset-0 before:animate-typewriter">
                         <li>
                             <b>Applicant:</b>
                             {{ currentReport.analysis.basic_info.applicant }}
@@ -122,9 +93,7 @@
                     </ul>
                 </div>
                 <!-- Control + Leads Agri Metrics (Right Side of Basic Info) -->
-                <div
-                    class="bg-white p-6 rounded-xl flex flex-col w-[900px]"
-                >
+                <div class="bg-white p-6 rounded-xl flex flex-col w-[900px]">
                     <div class="flex items-center mb-4">
                         <h4 class="text-2xl font-semibold text-black">
                             Performance Metrics
@@ -133,8 +102,7 @@
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Control Average -->
                         <div
-                            class="bg-red-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44"
-                        >
+                            class="bg-red-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
                             <p class="text-5xl font-bold mb-4">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(
@@ -147,8 +115,7 @@
 
                         <!-- Leads Agri Average -->
                         <div
-                            class="bg-green-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44"
-                        >
+                            class="bg-green-600 text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
                             <p class="text-5xl font-bold mb-4">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(
@@ -163,8 +130,7 @@
             </div>
 
             <!-- Performance Metrics Section -->
-            <div
-                v-if="currentReport.analysis?.performance_analysis"
+            <div v-if="currentReport.analysis?.performance_analysis"
                 class="bg-white p-6 -mt-4 rounded-xl shadow-md w-full">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                     <!-- Relative Improvement -->
@@ -173,24 +139,18 @@
                             <p class="text-3xl font-bold text-white">
                                 {{ improvementValue.toFixed(2) }}%
                             </p>
-                            <span
-                                v-if="improvementValue > 0"
-                                class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
-                            >
+                            <span v-if="improvementValue > 0"
+                                class="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                                 <span>↑</span>
                                 <span>Improved</span>
                             </span>
-                            <span
-                                v-else-if="improvementValue < 0"
-                                class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
-                            >
+                            <span v-else-if="improvementValue < 0"
+                                class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                                 <span>↓</span>
                                 <span>Decreased</span>
                             </span>
-                            <span
-                                v-else
-                                class="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1"
-                            >
+                            <span v-else
+                                class="bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                                 <span>→</span>
                                 <span>No Change</span>
                             </span>
@@ -233,245 +193,207 @@
                 </div>
             </div>
 
-            <div
-                v-if="currentReport.analysis?.performance_analysis || chartMap[currentReport.form_id]?.length"
+            <!-- 📊 Responsive Charts + Treatment Details -->
+            <div v-if="currentReport.analysis?.performance_analysis || chartMap[currentReport.form_id]?.length"
                 class="flex flex-col gap-6 mt-10 w-full">
-                
-                <div
-                    v-if="chartMap[currentReport.form_id]?.length || currentReport.analysis?.treatment_comparison"
-                    :class="[
-                        (chartMap[currentReport.form_id]?.length || 0) + (currentReport.analysis?.treatment_comparison ? 1 : 0) === 2
-                            ? 'flex flex-col md:flex-row gap-6 w-full'
-                            : 'grid grid-cols-1 md:grid-cols-2 gap-6 w-full'
-                    ]"
-                >
-                    <div
-                        v-for="(chart, idx) in chartMap[currentReport.form_id]"
-                        :key="idx"
-                        :class="[
-                            'chart-card bg-white rounded-lg shadow p-4',
-                            (chartMap[currentReport.form_id]?.length || 0) + (currentReport.analysis?.treatment_comparison ? 1 : 0) === 2
-                                ? 'flex-1'
-                                : ''
-                        ]"
-                    >
-                        <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
-                            {{ chart.title }}
-                        </h5>
-                        <component
-                            :is="chart.component"
-                            :data="chart.chart_data"
-                            :options="chart.chart_options"
-                        />
-                        <p
-                            v-if="chart.description"
-                            class="text-gray-600 mb-3 text-sm italic mt-4 px-4"
-                        >
-                            {{ chart.description }}
-                        </p>
-                    </div>
 
-                    <div
-                        v-if="currentReport.analysis?.treatment_comparison"
-                        :class="[
-                            'chart-card bg-white rounded-lg shadow p-4',
-                            (chartMap[currentReport.form_id]?.length || 0) + (currentReport.analysis?.treatment_comparison ? 1 : 0) === 2
-                                ? 'flex-1'
-                                : ''
-                        ]"
-                    >
-                        <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
-                            Treatment Details
-                        </h5>
-                        <hr class="border-t-2 border-gray-400 my-4" />
-                        <div
-                            class="flex flex-col md:flex-row justify-between text-gray-800"
-                        >
-                            <div class="flex-1 pr-4">
-                                <h6
-                                    class="text-2xl font-semibold text-blue-700 mb-3"
-                                >
-                                    Standard Practice
-                                </h6>
-                                <ul class="space-y-1 text-lg">
-                                    <li>
-                                        <b>Product:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.control
-                                                .product
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Rate:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.control.rate
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Timing:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.control.timing
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Method:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.control.method
-                                        }}
-                                    </li>
-                                </ul>
+                <template v-if="chartMap[currentReport.form_id]">
+                    <div>
+                        <!-- Count charts -->
+                        <div class="hidden">
+                            {{ chartCount = chartMap[currentReport.form_id]?.length || 0 }}
+                        </div>
+                        <!--
+                            ODD chart count → grid (charts + treatment inside grid)
+                            EVEN chart count → grid for charts ONLY + treatment BELOW grid
+                        -->
+                        <div :class="[
+                            'grid gap-6 w-full',
+                            chartCount === 1 ? 'md:grid-cols-1' :
+                                chartCount === 2 ? 'md:grid-cols-2' :
+                                    chartCount === 3 ? 'md:grid-cols-3' :
+                                        chartCount >= 4 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-1'
+                        ]">
+                            <!-- Render CHARTS -->
+                            <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
+                                class="chart-card bg-white rounded-lg shadow p-4">
+                                <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                                    {{ chart.title }}
+                                </h5>
+
+                                <component :is="chart.component" :data="chart.chart_data"
+                                    :options="chart.chart_options" />
+
+                                <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                                    {{ chart.description }}
+                                </p>
                             </div>
-                            <div
-                                class="hidden md:block w-[1px] bg-gray-300 mx-6"
-                            ></div>
-                            <div class="flex-1 pl-4">
-                                <h6
-                                    class="text-2xl font-semibold text-green-700 mb-3"
-                                >
-                                    Leads Agri Treatment
-                                </h6>
-                                <ul class="space-y-1 text-lg">
-                                    <li>
-                                        <b>Product:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.leads_agri
-                                                .product
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Rate:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.leads_agri
-                                                .rate
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Timing:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.leads_agri
-                                                .timing
-                                        }}
-                                    </li>
-                                    <li>
-                                        <b>Method:</b>
-                                        {{
-                                            currentReport.analysis
-                                                .treatment_comparison.leads_agri
-                                                .method
-                                        }}
-                                    </li>
-                                </ul>
+
+                            <!-- Render Treatment Details INSIDE GRID only if chartCount is ODD -->
+                            <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
+                                class="chart-card bg-white rounded-lg shadow p-4">
+                                <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                                    Treatment Details
+                                </h5>
+                                <hr class="border-t-2 border-gray-400 my-4" />
+
+                                <div class="flex flex-col md:flex-row justify-between text-gray-800">
+                                    <div class="flex-1 pr-4">
+                                        <h6 class="text-2xl font-semibold text-blue-700 mb-3">
+                                            Standard Practice
+                                        </h6>
+                                        <ul class="space-y-1 text-lg">
+                                            <li><b>Product:</b> {{
+                                                currentReport.analysis.treatment_comparison.control.product }}</li>
+                                            <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate
+                                            }}</li>
+                                            <li><b>Timing:</b> {{
+                                                currentReport.analysis.treatment_comparison.control.timing }}</li>
+                                            <li><b>Method:</b> {{
+                                                currentReport.analysis.treatment_comparison.control.method }}</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
+
+                                    <div class="flex-1 pl-4">
+                                        <h6 class="text-2xl font-semibold text-green-700 mb-3">
+                                            Leads Agri Treatment
+                                        </h6>
+                                        <ul class="space-y-1 text-lg">
+                                            <li><b>Product:</b> {{
+                                                currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
+                                            <li><b>Rate:</b> {{
+                                                currentReport.analysis.treatment_comparison.leads_agri.rate }}</li>
+                                            <li><b>Timing:</b> {{
+                                                currentReport.analysis.treatment_comparison.leads_agri.timing }}</li>
+                                            <li><b>Method:</b> {{
+                                                currentReport.analysis.treatment_comparison.leads_agri.method }}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                                    {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
+                                </p>
                             </div>
                         </div>
-                        <br />
-                        <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
-                            {{
-                                currentReport.analysis.treatment_comparison
-                                    .protocol_assessment
-                            }}
-                        </p>
+
+                        <!-- Treatment Details BELOW GRID only if chartCount is EVEN -->
+                        <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
+                            class="bg-white rounded-lg shadow p-4 mt-6">
+                            <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                                Treatment Details
+                            </h5>
+                            <hr class="border-t-2 border-gray-400 my-4" />
+
+                            <div class="flex flex-col md:flex-row justify-between text-gray-800">
+                                <div class="flex-1 pr-4">
+                                    <h6 class="text-2xl font-semibold text-blue-700 mb-3">
+                                        Standard Practice
+                                    </h6>
+                                    <ul class="space-y-1 text-lg">
+                                        <li><b>Product:</b> {{
+                                            currentReport.analysis.treatment_comparison.control.product }}</li>
+                                        <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                        </li>
+                                        <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing
+                                        }}</li>
+                                        <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method
+                                        }}</li>
+                                    </ul>
+                                </div>
+
+                                <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
+
+                                <div class="flex-1 pl-4">
+                                    <h6 class="text-2xl font-semibold text-green-700 mb-3">
+                                        Leads Agri Treatment
+                                    </h6>
+                                    <ul class="space-y-1 text-lg">
+                                        <li><b>Product:</b> {{
+                                            currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
+                                        <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate
+                                        }}</li>
+                                        <li><b>Timing:</b> {{
+                                            currentReport.analysis.treatment_comparison.leads_agri.timing }}</li>
+                                        <li><b>Method:</b> {{
+                                            currentReport.analysis.treatment_comparison.leads_agri.method }}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                                {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </template>
             </div>
 
-            <!-- Flash Cards - All 4 in One Row -->
-            <div
-                v-if="
-                    currentReport.analysis?.opportunities?.length ||
-                    currentReport.analysis?.risk_factors?.length ||
-                    currentReport.analysis?.recommendations?.length ||
-                    currentReport.analysis?.executive_summary
-                "
-                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6 w-full"
-            >
-                <!-- Opportunities Flash Card -->
-                <div
-                    v-if="currentReport.analysis?.opportunities?.length"
-                    @click="showOpportunitiesModal = true"
-                    class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 border-2 border-transparent hover:border-yellow-400"
-                >
-                    <div class="flex flex-col items-center justify-center h-full min-h-[200px]">
-                        <div class="text-6xl mb-4">🎯</div>
-                        <h4 class="text-3xl font-semibold text-black mb-4 text-center">
-                            Opportunities
-                        </h4>
-                        <p class="text-lg text-gray-600 text-center mb-4">
-                            {{ currentReport.analysis.opportunities.length }} 
-                            {{ currentReport.analysis.opportunities.length === 1 ? 'opportunity' : 'opportunities' }} available
-                        </p>
-                        <div class="text-yellow-500 font-semibold text-lg mt-2">
-                            Click to view details →
+
+            <!-- Main White Container -->
+            <div class="bg-white p-8 rounded-xl shadow-lg w-full mt-6">
+                <!-- Opportunities Row -->
+                <div class="flex items-center justify-between py-4 border-b last:border-none">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">🎯</div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-black">Opportunities</h4>
+                            <p class="text-gray-600 text-sm">
+                                {{ currentReport.analysis.opportunities.length }} available
+                            </p>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Risks & Limitations Flash Card -->
-                <div
-                    v-if="currentReport.analysis?.risk_factors?.length"
-                    @click="showRiskLimitationsModal = true"
-                    class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 border-2 border-transparent hover:border-red-400"
-                >
-                    <div class="flex flex-col items-center justify-center h-full min-h-[200px]">
-                        <div class="text-6xl mb-4">⚠️</div>
-                        <h4 class="text-3xl font-semibold text-black mb-4 text-center">
-                            Risks & Limitations
-                        </h4>
-                        <p class="text-lg text-gray-600 text-center mb-4">
-                            {{ currentReport.analysis.risk_factors.length }} 
-                            {{ currentReport.analysis.risk_factors.length === 1 ? 'risk factor' : 'risk factors' }} identified
-                        </p>
-                        <div class="text-red-500 font-semibold text-lg mt-2">
-                            Click to view details →
-                        </div>
-                    </div>
+                    <button @click="showOpportunitiesModal = true">
+                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
+                    </button>
                 </div>
 
-                <!-- Recommendations Flash Card -->
-                <div
-                    v-if="currentReport.analysis?.recommendations?.length"
-                    @click="showRecommendationsModal = true"
-                    class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 border-2 border-transparent hover:border-blue-400"
-                >
-                    <div class="flex flex-col items-center justify-center h-full min-h-[200px]">
-                        <div class="text-6xl mb-4">💡</div>
-                        <h4 class="text-3xl font-semibold text-black mb-4 text-center">
-                            Recommendations
-                        </h4>
-                        <p class="text-lg text-gray-600 text-center mb-4">
-                            {{ currentReport.analysis.recommendations.length }} 
-                            {{ currentReport.analysis.recommendations.length === 1 ? 'recommendation' : 'recommendations' }} provided
-                        </p>
-                        <div class="text-blue-500 font-semibold text-lg mt-2">
-                            Click to view details →
+                <!-- Risks Row -->
+                <div class="flex items-center justify-between py-4 border-b last:border-none">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">⚠️</div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-black">Risks & Limitations</h4>
+                            <p class="text-gray-600 text-sm">
+                                {{ currentReport.analysis.risk_factors.length }} identified
+                            </p>
                         </div>
                     </div>
+                    <button @click="showRiskLimitationsModal = true">
+                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
+                    </button>
                 </div>
 
-                <!-- Executive Summary Flash Card -->
-                <div
-                    v-if="currentReport.analysis?.executive_summary"
-                    @click="showExecutiveSummaryModal = true"
-                    class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105 border-2 border-transparent hover:border-purple-400"
-                >
-                    <div class="flex flex-col items-center justify-center h-full min-h-[200px]">
-                        <div class="text-6xl mb-4">📊</div>
-                        <h4 class="text-3xl font-semibold text-black mb-4 text-center">
-                            Executive Summary
-                        </h4>
-                        <p class="text-lg text-gray-600 text-center mb-4">
-                            Comprehensive overview available
-                        </p>
-                        <div class="text-purple-500 font-semibold text-lg mt-2">
-                            Click to view details →
+                <!-- Recommendations Row -->
+                <div class="flex items-center justify-between py-4 border-b last:border-none">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">💡</div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-black">Recommendations</h4>
+                            <p class="text-gray-600 text-sm">
+                                {{ currentReport.analysis.recommendations.length }} provided
+                            </p>
                         </div>
                     </div>
+                    <button @click="showRecommendationsModal = true">
+                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
+                    </button>
+                </div>
+
+                <!-- Executive Summary Row -->
+                <div class="flex items-center justify-between py-4">
+                    <div class="flex items-center gap-4">
+                        <div class="text-3xl">📊</div>
+                        <div>
+                            <h4 class="text-xl font-semibold text-black">Executive Summary</h4>
+                            <p class="text-gray-600 text-sm">Overview available</p>
+                        </div>
+                    </div>
+                    <button @click="showExecutiveSummaryModal = true">
+                        <i class="fas fa-eye text-gray-500 hover:text-black text-2xl"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -481,14 +403,10 @@
             <p v-else-if="error">{{ error }}</p>
         </div> -->
         <!-- Loading/Error/Empty Placeholder -->
-        <div
-            v-else-if="!currentReport"
-            class="flex flex-col items-center justify-center h-[440px] mt-10 bg-[#e6e9f7] rounded-lg"
-        >
+        <div v-else-if="!currentReport"
+            class="flex flex-col items-center justify-center h-[440px] mt-10 bg-[#e6e9f7] rounded-lg">
             <div class="relative flex flex-col items-center justify-center">
-                <div
-                    class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md"
-                >
+                <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
                     <span class="text-[#1f3b70] text-7xl font-semibold">?</span>
                 </div>
 
@@ -511,42 +429,29 @@
 
         <!-- weetAlert-style Modal -->
         <transition name="fade">
-            <div
-                v-if="alertVisible"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-            >
-                <div
-                    class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4"
-                    :class="{
-                        'border-green-600': alertType === 'success',
-                        'border-red-600': alertType === 'error',
-                        'border-yellow-500': alertType === 'warning',
-                    }"
-                >
-                    <div
-                        class="text-5xl mb-3"
-                        :class="{
-                            'text-green-600': alertType === 'success',
-                            'text-red-600': alertType === 'error',
-                            'text-yellow-500': alertType === 'warning',
-                        }"
-                    >
+            <div v-if="alertVisible"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
+                <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
+                    'border-green-600': alertType === 'success',
+                    'border-red-600': alertType === 'error',
+                    'border-yellow-500': alertType === 'warning',
+                }">
+                    <div class="text-5xl mb-3" :class="{
+                        'text-green-600': alertType === 'success',
+                        'text-red-600': alertType === 'error',
+                        'text-yellow-500': alertType === 'warning',
+                    }">
                         {{ alertIcon }}
                     </div>
                     <h2 class="text-2xl font-bold mb-2">{{ alertTitle }}</h2>
                     <p class="text-gray-600 mb-5">{{ alertMessage }}</p>
                     <div class="flex justify-center gap-3">
-                        <button
-                            v-if="alertType === 'warning'"
-                            @click="confirmAction"
-                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
-                        >
+                        <button v-if="alertType === 'warning'" @click="confirmAction"
+                            class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
                             Yes
                         </button>
-                        <button
-                            @click="closeAlert"
-                            class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500"
-                        >
+                        <button @click="closeAlert"
+                            class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
                             {{ alertType === "warning" ? "Cancel" : "OK" }}
                         </button>
                     </div>
@@ -556,57 +461,41 @@
 
         <!-- Opportunities Modal -->
         <transition name="fade">
-            <div
-                v-if="showOpportunitiesModal"
+            <div v-if="showOpportunitiesModal"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-                @click.self="showOpportunitiesModal = false"
-            >
-                <OpportunitiesModal
-                    :opportunities="currentReport?.analysis?.opportunities || []"
-                    @close="showOpportunitiesModal = false"
-                />
+                @click.self="showOpportunitiesModal = false">
+                <OpportunitiesModal :opportunities="currentReport?.analysis?.opportunities || []"
+                    @close="showOpportunitiesModal = false" />
             </div>
         </transition>
 
         <!-- Risk & Limitations Modal -->
         <transition name="fade">
-            <div
-                v-if="showRiskLimitationsModal"
+            <div v-if="showRiskLimitationsModal"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-                @click.self="showRiskLimitationsModal = false"
-            >
-                <RiskLimitationsModal
-                    :riskFactors="currentReport?.analysis?.risk_factors || []"
-                    @close="showRiskLimitationsModal = false"
-                />
+                @click.self="showRiskLimitationsModal = false">
+                <RiskLimitationsModal :riskFactors="currentReport?.analysis?.risk_factors || []"
+                    @close="showRiskLimitationsModal = false" />
             </div>
         </transition>
 
         <!-- Recommendations Modal -->
         <transition name="fade">
-            <div
-                v-if="showRecommendationsModal"
+            <div v-if="showRecommendationsModal"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-                @click.self="showRecommendationsModal = false"
-            >
-                <RecommendationsModal
-                    :recommendations="currentReport?.analysis?.recommendations || []"
-                    @close="showRecommendationsModal = false"
-                />
+                @click.self="showRecommendationsModal = false">
+                <RecommendationsModal :recommendations="currentReport?.analysis?.recommendations || []"
+                    @close="showRecommendationsModal = false" />
             </div>
         </transition>
 
         <!-- Executive Summary Modal -->
         <transition name="fade">
-            <div
-                v-if="showExecutiveSummaryModal"
+            <div v-if="showExecutiveSummaryModal"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
-                @click.self="showExecutiveSummaryModal = false"
-            >
-                <ExecutiveSummaryModal
-                    :executiveSummary="currentReport?.analysis?.executive_summary || ''"
-                    @close="showExecutiveSummaryModal = false"
-                />
+                @click.self="showExecutiveSummaryModal = false">
+                <ExecutiveSummaryModal :executiveSummary="currentReport?.analysis?.executive_summary || ''"
+                    @close="showExecutiveSummaryModal = false" />
             </div>
         </transition>
     </div>
@@ -721,7 +610,7 @@ watchEffect(() => {
             let component;
             let options = chart.chart_options || {};
             const type = chart.chart_type?.toLowerCase() || "";
-            
+
             // Add 1 to max value for line and bar charts y-axis
             if (type.includes("line") || type.includes("bar")) {
                 const chartData = chart.chart_data;
@@ -736,10 +625,10 @@ watchEffect(() => {
                             }
                         }
                     });
-                    
+
                     // Add 1 to max value for y-axis
                     const newMax = maxValue + 1;
-                    
+
                     if (type.includes("line")) {
                         component = Line;
                         options = {
@@ -1002,8 +891,8 @@ const exportToPDF = async () => {
                 const errorData = await response.json();
                 throw new Error(
                     errorData.error ||
-                        errorData.message ||
-                        "Failed to export PDF"
+                    errorData.message ||
+                    "Failed to export PDF"
                 );
             }
             throw new Error(
