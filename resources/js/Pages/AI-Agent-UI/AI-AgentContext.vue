@@ -323,7 +323,7 @@
                                 </div>
                             </div>
 
-                            <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                            <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
                                 {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                             </p>
                         </div>
