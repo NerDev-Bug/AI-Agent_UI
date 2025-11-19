@@ -332,7 +332,7 @@
             </div>
 
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+            <div class="flex justify-between grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
                 <!-- 🌍 World Map Card (No Data State) -->
                 <div
                     class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[900px]">
@@ -341,7 +341,7 @@
                 </div>
 
                 <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
-                <div class="bg-white p-8 rounded-xl shadow-lg w-[300px]">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-[350px]">
                     <h2 class="text-xl font-semibold mb-4">Analysis Overview</h2>
                     <!-- Opportunities -->
                     <div class="flex justify-between items-center py-4 border-b">
