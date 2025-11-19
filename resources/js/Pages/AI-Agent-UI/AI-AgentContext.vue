@@ -341,7 +341,7 @@
                 </div>
 
                 <!-- 📋 Opportunities / Risks / Recommendations / Executive Summary -->
-                <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="bg-white p-8 rounded-xl shadow-lg w-[300px]">
                     <h2 class="text-xl font-semibold mb-4">Analysis Overview</h2>
                     <!-- Opportunities -->
                     <div class="flex justify-between items-center py-4 border-b">
