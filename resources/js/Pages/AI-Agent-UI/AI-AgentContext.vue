@@ -208,15 +208,18 @@
                             {{ chartCount = chartMap[currentReport.form_id]?.length || 0 }}
                         </div>
                         <!--
-                            ODD chart count → grid (charts + treatment inside grid)
-                            EVEN chart count → grid for charts ONLY + treatment BELOW grid
+                            ODD chart count (1, 3, 5, 7) → grid (charts + treatment inside grid)
+                            EVEN chart count (2, 4, 6) → grid for charts ONLY + treatment BELOW grid
                         -->
                         <div :class="[
                             'grid gap-6 w-full',
-                            chartCount === 1 ? 'md:grid-cols-1' :
+                            chartCount === 1 ? 'md:grid-cols-2' : // 1 chart: 2 cols (Chart 1 | Treatment Details)
                                 chartCount === 2 ? 'md:grid-cols-2' :
-                                    chartCount === 3 ? 'md:grid-cols-3' :
-                                        chartCount >= 4 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-1'
+                                    chartCount === 3 ? 'md:grid-cols-2' : // 3 charts: 2 cols (2x2 grid with Treatment Details)
+                                        chartCount === 5 ? 'md:grid-cols-2 lg:grid-cols-3' : // 5 charts: 3 cols
+                                            chartCount === 7 ? 'md:grid-cols-2 lg:grid-cols-3' : // 7 charts: 3 cols
+                                                chartCount >= 4 && chartCount % 2 === 0 ? 'md:grid-cols-2 lg:grid-cols-3' : // Even 4, 6, 8+
+                                                    chartCount >= 4 ? 'md:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-1'
                         ]">
                             <!-- Render CHARTS -->
                             <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
@@ -233,9 +236,16 @@
                                 </p>
                             </div>
 
-                            <!-- Render Treatment Details INSIDE GRID only if chartCount is ODD -->
+                            <!-- Render Treatment Details INSIDE GRID only if chartCount is ODD (1, 3, 5, 7) -->
                             <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
-                                class="chart-card bg-white rounded-lg shadow p-4">
+                                :class="[
+                                    'chart-card bg-white rounded-lg shadow p-4',
+                                    chartCount === 1 ? '' : // 1 chart: Normal grid item (side by side with chart)
+                                        chartCount === 3 ? '' : // 3 charts: Normal grid item (no span, creates 2x2 grid)
+                                            chartCount === 5 ? 'lg:col-span-1' : // 5 charts: Normal grid item (1 cell in 3-col grid)
+                                                chartCount === 7 ? 'lg:col-span-1' : // 7 charts: Normal grid item (1 cell in 3-col grid)
+                                                    '' // Default: normal grid item (no span)
+                                ]">
                                 <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                     Treatment Details
                                 </h5>
