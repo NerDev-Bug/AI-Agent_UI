@@ -138,21 +138,20 @@
                         <!-- Season Badge (top right) -->
                         <div :class="[
                             'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1 rounded-full capitalize',
-                            currentReport.analysis.performance_analysis.statistical_assessment.season === 'Dry'
+                            currentReport.analysis.basic_info.season === 'dry'
                                 ? 'bg-yellow-400'
                                 : 'bg-sky-400'
                         ]">
                             {{
-                                currentReport.analysis.performance_analysis
-                                    .statistical_assessment.season
+                                currentReport.analysis.basic_info.season
                             }}
                         </div>
                         <!-- Season Icon -->
                         <div class="w-20 h-20 mb-3">
-                            <img v-if="currentReport.analysis.performance_analysis.statistical_assessment.season === 'Dry'"
+                            <img v-if="currentReport.analysis.basic_info.season === 'dry'"
                                 src="/images/sun.png" alt="Dry season" class="w-full h-full object-contain" />
 
-                            <img v-else-if="currentReport.analysis.performance_analysis.statistical_assessment.season === 'Wet'"
+                            <img v-else-if="currentReport.analysis.basic_info.season === 'wet'"
                                 src="/images/cloud_with_rain.png" alt="Wet season"
                                 class="w-full h-full object-contain" />
 
