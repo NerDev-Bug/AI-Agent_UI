@@ -102,28 +102,34 @@
                     <div class="grid grid-cols-2 gap-6">
                         <!-- Control Average -->
                         <div
-                            class="bg-[linear-gradient(#1E3E8B,#346BF1)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
-                            <p class="text-5xl font-bold mb-4">
+                            class="bg-[linear-gradient(to_right,#1E3E8B,#346BF1)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
+                            <p class="text-5xl font-bold mb-2">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(
                                         2
                                     )
                                 }}
                             </p>
-                            <p class="text-lg opacity-90">Control Average</p>
+                            <div class="text-center">
+                                <p class="text-lg opacity-90 leading-tight">Control</p>
+                                <p class="text-lg opacity-90 leading-tight">Average</p>
+                            </div>
                         </div>
 
                         <!-- Leads Agri Average -->
                         <div
-                            class="bg-[linear-gradient(#00853F,#4CAF50)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
-                            <p class="text-5xl font-bold mb-4">
+                            class="bg-[linear-gradient(to_right,#00853F,#4CAF50)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
+                            <p class="text-5xl font-bold mb-2">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(
                                         2
                                     )
                                 }}
                             </p>
-                            <p class="text-lg opacity-90">Leads Agri Average</p>
+                            <div class="text-center">
+                                <p class="text-lg opacity-90 leading-tight">Leads Agri</p>
+                                <p class="text-lg opacity-90 leading-tight">Average</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -134,10 +140,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
                     <!-- Season -->
                     <div
-                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
+                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center relative min-h-[200px]">
                         <!-- Season Badge (top right) -->
                         <div :class="[
-                            'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1 rounded-full capitalize',
+                            'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1.5 rounded-full capitalize',
                             currentReport.analysis.basic_info.season === 'dry'
                                 ? 'bg-yellow-400'
                                 : 'bg-sky-400'
@@ -146,19 +152,17 @@
                                 currentReport.analysis.basic_info.season
                             }}
                         </div>
-                        <!-- Season Icon -->
-                        <div class="w-20 h-20 mb-3">
-                            <img v-if="currentReport.analysis.basic_info.season === 'dry'"
-                                src="/images/sun.png" alt="Dry season" class="w-full h-full object-contain" />
-
-                            <img v-else-if="currentReport.analysis.basic_info.season === 'wet'"
-                                src="/images/cloud_with_rain.png" alt="Wet season"
-                                class="w-full h-full object-contain" />
-
-                            <!-- Optional fallback for other values -->
-                            <img v-else src="/images/sun.png" alt="Season" class="w-full h-full object-contain" />
-                        </div>
-                        <p class="text-sm text-gray-500 mt-2">Season</p>
+                        <!-- Large Yellow Circle (centered) -->
+                        <div :class="[
+                            'w-24 h-24 rounded-full',
+                            currentReport.analysis.basic_info.season === 'dry'
+                                ? 'bg-yellow-400'
+                                : 'bg-sky-400'
+                        ]" :style="currentReport.analysis.basic_info.season === 'dry' 
+                            ? 'box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2);' 
+                            : 'box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);'"></div>
+                        <!-- Season Label (bottom left) -->
+                        <p class="text-sm text-gray-600 absolute bottom-4 left-4">Season</p>
                     </div>
 
                     <!-- Relative Improvement -->
@@ -259,40 +263,81 @@
                             <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                 Treatment Details
                             </h5>
-                            <hr class="border-t-2 border-gray-400 my-4" />
-                            <div class="flex flex-col md:flex-row justify-between text-gray-800">
-                                <div class="flex-1 pr-4">
-                                    <h6 class="text-2xl font-semibold text-blue-700 mb-3">
-                                        Standard Practice
-                                    </h6>
-                                    <ul class="space-y-1 text-lg">
-                                        <li><b>Product:</b> {{
-                                            currentReport.analysis.treatment_comparison.control.product }}</li>
-                                        <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}
-                                        </li>
-                                        <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing
-                                            }}</li>
-                                        <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method
-                                            }}</li>
-                                    </ul>
-                                </div>
-                                <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
-                                <div class="flex-1 pl-4">
-                                    <h6 class="text-2xl font-semibold text-green-700 mb-3">
-                                        Leads Agri Treatment
-                                    </h6>
-                                    <ul class="space-y-1 text-lg">
-                                        <li><b>Product:</b> {{
-                                            currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
-                                        <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate
-                                            }}</li>
-                                        <li><b>Timing:</b> {{
-                                            currentReport.analysis.treatment_comparison.leads_agri.timing }}</li>
-                                        <li><b>Method:</b> {{
-                                            currentReport.analysis.treatment_comparison.leads_agri.method }}</li>
-                                    </ul>
-                                </div>
+                            
+                            <!-- Treatment Details Table -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-separate border-spacing-0 border border-gray-600">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="2" class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                                Standard Practice
+                                            </th>
+                                            <th colspan="2" class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                                Leads Agri Treatment
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Product:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.control.product }}
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Product:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Rate:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Rate:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Timing:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Timing:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Method:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.control.method }}
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                                <b>Method:</b>
+                                            </td>
+                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                            
                             <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
                                 {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                             </p>
@@ -306,42 +351,81 @@
                         <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                             Treatment Details
                         </h5>
-                        <hr class="border-t-2 border-gray-400 my-4" />
-
-                        <div class="flex flex-col md:flex-row justify-between text-gray-800">
-                            <div class="flex-1 pr-4">
-                                <h6 class="text-2xl font-semibold text-blue-700 mb-3">
-                                    Standard Practice
-                                </h6>
-                                <ul class="space-y-1 text-lg">
-                                    <li><b>Product:</b> {{ currentReport.analysis.treatment_comparison.control.product
-                                        }}</li>
-                                    <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.control.rate }}</li>
-                                    <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.control.timing }}
-                                    </li>
-                                    <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.control.method }}
-                                    </li>
-                                </ul>
-                            </div>
-
-                            <div class="hidden md:block w-[1px] bg-gray-300 mx-6"></div>
-
-                            <div class="flex-1 pl-4">
-                                <h6 class="text-2xl font-semibold text-green-700 mb-3">
-                                    Leads Agri Treatment
-                                </h6>
-                                <ul class="space-y-1 text-lg">
-                                    <li><b>Product:</b> {{
-                                        currentReport.analysis.treatment_comparison.leads_agri.product }}</li>
-                                    <li><b>Rate:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
-                                    </li>
-                                    <li><b>Timing:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.timing
-                                        }}</li>
-                                    <li><b>Method:</b> {{ currentReport.analysis.treatment_comparison.leads_agri.method
-                                        }}</li>
-                                </ul>
-                            </div>
+                        
+                        <!-- Treatment Details Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-separate border-spacing-0 border border-gray-600">
+                                <thead>
+                                    <tr>
+                                        <th colspan="2" class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            Standard Practice
+                                        </th>
+                                        <th colspan="2" class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            Leads Agri Treatment
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Product:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.control.product }}
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Product:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Rate:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Rate:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Timing:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Timing:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Method:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.control.method }}
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <b>Method:</b>
+                                        </td>
+                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
+                        
                         <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
                             {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                         </p>
@@ -358,71 +442,37 @@
                 </div>
 
                 <!-- Key Findings & Strategic Insights -->
-                <div class="bg-white p-8 rounded-xl shadow-lg w-[390px]">
-                    <h2 class="text-xl font-semibold mb-4">Key Findings & Strategic Insights</h2>
+                <div class="bg-gray-100 p-8 rounded-xl shadow-lg w-[390px]">
+                    <h2 class="text-xl font-semibold mb-6 text-gray-800">Key Findings & Strategic Insights</h2>
 
                     <!-- Opportunities -->
-                    <div class="insight-item bg-gray-100" @click="showOpportunitiesModal = true">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">🎯</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">Opportunities</h4>
-                                <p class="text-gray-500 text-sm insight-sub">
-                                    {{ currentReport.analysis.opportunities.length }} available
-                                </p>
-                            </div>
-                        </div>
-
-                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showOpportunitiesModal = true">
+                        <span class="text-gray-700 text-lg font-semibold">Opportunities</span>
+                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Risks & Limitations -->
-                    <div class="insight-item bg-gray-100" @click="showRiskLimitationsModal = true">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">⚠️</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">Risks & Limitations</h4>
-                                <p class="text-gray-500 text-sm insight-sub">
-                                    {{ currentReport.analysis.risk_factors.length }} identified
-                                </p>
-                            </div>
-                        </div>
-
-                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showRiskLimitationsModal = true">
+                        <span class="text-gray-700 text-lg font-semibold">Risks & Limitations</span>
+                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="insight-item bg-gray-100" @click="showExecutiveSummaryModal = true">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">📊</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">Executive Summary</h4>
-                                <p class="text-gray-500 text-sm insight-sub">Overview available</p>
-                            </div>
-                        </div>
-
-                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showExecutiveSummaryModal = true">
+                        <span class="text-gray-700 text-lg font-semibold">Executive Summary</span>
+                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="insight-item bg-gray-100" @click="showRecommendationsModal = true">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">💡</div>
-                            <div>
-                                <h4 class="text-lg font-semibold">Recommendations</h4>
-                                <p class="text-gray-500 text-sm insight-sub">
-                                    {{ currentReport.analysis.recommendations.length }} provided
-                                </p>
-                            </div>
-                        </div>
-
-                        <button class="see-more bg-yellow-400 text-white text-xs px-3 py-1 rounded-full">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showRecommendationsModal = true">
+                        <span class="text-gray-700 text-lg font-semibold">Recommendations</span>
+                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
@@ -998,29 +1048,26 @@ canvas {
 
 /* Insight Item Styles */
 .insight-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    border-radius: 0.75rem;
-    margin-bottom: 0.75rem;
     transition: all 300ms;
-    position: relative;
-    cursor: pointer;
 }
 
 .insight-item:hover {
-    background: linear-gradient(to right, #00853F, #4CAF50);
+    background-color: #16a34a !important; /* green-600 */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.insight-item:hover span {
     color: white !important;
 }
 
-/* Show the button only on hover */
-.insight-item .see-more {
+/* See more button - hidden by default, shown on hover */
+.see-more-btn {
     opacity: 0;
     transition: opacity 0.3s;
 }
 
-.insight-item:hover .see-more {
+.insight-item:hover .see-more-btn {
     opacity: 1;
 }
 </style>

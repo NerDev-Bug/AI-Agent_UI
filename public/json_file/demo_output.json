@@ -1,0 +1,508 @@
+{
+  "job_id": "123:5-ddfb3aa5-1f8a-4e98-b1f0-d4dc2b3e784f",
+  "status": "complete",
+  "progress": 100,
+  "message": "Complete!",
+  "user_id": "123",
+  "result": {
+    "status": "success",
+    "total_reports": 1,
+    "reports": [
+      {
+        "report_number": 1,
+        "file_name": "Leads Agri Demo Protocol SAMPLE FORM.pdf",
+        "form_id": "",
+        "form_type": "Leads Agri Herbicide Demo Form",
+        "extracted_content": "# Leads Agri Herbicide Demo Form\n\n## Fields\n- **Name/Position/Area**: Juan Dela Cruz - TPS - 815\n- **Leads Agri Product (Rate/Timing/No of applications)**: Frontier 200 OD - 100 ml/tl - 12 DAT - 1 App\n- **Name of Cooperator**: Edward Macatula\n- **Farm Location**: Los Banos, Laguna\n- **Contact Number**: 0967 234 0844\n- **Farmers Practice (Product/Rate/Timing)**: Nominee - 30 ml/tl - 8 DAT - 1 App\n- **Plot size (sq meter)**: 1,000\n- **Date of Application**: February 3, 2025\n- **Crop/Variety**: Rice\n- **Date of Planting**: January 22, 2025\n- **Date of Product Demo Showcase/s**: February 10, 2025\n- **Total Move-out**: Php 22,450\n- **No of Participants**: 14\n- **Name and Signature of Demo Cooperator**: Edward Macatula\n\n## Treatment Details\n| Treatment | Product       | Rate        | Application Method | Timing/s of application |\n|-----------|---------------|-------------|--------------------|-------------------------|\n| 1         | FP/Untreated  | 30 ml/tl    | Foliar             | 7-15 DAT                |\n| 2         | Leads Agri    | 100 ml/tl   | Foliar             | 12-15 DAT               |\n\n## % Control (whole plot) - Ratings\n| Trt | Product      | 3 DAA | 7 DAA | 14 DAA |\n|-----|--------------|-------|-------|--------|\n| 1   | FP/Untreated | 3     | 3     | 3      |\n| 2   | Leads Agri   | 3     | 4     | 4      |\n\n## % Control (whole plot) - Categories\n| Rating | Categories |\n|--------|------------|\n| 1      | No control |\n| 2      | Poor       |\n| 3      | Acceptable |\n| 4      | Excellent  |\n\n## Notes\n- **Remarks/Cooperator Feedback/Result of Demo**: N/A",
+        "analysis": {
+          "template_version": "1.1.0",
+          "model_name": "SENIOR_AGRICULTURAL_DATA_ANALYST",
+          "status": "success",
+          "product_category": "herbicide",
+          "metrics_detected": [
+            "% Control (Ratings)"
+          ],
+          "measurement_intervals": [
+            "3 DAA",
+            "7 DAA",
+            "14 DAA"
+          ],
+          "data_quality": {
+            "completeness_score": 100,
+            "critical_data_present": false,
+            "sample_size_adequate": false,
+            "reliability_notes": "Cooperator feedback is N/A, limiting qualitative insights. Yield data is not available, which is critical for full economic assessment. Single plot per treatment limits statistical power.",
+            "missing_fields": [
+              "yield_data",
+              "cooperator_feedback"
+            ]
+          },
+          "basic_info": {
+            "applicant": "Juan Dela Cruz",
+            "date_of_application": "2025-02-03",
+            "cooperator": "Edward Macatula",
+            "product": "Frontier 200 OD",
+            "location": "Los Banos, Laguna",
+            "application_date": "2025-02-03",
+            "planting_date": "2025-01-22",
+            "crop": "Rice",
+            "plot_size": "1000 sq meter",
+            "contact": "0967 234 0844",
+            "season": "dry"
+          },
+          "treatment_comparison": {
+            "control": {
+              "description": "Farmer's Practice",
+              "product": "FP/Untreated (Nominee)",
+              "rate": "30 ml/tl",
+              "timing": "7-15 DAT",
+              "method": "Foliar",
+              "applications": "1 App"
+            },
+            "leads_agri": {
+              "product": "Frontier 200 OD",
+              "rate": "100 ml/tl",
+              "timing": "12-15 DAT",
+              "method": "Foliar",
+              "applications": "1 App"
+            },
+            "protocol_assessment": "Both treatments involved a single foliar application. The application timings for control (7-15 DAT) and Leads Agri (12-15 DAT) are appropriate for post-emergence herbicide application in rice, with a slight difference in the initial timing window. The comparison appears fair given the product category."
+          },
+          "performance_analysis": {
+            "metric_type": "rating_scale",
+            "scale_info": "1-4 where 1=No control, 2=Poor, 3=Acceptable, 4=Excellent",
+            "raw_data": {
+              "control": {
+                "3 DAA": 3,
+                "7 DAA": 3,
+                "14 DAA": 3
+              },
+              "leads_agri": {
+                "3 DAA": 3,
+                "7 DAA": 4,
+                "14 DAA": 4
+              }
+            },
+            "raw_data_notes": "Weed control ratings were assessed at 3, 7, and 14 Days After Application (DAA) using a 1-4 scale.",
+            "calculated_metrics": {
+              "control_average": 3,
+              "leads_average": 3.67,
+              "absolute_difference": 0.67,
+              "absolute_difference_unit": "points",
+              "relative_improvement_percent": 16.75,
+              "improvement_interpretation": "Leads Agri achieved an average weed control rating of 3.67 ('Excellent') compared to the Control's 3.0 ('Acceptable'), showing an absolute improvement of 0.67 points. This represents a 16.75% improvement relative to the 1-4 rating scale."
+            },
+            "statistical_assessment": {
+              "improvement_significance": "significant",
+              "significance_basis": "An absolute difference of 0.67 points on a 1-4 rating scale falls within the 'significant' category (0.5–0.75 points).",
+              "performance_consistency": "medium",
+              "confidence_level": "medium",
+              "notes": "Confidence is medium due to limited sample size (single plot per treatment) and lack of cooperator feedback/yield data."
+            },
+            "trend_analysis": {
+              "control_trend": "stable",
+              "leads_trend": "improving",
+              "early_performance": "At 3 DAA, both Leads Agri and Control showed 'Acceptable' weed control (rating 3).",
+              "late_performance": "By 14 DAA, Leads Agri maintained 'Excellent' weed control (rating 4), while Control remained at 'Acceptable' (rating 3).",
+              "key_observation": "Leads Agri demonstrated a rapid improvement in weed control efficacy, reaching 'Excellent' status by 7 DAA and maintaining it, significantly outperforming the Farmer's Practice in the later stages.",
+              "speed_of_action": "moderate"
+            }
+          },
+          "yield_analysis": {
+            "control_yield": "N/A",
+            "leads_yield": "N/A",
+            "yield_difference_absolute": "N/A",
+            "yield_improvement_percent": 0,
+            "yield_status": "not_measured"
+          },
+          "cooperator_feedback": {
+            "raw_feedback": "N/A",
+            "sentiment": "neutral",
+            "key_highlights": [],
+            "visible_results_timeline": "No specific timeline mentioned, but quantitative data shows improvement by 7 DAA.",
+            "concerns": [
+              "No cooperator feedback provided, limiting qualitative insight into user experience and satisfaction."
+            ]
+          },
+          "privacy": {
+            "pii_detected": true,
+            "fields_masked": [
+              "contact",
+              "applicant"
+            ]
+          },
+          "validation": {
+            "warnings": [],
+            "assumptions": [
+              "Applicant name 'Juan Dela Cruz' was extracted, assuming 'TPS - 815' is a role/identifier and not part of the name.",
+              "Plot size '1,000' is assumed to be '1,000 sq meter' based on the field label."
+            ]
+          },
+          "risk_factors": [
+            {
+              "risk": "Missing critical data (yield, qualitative feedback)",
+              "data_basis": "The demo form explicitly states 'Remarks/Cooperator Feedback/Result of Demo: N/A' and no yield data is present. This limits the ability to assess economic impact and farmer satisfaction.",
+              "severity": "medium"
+            },
+            {
+              "risk": "Limited trial scope and sample size",
+              "data_basis": "The demo was conducted at a single location with only one plot per treatment, which limits the generalizability and statistical robustness of the results.",
+              "severity": "medium"
+            }
+          ],
+          "opportunities": [
+            {
+              "opportunity": "Strong and sustained weed control efficacy",
+              "data_basis": "Leads Agri's Frontier 200 OD achieved an 'Excellent' rating (4.0) by 7 DAA and maintained it until 14 DAA, significantly outperforming the control's consistent 'Acceptable' rating (3.0).",
+              "potential": "high"
+            },
+            {
+              "opportunity": "Relatively fast action for visible results",
+              "data_basis": "The product showed a rapid improvement in control, moving from 'Acceptable' at 3 DAA to 'Excellent' by 7 DAA, indicating a quick visible effect.",
+              "potential": "medium"
+            }
+          ],
+          "recommendations": [
+            {
+              "priority": "high",
+              "recommendation": "Conduct follow-up trials focused on collecting comprehensive yield data and detailed weed species-specific efficacy.",
+              "data_basis": "While Frontier 200 OD demonstrated significant improvement in overall weed control ratings, the absence of yield data and specific weed control metrics prevents a full assessment of its economic value and specific weed spectrum effectiveness.",
+              "expected_impact": "Quantify the economic benefits of using Frontier 200 OD through yield improvements and identify its precise weed control capabilities, strengthening the product's value proposition for farmers."
+            },
+            {
+              "priority": "medium",
+              "recommendation": "Implement structured cooperator feedback mechanisms for all future demos, including interviews or surveys.",
+              "data_basis": "The current demo form indicated 'N/A' for cooperator feedback, which is a critical missed opportunity to capture real-world user experience, ease of use, and overall satisfaction.",
+              "expected_impact": "Gather invaluable qualitative insights into product performance, farmer perception, and market acceptance, which can directly inform marketing strategies, product positioning, and potential improvements."
+            },
+            {
+              "priority": "medium",
+              "recommendation": "Expand demo trials to multiple locations with varying environmental conditions and larger plot sizes.",
+              "data_basis": "The current demo was limited to a single location (Los Banos, Laguna) and one plot per treatment. This restricts the generalizability of the findings and the robustness of the performance assessment.",
+              "expected_impact": "Validate Frontier 200 OD's performance across diverse agro-climatic zones and farming practices, increasing confidence in its broad applicability, robustness, and regional market potential."
+            }
+          ],
+          "executive_summary": "This demo trial evaluated the efficacy of Frontier 200 OD, a herbicide product, on rice in Los Banos, Laguna during the dry season, with application on February 3, 2025. The trial demonstrated that Leads Agri's Frontier 200 OD achieved superior weed control compared to the Farmer's Practice (FP). Averaging across 3, 7, and 14 Days After Application (DAA), Leads Agri secured an average weed control rating of 3.67, significantly outperforming the FP's consistent average of 3.0. This represents a 0.67-point increase in control, equating to a 16.75% improvement relative to the 1-4 rating scale, where 4 signifies 'Excellent' control. Frontier 200 OD exhibited a moderate speed of action, showing initial 'Acceptable' control at 3 DAA, rapidly progressing to 'Excellent' control by 7 DAA, and maintaining this high level of efficacy through the 14 DAA assessment. In contrast, the Farmer's Practice remained at an 'Acceptable' control level throughout the observation period. While the quantitative results indicate a strong performance, the absence of cooperator feedback and yield data presents a limitation, precluding a comprehensive validation of farmer satisfaction and economic impact. Key opportunities lie in the product's demonstrated ability to achieve excellent and sustained weed control shortly after application. However, risks include the demo's single-location, single-plot design, and the lack of critical yield and qualitative feedback. To fully capitalize on Frontier 200 OD's potential, a high-priority recommendation is to conduct further trials focusing on collecting yield data and structured cooperator feedback across diverse locations to solidify its market value proposition and broaden its applicability."
+        },
+        "graph_suggestions": {
+          "suggested_charts": [
+            {
+              "chart_id": "performance_trend",
+              "chart_type": "line_chart",
+              "title": "Weed Control Efficacy Trend Over Time",
+              "priority": "high",
+              "data_source": "performance_analysis.raw_data",
+              "description": "This line chart visualizes weed control efficacy over 3, 7, and 14 DAA. Leads Agri improved from 'Acceptable' (3) to 'Excellent' (4) by 7 DAA, maintaining it, while Control stayed 'Acceptable' (3). This highlights Frontier 200 OD's sustained effectiveness and moderate speed of action, crucial for optimal weed management in rice.",
+              "chart_data": {
+                "labels": [
+                  "3 DAA",
+                  "7 DAA",
+                  "14 DAA"
+                ],
+                "datasets": [
+                  {
+                    "label": "Control",
+                    "data": [
+                      3,
+                      3,
+                      3
+                    ],
+                    "borderColor": "#28628C",
+                    "backgroundColor": "rgba(40, 98, 140, 0.15)",
+                    "tension": 0.3,
+                    "borderWidth": 3
+                  },
+                  {
+                    "label": "Leads Agri",
+                    "data": [
+                      3,
+                      4,
+                      4
+                    ],
+                    "borderColor": "#227E26",
+                    "backgroundColor": "rgba(34, 126, 38, 0.15)",
+                    "tension": 0.3,
+                    "borderWidth": 3
+                  }
+                ]
+              },
+              "chart_options": {
+                "responsive": true,
+                "maintainAspectRatio": false,
+                "layout": {
+                  "padding": {
+                    "top": 8,
+                    "right": 12,
+                    "bottom": 12,
+                    "left": 12
+                  }
+                },
+                "plugins": {
+                  "legend": {
+                    "position": "bottom"
+                  },
+                  "title": {
+                    "display": true,
+                    "text": "Weed Control Efficacy Trend Over Time"
+                  }
+                },
+                "animation": {
+                  "duration": 800,
+                  "easing": "easeOutQuart"
+                },
+                "elements": {
+                  "line": {
+                    "tension": 0.3,
+                    "borderWidth": 3
+                  },
+                  "point": {
+                    "radius": 4,
+                    "hoverRadius": 6
+                  },
+                  "bar": {
+                    "borderRadius": 6,
+                    "borderSkipped": false
+                  }
+                },
+                "scales": {
+                  "y": {
+                    "beginAtZero": true,
+                    "title": {
+                      "display": true,
+                      "text": "Weed Control Rating (1-4 Scale)"
+                    },
+                    "max": 5,
+                    "grid": {
+                      "color": "rgba(0,0,0,0.06)"
+                    },
+                    "ticks": {
+                      "color": "#555",
+                      "font": {
+                        "size": 12
+                      }
+                    }
+                  },
+                  "x": {
+                    "title": {
+                      "display": true,
+                      "text": "Days After Application (DAA)"
+                    },
+                    "grid": {
+                      "display": false
+                    },
+                    "ticks": {
+                      "color": "#555",
+                      "font": {
+                        "size": 12
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "chart_id": "performance_comparison",
+              "chart_type": "bar_chart",
+              "title": "Average Weed Control: 16.75% Improvement with Leads Agri",
+              "priority": "high",
+              "data_source": "performance_analysis.calculated_metrics",
+              "description": "This bar chart compares average weed control ratings: Control (3.0) versus Leads Agri (3.67). Leads Agri demonstrates a significant 16.75% relative improvement, showcasing superior efficacy. This clear quantitative advantage helps stakeholders quickly assess the product's effectiveness against the farmer's practice, guiding informed adoption decisions.",
+              "chart_data": {
+                "labels": [
+                  "Control",
+                  "Leads Agri"
+                ],
+                "datasets": [
+                  {
+                    "label": "Average Performance",
+                    "data": [
+                      3,
+                      3.67
+                    ],
+                    "backgroundColor": [
+                      "rgba(69, 170, 242, 0.8)",
+                      "rgba(122, 208, 119, 0.8)"
+                    ],
+                    "borderColor": [
+                      "#28628C",
+                      "#227E26"
+                    ],
+                    "borderWidth": 1,
+                    "borderRadius": 6
+                  }
+                ]
+              },
+              "chart_options": {
+                "responsive": true,
+                "maintainAspectRatio": false,
+                "layout": {
+                  "padding": {
+                    "top": 8,
+                    "right": 12,
+                    "bottom": 12,
+                    "left": 12
+                  }
+                },
+                "plugins": {
+                  "legend": {
+                    "position": "bottom"
+                  },
+                  "title": {
+                    "display": true,
+                    "text": "Average Weed Control: 16.75% Improvement with Leads Agri"
+                  }
+                },
+                "animation": {
+                  "duration": 800,
+                  "easing": "easeOutQuart"
+                },
+                "elements": {
+                  "line": {
+                    "tension": 0.3,
+                    "borderWidth": 3
+                  },
+                  "point": {
+                    "radius": 4,
+                    "hoverRadius": 6
+                  },
+                  "bar": {
+                    "borderRadius": 6,
+                    "borderSkipped": false
+                  }
+                },
+                "scales": {
+                  "y": {
+                    "beginAtZero": true,
+                    "title": {
+                      "display": true,
+                      "text": "Average Rating (1-4 Scale)"
+                    },
+                    "max": 5,
+                    "grid": {
+                      "color": "rgba(0,0,0,0.06)"
+                    },
+                    "ticks": {
+                      "color": "#555",
+                      "font": {
+                        "size": 12
+                      }
+                    }
+                  },
+                  "x": {
+                    "title": {
+                      "display": true,
+                      "text": "Treatment"
+                    },
+                    "grid": {
+                      "display": false
+                    },
+                    "ticks": {
+                      "color": "#555",
+                      "font": {
+                        "size": 12
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "summary": "The visualization focuses on the efficacy of Frontier 200 OD in weed control. A line chart illustrates the product's improving trend over time, moving from 'Acceptable' to 'Excellent' control, while a bar chart quantifies its superior average performance, showing a 16.75% improvement over the Farmer's Practice. These charts highlight the product's sustained effectiveness and speed of action, crucial for evaluating its agricultural value, despite the absence of yield and cooperator feedback data."
+        },
+        "chunks": [
+          {
+            "chunk_id": "table_0_flat",
+            "content": "Treatment: 1, Product: FP/Untreated, Rate: 30 ml/tl, Application Method: Foliar, Timing/s of application: 7-15 DAT\nTreatment: 2, Product: Leads Agri, Rate: 100 ml/tl, Application Method: Foliar, Timing/s of application: 12-15 DAT",
+            "metadata": {
+              "type": "table_flat",
+              "table_index": 0,
+              "row_count": 2
+            },
+            "token_count": 31,
+            "char_count": 229
+          },
+          {
+            "chunk_id": "table_1_flat",
+            "content": "Trt: 1, Product: FP/Untreated, 3 DAA: 3, 7 DAA: 3, 14 DAA: 3\nTrt: 2, Product: Leads Agri, 3 DAA: 3, 7 DAA: 4, 14 DAA: 4",
+            "metadata": {
+              "type": "table_flat",
+              "table_index": 1,
+              "row_count": 2
+            },
+            "token_count": 27,
+            "char_count": 119
+          },
+          {
+            "chunk_id": "table_2_flat",
+            "content": "Rating: 1, Categories: No control\nRating: 2, Categories: Poor\nRating: 3, Categories: Acceptable\nRating: 4, Categories: Excellent",
+            "metadata": {
+              "type": "table_flat",
+              "table_index": 2,
+              "row_count": 4
+            },
+            "token_count": 17,
+            "char_count": 128
+          },
+          {
+            "chunk_id": "text_0",
+            "content": "# Leads Agri Herbicide Demo Form ## Fields - **Name/Position/Area**: Juan Dela Cruz - TPS - 815 - **Leads Agri Product (Rate/Timing/No of applications)**: Frontier 200 OD - 100 ml/tl - 12 DAT - 1 App - **Name of Cooperator**: Edward Macatula - **Farm Location**: Los Banos, Laguna - **Contact Number**: 0967 234 0844 - **Farmers Practice (Product/Rate/Timing)**: Nominee - 30 ml/tl - 8 DAT - 1 App - **Plot size (sq meter)**: 1,000 - **Date of Application**: February 3, 2025 - **Crop/Variety**: Rice - **Date of Planting**: January 22, 2025 - **Date of Product Demo Showcase/s**: February 10, 2025 - **Total Move-out**: Php 22,450 - **No of Participants**: 14 - **Name and Signature of Demo Cooperator**: Edward Macatula ## Treatment Details ## % Control (whole plot) - Ratings ## % Control (whole plot) - Categories ## Notes - **Remarks/Cooperator Feedback/Result of Demo**: N/A",
+            "metadata": {
+              "type": "text",
+              "chunk_index": 0
+            },
+            "token_count": 144,
+            "char_count": 880
+          }
+        ],
+        "processing_metrics": {
+          "chunk_count": 4,
+          "processing_steps": "chunking",
+          "workflow_completed": true,
+          "storage_ready": true
+        },
+        "errors": [
+          "Analysis error: No response from LLM"
+        ],
+        "validation": {
+          "file_validation": {
+            "is_valid": true,
+            "file_type": "pdf",
+            "format": "PDF",
+            "errors": [
+              "PDF validation failed: name 'logger' is not defined"
+            ],
+            "warnings": [],
+            "metadata": {
+              "num_pages": 1,
+              "file_size_mb": 0.12120819091796875,
+              "title": "",
+              "author": "LAPC-E. Macatula",
+              "creator": "Microsoft® Excel® LTSC"
+            }
+          },
+          "content_validation": {
+            "is_valid_demo": true,
+            "confidence": 0.98,
+            "content_type": "product_demo",
+            "reasoning": "The content clearly outlines a product demonstration with specific product names, application details, cooperator information, crop details, and performance metrics (% Control) over time.",
+            "detected_elements": {
+              "has_product_info": true,
+              "has_trial_data": true,
+              "has_numeric_results": true,
+              "has_location_info": true
+            },
+            "feedback": "Valid product demo detected. Proceeding."
+          }
+        },
+        "storage_status": "ready_for_approval",
+        "storage_message": "Analysis completed. Use /api/storage/preview to review and /api/storage/approve to store."
+      }
+    ],
+    "cross_report_analysis": {
+      "cross_report_suggestions": []
+    },
+    "analysis_storage_status": "ready_for_approval",
+    "cache_id": "c3fe7bc0-432c-44c7-b0b6-35897a7c89f9",
+    "session_id": "file_upload_123-4b8e8719-b596-4b12-ac15-cc7c70318b96"
+  }
+}

@@ -1,29 +1,29 @@
 <template>
     <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
         <!-- Header -->
-        <div class="bg-[linear-gradient(to_right,#00853F,#4CAF50)] rounded-lg max-w-4xl h-15 flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-            <h2 class="text-3xl font-semibold text-black">Opportunities</h2>
-            <div class="flex items-center gap-8">
+        <div class="bg-green-600 rounded-t-lg flex items-center justify-between p-6 sticky top-0 z-10">
+            <h2 class="text-2xl font-semibold text-white">Opportunities</h2>
+            <div class="flex items-center gap-6">
                 <!-- Legend -->
-                <div class="flex items-center gap-4 text-sm">
-                    <span class="text-gray-700 font-medium">Potential:</span>
+                <div class="flex items-center gap-3 text-sm">
+                    <span class="text-white font-medium">Potential</span>
                     <div class="flex items-center gap-1">
                         <span class="w-3 h-3 rounded-full bg-red-500"></span>
-                        <span class="text-gray-700">High</span>
+                        <span class="text-white">High</span>
                     </div>
                     <div class="flex items-center gap-1">
-                        <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                        <span class="text-gray-700">medium</span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500"></span>
+                        <span class="text-white">medium</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                        <span class="text-gray-700">Low</span>
+                        <span class="text-white">Low</span>
                     </div>
                 </div>
                 <!-- Close Button -->
                 <button
                     @click="$emit('close')"
-                    class="text-white hover:text-white text-5xl font-bold w-8 h-8 flex items-center justify-center"
+                    class="text-white hover:text-gray-200 text-3xl font-bold w-8 h-8 flex items-center justify-center transition-colors"
                 >
                     ×
                 </button>
@@ -38,20 +38,12 @@
                     :key="i"
                     class="flex items-start gap-3"
                 >
-                    <!-- Bullet point with color based on potential -->
-                    <span
-                        class="w-3 h-3 rounded-full mt-2 flex-shrink-0"
-                        :class="{
-                            'bg-red-500': op.potential?.toLowerCase() === 'high',
-                            'bg-green-500': op.potential?.toLowerCase() === 'medium',
-                            'bg-blue-500': op.potential?.toLowerCase() === 'low' || !op.potential
-                        }"
-                    ></span>
+                    <!-- Red bullet point for all items -->
+                    <span class="w-3 h-3 rounded-full mt-2 flex-shrink-0 bg-red-500"></span>
                     <div class="flex-1">
                         <p class="text-lg text-black">
-                            <b>{{ op.opportunity }}</b> — 
-                            {{ op.data_basis }} 
-                            <span v-if="op.potential">(Potential: <b>{{ op.potential }}</b>)</span>
+                            <b>{{ op.opportunity }}:</b> {{ op.data_basis }} 
+                            <span v-if="op.potential">(Potential: <b>{{ op.potential.toLowerCase() }}</b>)</span>
                         </p>
                     </div>
                 </li>

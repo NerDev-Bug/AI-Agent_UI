@@ -115,13 +115,35 @@
             </button>
           </div>
 
+          <!-- ✅ Toggle Button for JSON/API Mode -->
+          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+            <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
+            <button
+              @click="toggleJsonMode"
+              :class="[
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2',
+                useJsonFile ? 'bg-green-600' : 'bg-gray-300'
+              ]">
+              <span
+                :class="[
+                  'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                  useJsonFile ? 'translate-x-6' : 'translate-x-1'
+                ]"
+              ></span>
+            </button>
+            <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
+          </div>
+
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
             <!-- Analyze -->
             <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4 relative z-50">
               <button @click="startAnalysis"
-                class="bg-[#00853F] w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-[#00953F] transition">
-                Analyze Demo Form
+                :class="[
+                  'w-[200px] h-10 rounded-lg text-white font-semibold transition',
+                  useJsonFile ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#00853F] hover:bg-[#00953F]'
+                ]">
+                {{ useJsonFile ? 'Load from JSON' : 'Analyze Demo Form' }}
               </button>
             </div>
 
@@ -215,6 +237,7 @@ const analysisData = ref(null);
 const cacheId = ref(null); // Store cache_id for save operation
 const fileInput = ref(null);
 const jobId = ref(null);
+const useJsonFile = ref(false); // Toggle state: true = use JSON file, false = use API
 
 const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
 const showSuccessMessage = ref(false); // control showing success box
@@ -323,9 +346,79 @@ function processFile(file) {
   }, 2000);
 }
 
-// ✅ Analyze button — send file to API
+// ✅ Toggle JSON file mode
+function toggleJsonMode() {
+  useJsonFile.value = !useJsonFile.value;
+  console.log("🔄 Toggle JSON mode:", useJsonFile.value ? "ON (Using JSON file)" : "OFF (Using API)");
+}
+
+// ✅ Load analysis from JSON file
+async function loadFromJsonFile() {
+  try {
+    loadingText.value = "Loading from JSON file...";
+    loadingVisible.value = true;
+    loadingProgress.value = 0;
+
+    const response = await axios.get("/json_file/demo_output.json");
+    console.log("📄 JSON File Response:", response.data);
+
+    // Extract the first report from the JSON structure
+    // JSON structure: { result: { reports: [...] } }
+    const jsonData = response.data;
+    let reportData = null;
+
+    if (jsonData.result && jsonData.result.reports && jsonData.result.reports.length > 0) {
+      reportData = jsonData.result.reports[0];
+    } else if (jsonData.reports && jsonData.reports.length > 0) {
+      reportData = jsonData.reports[0];
+    } else if (jsonData.analysis) {
+      // If it's already in the expected format
+      reportData = jsonData;
+    } else {
+      throw new Error("Invalid JSON structure. Expected 'result.reports[0]' or 'reports[0]' or 'analysis'");
+    }
+
+    // Set the analysis data
+    analysisData.value = reportData;
+    console.log("✅ Analysis data loaded from JSON:", analysisData.value);
+    console.log("✅ Has form_id:", analysisData.value?.form_id);
+    console.log("✅ Has analysis:", !!analysisData.value?.analysis);
+
+    // Set cache_id if available
+    if (reportData.cache_id) {
+      cacheId.value = reportData.cache_id;
+    } else if (jsonData.cache_id) {
+      cacheId.value = jsonData.cache_id;
+    }
+
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
+
+    isAnalyzed.value = true;
+    isSaved.value = false;
+    showAlert("success", "Analysis Complete", "Analysis loaded from JSON file successfully!");
+
+    successMessage.value = "Successfully Analyze!";
+    showSuccessMessage.value = true;
+
+  } catch (err) {
+    console.error("❌ JSON file loading error:", err);
+    showAlert("error", "Load Failed", `Failed to load JSON file: ${getErrorMessage(err)}`);
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
+  }
+}
+
+// ✅ Analyze button — send file to API or load from JSON
 // ✅ Analyze button — send file to API with background support
 async function startAnalysis() {
+  // ✅ If toggle is ON, use JSON file
+  if (useJsonFile.value) {
+    await loadFromJsonFile();
+    return;
+  }
+
+  // ✅ Otherwise, use API (original behavior)
   if (!uploadedFile.value) {
     showAlert("warning", "No file", "Please upload a file first!");
     return;
@@ -368,13 +461,20 @@ async function startAnalysis() {
     }
 
     // Set the analysis data
+    // The component expects the full report object (with form_id, analysis, graph_suggestions, etc.)
     if (data.analysis) {
       analysisData.value = data.analysis;
       console.log("✅ Analysis data set:", analysisData.value);
+      console.log("✅ Has form_id:", analysisData.value?.form_id);
+      console.log("✅ Has analysis:", !!analysisData.value?.analysis);
     } else {
       console.warn("⚠️ No 'analysis' key found, using full response");
       analysisData.value = data;
     }
+    
+    // Ensure loading is hidden
+    loadingVisible.value = false;
+    loadingProgress.value = 0;
 
     isAnalyzed.value = true;
     isSaved.value = false;
