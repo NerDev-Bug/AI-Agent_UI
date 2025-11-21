@@ -1,15 +1,18 @@
 FROM php:8.2-fpm
 
-# System deps
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     zip unzip git curl nodejs npm
 
 WORKDIR /app
 
-# Copy everything
+# Install Composer manually
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Copy project files
 COPY . .
 
-# Install composer dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Laravel optimizations
@@ -17,10 +20,10 @@ RUN php artisan config:cache && \
     php artisan route:cache && \
     php artisan view:cache
 
-# Install JS deps + build assets
+# Install JS dependencies and build frontend
 RUN npm install && npm run build
 
-# Permissions
+# Set permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 EXPOSE 8000
