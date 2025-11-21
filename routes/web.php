@@ -7,11 +7,11 @@ use App\Http\Controllers\ReportPDFController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function (){
-    return Inertia::render('Login');
-});
+// Route::get('/', function (){
+//     return Inertia::render('Login');
+// });
     
-Route::get('/aiform', function () {
+Route::get('/', function () {
     return Inertia::render('AI-Agent-UI/AI-AgentForm');
 });
 Route::get('/index', function () {
