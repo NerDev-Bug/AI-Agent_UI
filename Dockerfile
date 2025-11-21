@@ -1,9 +1,9 @@
 FROM php:8.2-fpm
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    zip unzip git curl nodejs npm libzip-dev libpng-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
+    zip unzip git curl nodejs npm libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql
 
 WORKDIR /app
 
@@ -13,20 +13,26 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Copy project files
 COPY . .
 
+# Create .env from Railway env vars
+RUN cp .env.example .env || true
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel optimizations
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
-
-# Install JS dependencies and build frontend
+# Frontend build
 RUN npm install && npm run build
 
-# Set permissions
-RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
+# Cache Laravel stuff
+RUN php artisan key:generate || true
+RUN php artisan config:cache || true
+RUN php artisan route:cache || true
+RUN php artisan view:cache || true
 
-EXPOSE 8000
+# Permissions
+RUN chown -R www-data:www-data storage bootstrap/cache
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Expose Railway port
+EXPOSE 8080
+
+# Start using Railway PORT
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
