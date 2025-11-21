@@ -619,7 +619,7 @@ async function reanalyze() {
 
   loadingText.value = "Re-analyzing file...";
   loadingVisible.value = true;
-  loadingProgress.value = 0;   // <-- optional: reset progress bar
+  loadingProgress.value = 0;
 
   showSuccessMessage.value = false;
   isAnalyzed.value = false;
