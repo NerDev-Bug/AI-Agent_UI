@@ -2,22 +2,22 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
         <!-- Header -->
         <div class="bg-[linear-gradient(to_right,#00853F,#4CAF50)] rounded-lg max-w-4xl h-15 flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-            <h2 class="text-3xl font-semibold text-black">Risks & Limitations</h2>
+            <h2 class="text-3xl font-semibold text-white">Risks & Limitations</h2>
             <div class="flex items-center gap-8">
                 <!-- Legend -->
                 <div class="flex items-center gap-4 text-sm">
-                    <span class="text-gray-700 font-medium">Severity:</span>
+                    <span class="text-white font-medium">Severity:</span>
                     <div class="flex items-center gap-1">
                         <span class="w-3 h-3 rounded-full bg-red-500"></span>
-                        <span class="text-gray-700">High</span>
+                        <span class="text-white">High</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <span class="w-3 h-3 rounded-full bg-green-500"></span>
-                        <span class="text-gray-700">medium</span>
+                        <span class="text-white">medium</span>
                     </div>
                     <div class="flex items-center gap-1">
                         <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-                        <span class="text-gray-700">Low</span>
+                        <span class="text-white">Low</span>
                     </div>
                 </div>
                 <!-- Close Button -->

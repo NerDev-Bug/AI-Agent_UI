@@ -2,7 +2,7 @@
     <div class="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto m-4">
         <!-- Header -->
         <div class="bg-[linear-gradient(to_right,#00853F,#4CAF50)] rounded-lg max-w-4xl h-15 flex items-center justify-between p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
-            <h2 class="text-3xl font-semibold text-black">Executive Summary</h2>
+            <h2 class="text-3xl font-semibold text-white">Executive Summary</h2>
             <!-- Close Button -->
             <button
                 @click="$emit('close')"

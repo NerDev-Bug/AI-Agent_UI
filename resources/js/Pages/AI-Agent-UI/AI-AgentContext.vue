@@ -1,19 +1,19 @@
 <template>
-    <div class="min-h-screen">
+    <div class="min-h-screen w-full">
         <!-- Header -->
-        <div class="flex justify-between items-center mb-8">
+        <!-- <div class="flex justify-between items-center mb-8">
             <h2 class="text-3xl font-bold text-black">
                 Agent Products Demo Trials Result:
             </h2>
-        </div>
+        </div> -->
 
         <!-- Select and Export -->
-        <div class="flex items-center gap-6 mb-8 px-2">
-            <div class="flex-2">
+        <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 px-2">
+            <div class="flex-2 w-full md:w-auto">
                 <br />
                 <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
                 <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
-                    class="bg-blue-500 w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
+                    class="bg-blue-500 w-full md:w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
                     <span v-if="!isExporting">Export to PDF</span>
                     <span v-else class="flex flex-row gap-2">
                         <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -27,9 +27,9 @@
                 </button>
             </div>
 
-            <div class="ml-auto" v-if="uniqueApplicants.length > 1">
+            <div class="w-full md:w-auto md:ml-auto" v-if="uniqueApplicants.length > 1">
                 <label class="block text-sm text-black mb-1">Select Applicant:</label>
-                <select v-model="applicant" class="p-2 rounded-md w-72" :disabled="!currentReport">
+                <select v-model="applicant" class="p-2 rounded-md w-full md:w-72" :disabled="!currentReport">
                     <option value="">-- Choose Applicant --</option>
                     <option v-for="app in uniqueApplicants" :key="app" :value="app">
                         {{ app }}
@@ -45,14 +45,14 @@
             </h3>
 
             <!-- Basic Info -->
-            <div class="flex gap-4 w-full">
+            <div class="flex flex-col xl:flex-row gap-2 w-full">
                 <div v-if="currentReport.analysis?.basic_info"
-                    class="bg-white border-l-4 p-8 rounded-xl h-full w-[1400px] animate-slideInLeft">
+                    class="bg-white border-l-2 p-4 rounded-xl h-full flex-1 w-full animate-slideInLeft">
                     <h4 class="text-2xl font-semibold text-black mb-6 md:mb-8">
                         Basic Information
                     </h4>
                     <ul
-                        class="text-sm md:text-lg grid grid-cols-2 gap-x-8 text-gray-700 before:absolute before:inset-0 before:animate-typewriter">
+                        class="text-sm md:text-lg grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-gray-700 before:absolute before:inset-0 before:animate-typewriter">
                         <li>
                             <b>Applicant:</b>
                             {{ currentReport.analysis.basic_info.applicant }}
@@ -93,54 +93,56 @@
                     </ul>
                 </div>
                 <!-- Control + Leads Agri Metrics (Right Side of Basic Info) -->
-                <div class="bg-white p-6 rounded-xl flex flex-col w-[900px]">
+                <div class="bg-white p-4 rounded-xl flex flex-col flex-1 w-full xl:mt-0 mt-4">
                     <div class="flex items-center mb-4">
                         <h4 class="text-2xl font-semibold text-black">
                             Performance Metrics
                         </h4>
                     </div>
-                    <div class="grid grid-cols-2 gap-6">
+                    <div class="grid grid-cols-2 gap-2">
                         <!-- Control Average -->
                         <div
-                            class="bg-[linear-gradient(to_right,#1E3E8B,#346BF1)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
-                            <p class="text-5xl font-bold mb-2">
+                            class="relative rounded-3xl bg-gradient-to-r from-[#1E3E8B] to-[#346BF1] text-white h-36 px-10 shadow flex items-center justify-center">
+                            <!-- Centered Number -->
+                            <p class="text-5xl font-semibold leading-none">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(
                                         2
                                     )
                                 }}
                             </p>
-                            <div class="text-center">
-                                <p class="text-lg opacity-90 leading-tight">Control</p>
-                                <p class="text-lg opacity-90 leading-tight">Average</p>
-                            </div>
+                            <!-- Bottom-Left Label -->
+                            <p class="absolute bottom-3 left-6 text-sm opacity-90">
+                                Control Average
+                            </p>
                         </div>
 
                         <!-- Leads Agri Average -->
                         <div
-                            class="bg-[linear-gradient(to_right,#00853F,#4CAF50)] text-white p-10 rounded-3xl shadow flex flex-col justify-center items-center h-44">
-                            <p class="text-5xl font-bold mb-2">
+                            class="relative rounded-3xl bg-gradient-to-r from-[#00853F] to-[#4CAF50] text-white h-36 px-10 shadow flex items-center justify-center">
+                            <!-- Centered Number -->
+                            <p class="text-5xl font-semibold leading-none">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(
                                         2
                                     )
                                 }}
                             </p>
-                            <div class="text-center">
-                                <p class="text-lg opacity-90 leading-tight">Leads Agri</p>
-                                <p class="text-lg opacity-90 leading-tight">Average</p>
-                            </div>
+                            <!-- Bottom-Left Label -->
+                            <p class="absolute bottom-3 left-6 text-sm opacity-90">
+                                Leads Agri Average
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Performance Metrics Section -->
-            <div v-if="currentReport.analysis?.performance_analysis" class="p-6 w-full">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 w-full">
+            <div v-if="currentReport.analysis?.performance_analysis">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2">
                     <!-- Season -->
                     <div
-                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center relative min-h-[200px]">
+                        class="bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[150px]">
                         <!-- Season Badge (top right) -->
                         <div :class="[
                             'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1.5 rounded-full capitalize',
@@ -152,66 +154,70 @@
                                 currentReport.analysis.basic_info.season
                             }}
                         </div>
-                        <!-- Large Yellow Circle (centered) -->
-                        <div :class="[
-                            'w-24 h-24 rounded-full',
-                            currentReport.analysis.basic_info.season === 'dry'
-                                ? 'bg-yellow-400'
-                                : 'bg-sky-400'
-                        ]" :style="currentReport.analysis.basic_info.season === 'dry' 
-                            ? 'box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2);' 
-                            : 'box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);'"></div>
+                        <!-- Display Based on Season -->
+                        <div class="flex items-center justify-center mt-4">
+                            <!-- DRY = Yellow Sun -->
+                            <div v-if="currentReport.analysis.basic_info.season === 'dry'"
+                                class="w-24 h-24 rounded-full bg-yellow-400"
+                                style="box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2);">
+                            </div>
+
+                            <!-- WET = Cloud/rain icon -->
+                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon"
+                                class="w-24 h-auto" />
+                        </div>
+
                         <!-- Season Label (bottom left) -->
                         <p class="text-sm text-gray-600 absolute bottom-4 left-4">Season</p>
                     </div>
 
                     <!-- Relative Improvement -->
                     <div
-                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center relative">
+                        class="bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative">
 
                         <!-- Status badge -->
                         <span v-if="improvementValue > 0"
-                            class="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                             <span>↑</span>
                             <span>Improved</span>
                         </span>
 
                         <span v-else-if="improvementValue < 0"
-                            class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                             <span>↓</span>
                             <span>Decreased</span>
                         </span>
 
                         <span v-else
-                            class="absolute top-4 left-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                            class="absolute top-4 right-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
                             <span>→</span>
                             <span>No Change</span>
                         </span>
                         <!-- Main Value -->
-                        <p class="text-3xl font-semibold text-black mt-6">
+                        <p class="text-4xl font-semibold text-black">
                             {{ improvementValue.toFixed(2) }}%
                         </p>
                         <!-- Label -->
-                        <p class="text-sm text-gray-500 mt-2">Relative Improvement</p>
+                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Relative Improvement</p>
                     </div>
 
                     <!-- Significance -->
                     <div
-                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-3xl font-semibold text-black capitalize">
+                        class="relative bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+                        <p class="text-4xl font-semibold text-black capitalize">
                             {{
                                 currentReport.analysis.performance_analysis
                                     .statistical_assessment
                                     .improvement_significance
                             }}
                         </p>
-                        <p class="text-sm text-gray-500 mt-2">Significance</p>
+                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Significance</p>
                     </div>
 
                     <!-- Absolute Difference -->
                     <div
-                        class="bg-white border border-gray-200 rounded-3xl p-8 flex flex-col items-center justify-center text-center">
-                        <p class="text-3xl font-semibold text-black">
+                        class="relative bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+                        <p class="text-4xl font-semibold text-black">
                             {{
                                 currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
                             }}
@@ -223,14 +229,14 @@
                                 }}
                             </span>
                         </p>
-                        <p class="text-sm text-gray-500 mt-2">Absolute Difference</p>
+                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Absolute Difference</p>
                     </div>
                 </div>
             </div>
 
             <!-- Responsive Charts + Treatment Details -->
             <div v-if="currentReport.analysis?.performance_analysis || chartMap[currentReport.form_id]?.length"
-                class="flex flex-col gap-6 mt-10 w-full">
+                class="flex flex-col gap-2 pt-2 w-full">
 
                 <template v-if="chartMap[currentReport.form_id]">
 
@@ -240,18 +246,18 @@
                     </div>
 
                     <!-- 2-column grid ALWAYS -->
-                    <div class="grid gap-6 w-full md:grid-cols-2">
+                    <div class="grid gap-2 w-full md:grid-cols-2">
 
                         <!-- Render CHARTS -->
                         <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                            class="chart-card bg-white rounded-lg shadow p-4">
+                            class="chart-card bg-white rounded-2xl shadow p-4">
                             <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                 {{ chart.title }}
                             </h5>
 
                             <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
 
-                            <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
+                            <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic px-4">
                                 {{ chart.description }}
                             </p>
                         </div>
@@ -260,32 +266,36 @@
                         <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
                             class="chart-card bg-white rounded-lg shadow p-4">
 
-                            <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                            <h5 class="text-2xl font-semibold mb-2 text-gray-800 px-2">
                                 Treatment Details
                             </h5>
-                            
+
                             <!-- Treatment Details Table -->
                             <div class="overflow-x-auto">
                                 <table class="w-full border-separate border-spacing-0 border border-gray-600">
                                     <thead>
                                         <tr>
-                                            <th colspan="2" class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            <th colspan="2"
+                                                class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
                                                 Standard Practice
                                             </th>
-                                            <th colspan="2" class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            <th colspan="2"
+                                                class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
                                                 Leads Agri Treatment
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Product:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                                 {{ currentReport.analysis.treatment_comparison.control.product }}
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Product:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -293,13 +303,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Rate:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                                 {{ currentReport.analysis.treatment_comparison.control.rate }}
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Rate:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -307,13 +319,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Timing:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                                 {{ currentReport.analysis.treatment_comparison.control.timing }}
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Timing:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -321,13 +335,15 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Method:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                                 {{ currentReport.analysis.treatment_comparison.control.method }}
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                            <td
+                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                                 <b>Method:</b>
                                             </td>
                                             <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -337,7 +353,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
                                 {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                             </p>
@@ -346,34 +362,38 @@
 
                     <!-- Treatment Details BELOW grid for EVEN counts (2,4,6...) -->
                     <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
-                        class="bg-white rounded-lg shadow p-4 mt-6">
+                        class="bg-white rounded-2xl shadow p-4 mt-2">
 
-                        <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                        <h5 class="text-2xl font-semibold mb-2 text-gray-800">
                             Treatment Details
                         </h5>
-                        
+
                         <!-- Treatment Details Table -->
                         <div class="overflow-x-auto">
                             <table class="w-full border-separate border-spacing-0 border border-gray-600">
                                 <thead>
                                     <tr>
-                                        <th colspan="2" class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                        <th colspan="2"
+                                            class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
                                             Standard Practice
                                         </th>
-                                        <th colspan="2" class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                        <th colspan="2"
+                                            class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
                                             Leads Agri Treatment
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Product:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                             {{ currentReport.analysis.treatment_comparison.control.product }}
                                         </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Product:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -381,13 +401,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Rate:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                             {{ currentReport.analysis.treatment_comparison.control.rate }}
                                         </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Rate:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -395,13 +417,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Timing:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                             {{ currentReport.analysis.treatment_comparison.control.timing }}
                                         </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Timing:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -409,13 +433,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Method:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
                                             {{ currentReport.analysis.treatment_comparison.control.method }}
                                         </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
+                                        <td
+                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
                                             <b>Method:</b>
                                         </td>
                                         <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
@@ -425,7 +451,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
                             {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                         </p>
@@ -433,61 +459,67 @@
                 </template>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-[840px_390px] gap-6 mt-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-3 mt-3">
+
                 <!-- World Map Card (No Data State) -->
                 <div
-                    class="bg-white p-8 rounded-xl shadow-lg flex flex-col items-center justify-center h-full min-h-[300px] w-[840px]">
+                    class="bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[300px] w-full">
                     <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
-                    <p class="text-gray-500 text-lg font-medium">No data found</p>
+                    <p class="text-gray-500 text-lg font-medium">No Map found</p>
                 </div>
 
                 <!-- Key Findings & Strategic Insights -->
-                <div class="bg-gray-100 p-8 rounded-xl shadow-lg w-[390px]">
-                    <h2 class="text-xl font-semibold mb-6 text-gray-800">Key Findings & Strategic Insights</h2>
+                <div class="bg-gray-100 p-8 rounded-2xl shadow-lg w-full">
+                    <h2 class="text-xl font-semibold mb-6 text-gray-800">
+                        Key Findings & Strategic Insights
+                    </h2>
 
                     <!-- Opportunities -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showOpportunitiesModal = true">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                        @click="showOpportunitiesModal = true">
                         <span class="text-gray-700 text-lg font-semibold">Opportunities</span>
-                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                        <button
+                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Risks & Limitations -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showRiskLimitationsModal = true">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                        @click="showRiskLimitationsModal = true">
                         <span class="text-gray-700 text-lg font-semibold">Risks & Limitations</span>
-                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                        <button
+                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showExecutiveSummaryModal = true">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                        @click="showExecutiveSummaryModal = true">
                         <span class="text-gray-700 text-lg font-semibold">Executive Summary</span>
-                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                        <button
+                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md" @click="showRecommendationsModal = true">
+                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                        @click="showRecommendationsModal = true">
                         <span class="text-gray-700 text-lg font-semibold">Recommendations</span>
-                        <button class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                        <button
+                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
                             See more
                         </button>
                     </div>
                 </div>
             </div>
-
         </div>
-        <!-- Loading/Error -->
-        <!-- <div v-else-if="!currentReport" class="text-center text-black mt-24">
-            <p v-if="isLoading">Loading data...</p>
-            <p v-else-if="error">{{ error }}</p>
-        </div> -->
+
         <!-- Loading/Error/Empty Placeholder -->
         <div v-else-if="!currentReport"
-            class="flex flex-col items-center justify-center h-[440px] mt-10 bg-[#e6e9f7] rounded-lg">
+            class="flex flex-col items-center justify-center h-[440px] mt-10">
             <div class="relative flex flex-col items-center justify-center">
                 <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
                     <span class="text-[#1f3b70] text-7xl font-semibold">?</span>
@@ -498,7 +530,7 @@
                     <h2 class="text-2xl font-semibold text-[#1f3b70]">
                         No Data Found
                     </h2>
-                    <p class="text-gray-600 text-sm mt-2 max-w-md mx-auto">
+                    <p class="text-sm mt-2 max-w-md mx-auto">
                         Upload a file and click the Analyze Demo Form button to
                         show the analyzed result of your uploaded file.
                     </p>
@@ -514,7 +546,7 @@
         <transition name="fade">
             <div v-if="alertVisible"
                 class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
-                <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
+                <div class="bg-white rounded-2xl shadow-lg w-full max-w-sm p-6 text-center border-4" :class="{
                     'border-green-600': alertType === 'success',
                     'border-red-600': alertType === 'error',
                     'border-yellow-500': alertType === 'warning',
@@ -1026,7 +1058,7 @@ watch(isExporting, (newVal) => {
 
 <style scoped>
 canvas {
-    max-height: 400px;
+    max-height: 290px;
 }
 
 .chart-card {
@@ -1052,7 +1084,8 @@ canvas {
 }
 
 .insight-item:hover {
-    background-color: #16a34a !important; /* green-600 */
+    background-color: #16a34a !important;
+    /* green-600 */
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
 }

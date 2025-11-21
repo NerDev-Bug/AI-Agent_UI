@@ -116,7 +116,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -132,7 +132,7 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div>
+          </div> -->
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
@@ -170,7 +170,7 @@
     </div>
 
     <!-- Context -->
-    <div id="AI-AgentContext" class="p-8 pt-24" data-resultssection>
+    <div id="AI-AgentContext" class="p-2 pt-24" data-resultssection>
       <AIAgentContext :analysisData="analysisData" :isSaved="isSaved" />
     </div>
 
@@ -238,6 +238,7 @@ const cacheId = ref(null); // Store cache_id for save operation
 const fileInput = ref(null);
 const jobId = ref(null);
 const useJsonFile = ref(false); // Toggle state: true = use JSON file, false = use API
+const isReanalyzing = ref(false);
 
 const successMessage = ref(""); // store text like "Successfully Analyze!" or "Successfully Re-analyze!"
 const showSuccessMessage = ref(false); // control showing success box
@@ -267,10 +268,11 @@ function showAlert(type, title, message, onConfirm = null) {
 function closeAlert() {
   alertVisible.value = false;
 }
-function confirmAction() {
-  if (confirmCallback) confirmCallback();
+async function confirmAction() {
+  if (confirmCallback) await confirmCallback();
   closeAlert();
 }
+
 
 // Helper function to extract error message from error object
 function getErrorMessage(err) {
@@ -447,6 +449,7 @@ async function startAnalysis() {
       loadingText.value = data.message || "Processing started in background...";
       // LoadingPage component will automatically poll for progress
       // Don't hide loading yet - wait for job to complete
+      // Keep isUploading = true to prevent buttons from showing prematurely
       return;
     }
 
@@ -478,6 +481,7 @@ async function startAnalysis() {
 
     isAnalyzed.value = true;
     isSaved.value = false;
+    isUploading.value = false; // ✅ Set to false for synchronous mode success
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
 
     successMessage.value = "Successfully Analyze!";
@@ -491,9 +495,9 @@ async function startAnalysis() {
     showAlert("error", "Analyze failed", getErrorMessage(err));
     loadingVisible.value = false;
     loadingProgress.value = 0;
-  } finally {
-    isUploading.value = false;
+    isUploading.value = false; // ✅ Set to false on error for synchronous mode
   }
+  // Note: For background jobs, isUploading is set to false in handleJobComplete/handleJobError
 }
 // ✅ Handle job completion from LoadingPage
 function handleJobComplete(result) {
@@ -573,6 +577,7 @@ function handleJobComplete(result) {
     loadingVisible.value = false;
     loadingProgress.value = 0;
     jobId.value = null;
+    isUploading.value = false; // ✅ Set to false when job completes (success or error)
   }
 }
 
@@ -604,34 +609,32 @@ function handleJobError(errorInfo) {
     userFriendlyMessage
   );
   
-  // Reset upload state if needed
+  // ✅ Reset upload state when job fails
   isUploading.value = false;
 }
 
 // ✅ Re-analyze (re-send the same file)
 async function reanalyze() {
+  isReanalyzing.value = true;
+
   loadingText.value = "Re-analyzing file...";
   loadingVisible.value = true;
-  loadingProgress.value = 0;
+  loadingProgress.value = 0;   // <-- optional: reset progress bar
+
+  showSuccessMessage.value = false;
+  isAnalyzed.value = false;
+  isSaved.value = false;
+  analysisData.value = null;
+  cacheId.value = null;
+  jobId.value = null;
 
   try {
-    showSuccessMessage.value = false;
-    isAnalyzed.value = false;
-    isSaved.value = false;
-    analysisData.value = null;
-    cacheId.value = null;
-    jobId.value = null; 
-    
-    await startAnalysis(); 
-  
-  } catch (err) {
-    showAlert("error", "Reanalyze Failed", getErrorMessage(err));
-    // Only hide on error
-    loadingVisible.value = false;
-    loadingProgress.value = 0;
+    await startAnalysis();
+  } finally {
+    isReanalyzing.value = false;
   }
-
 }
+
 
 // ✅ Save button (send confirmation)
 async function saveAnalysis() {

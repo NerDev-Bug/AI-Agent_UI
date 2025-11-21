@@ -13,13 +13,13 @@ class FastAPIController extends Controller
      */
     private function getAnalyzeUrl(): string
     {
-        return config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/agent'));
+        return config('services.ai_agent.analyze_url');
     }
 
     private function getAnalysisSearchURL(): string
     {
         // ✅ Extract base URL from analyze_url config and append /analysis-search
-        $baseUrl = config('services.ai_agent.analyze_url', env('API_AI_AGENT_URL', 'http://localhost:8002/api/agent'));
+        $baseUrl = config('services.ai_agent.analyze_url');
         // Remove /api/agent or /agent if present, then add /api/analysis-search
         $baseUrl = preg_replace('/\/api\/agent$|\/agent$/', '', $baseUrl);
         return rtrim($baseUrl, '/') . '/api/analysis-search';
@@ -29,7 +29,7 @@ class FastAPIController extends Controller
      */
     private function getConfirmUrl(): string
     {
-        return config('services.ai_agent.confirm_url', env('API_AI_AGENT_CONFIRM_URL', 'http://localhost:8002/api/storage/approve-simple'));
+        return config('services.ai_agent.confirm_url');
     }
 
     /**
@@ -40,7 +40,7 @@ class FastAPIController extends Controller
      */
     private function getApiKey(): string
     {
-        return config('services.ai_agent.api_key', env('AI_AGENT_KEY', ''));
+        return config('services.ai_agent.api_key');
     }
 
     /**
