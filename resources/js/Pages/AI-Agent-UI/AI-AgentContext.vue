@@ -1,12 +1,5 @@
 <template>
-    <div class="min-h-screen w-full">
-        <!-- Header -->
-        <!-- <div class="flex justify-between items-center mb-8">
-            <h2 class="text-3xl font-bold text-black">
-                Agent Products Demo Trials Result:
-            </h2>
-        </div> -->
-
+    <div class="bg-[#E3EEFF] min-h-screen w-full mt-24">
         <!-- Select and Export -->
         <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 px-2">
             <div class="flex-2 w-full md:w-auto">
@@ -40,7 +33,7 @@
 
         <!-- Report Display -->
         <div v-if="currentReport && applicant" class="p-2">
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">
+            <h3 class="text-2xl font-bold text-gray-800 mb-2 ml-4">
                 {{ currentReport.form_type }}
             </h3>
 
@@ -163,8 +156,7 @@
                             </div>
 
                             <!-- WET = Cloud/rain icon -->
-                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon"
-                                class="w-24 h-auto" />
+                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon" class="w-24 h-auto" />
                         </div>
 
                         <!-- Season Label (bottom left) -->
@@ -518,8 +510,7 @@
         </div>
 
         <!-- Loading/Error/Empty Placeholder -->
-        <div v-else-if="!currentReport"
-            class="flex flex-col items-center justify-center h-[440px] mt-10">
+        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center h-[440px] mt-10">
             <div class="relative flex flex-col items-center justify-center">
                 <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
                     <span class="text-[#1f3b70] text-7xl font-semibold">?</span>

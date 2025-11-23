@@ -1,42 +1,68 @@
 <template>
-  <div class="bg-[#E2E8F3] min-h-screen overflow-y-auto">
-    <!-- Blurry green fade at the bottom -->
-    <div
-      class="absolute -bottom-4 left-0 right-0 h-1/4 bg-gradient-to-t from-green-700/100 to-transparent blur-md pointer-events-none">
+  <div class="bg-[#E2E8F3] min-h-screen overflow-y-auto z-50">
+    <!-- left leafs-->
+    <div>
+      <img src="/images/leaf2.png"
+        class="absolute top-[60px] left-[110px] w-[40px] h-auto pointer-events-none z-20 rotate-[-75deg]">
+      <img src="/images/leaf2.png"
+        class="absolute w-[60px] h-auto pointer-events-none bottom-[300px] left-[486px] z-10">
+      <img src="/images/leaf1.png"
+        class="absolute top-[140px] left-[365px] w-[30px] h-auto pointer-events-none z-20 scale-x-[-1] rotate-[-70deg]">
+      <img src="/images/leaf1.png"
+        class="absolute top-[160px] left-[-60px] w-[270px] h-auto pointer-events-none z-20 rotate-[70deg]">
+      <img src="/images/leaf1.png"
+        class="absolute w-[46px] h-auto pointer-events-none bottom-[90px] left-[115px] scale-x-[-1] rotate-[-128deg] z-10">
+      <img src="/images/leaf1.png"
+        class="absolute w-[50px] h-auto pointer-events-none scale-x-[-1] bottom-[-120px] left-[70px] rotate-[-70deg] z-10">
+      <img src="/images/Pandoy.png" alt="Pandoy"
+        class="absolute w-[270px] h-auto pointer-events-none bottom-[-30px] left-[220px] z-10" />
     </div>
 
-    <!-- PNG curved green line above the blur -->
-    <img src="/images/Line 1.png" alt="Curved green line"
-      class="absolute -bottom-2 left-0 w-full h-auto pointer-events-none z-10" />
-
-    <!-- Two overlapping images at the bottom right -->
-    <div class="absolute bottom-0 right-36 pointer-events-none z-20">
-      <img src="/images/Rectangle 5.png" alt="Rectangle 5" class="w-[270px] h-auto relative z-0" />
-      <img src="/images/Pandoy.png" alt="Pandoy" class="w-[330px] h-auto absolute bottom-0 right-0 z-10" />
+    <!-- right leafs-->
+    <div>
+      <img src="/images/leaf1.png"
+        class="absolute top-[60px] right-[210px] w-[44px] h-auto pointer-events-none z-20 rotate-[56deg]">
+      <img src="/images/leaf1.png"
+        class="absolute w-[50px] h-auto pointer-events-none bottom-[180px] right-[494px] z-10 rotate-[70deg]">
+      <img src="/images/leaf1.png"
+        class="absolute w-[44px] h-auto pointer-events-none bottom-[260px] right-[274px] z-10 rotate-[70deg]">
+      <div class="absolute inset-0 overflow-x-hidden overflow-y-hidden pointer-events-none">
+        <img src="/images/leaf2.png" class="absolute w-[570px] bottom-[-130px] right-[-260px] rotate-[-47deg]" />
+      </div>
+      <img src="/images/leaf2.png"
+        class="absolute w-[50px] h-auto pointer-events-none bottom-[-160px] right-[70px] rotate-[-70deg] z-10">
     </div>
 
-    <!-- Top right image -->
-    <img src="/images/nutrition 1.png" alt="Top Right Image"
-      class="absolute top-22 -right-0 w-[350px] h-auto pointer-events-none z-20" />
+    <!-- Top left image NFBT1-->
+    <img src="/images/NFBT1.png" alt="Middle"
+      class="absolute top-[160px] left-[230px] w-[90px] h-auto pointer-events-none z-20" />
 
-    <!-- Left stair images -->
-    <div class="absolute left-8 top-1/2 transform -translate-y-1/2 pointer-events-none z-20">
-      <img src="/images/iSBM.png" alt="Bottom" class="w-[190px] h-auto relative z-0 -ml-[-170px] mb-[-190px]" />
-      <img src="/images/NFBT1.png" alt="Middle" class="w-[190px] h-auto relative z-10 -ml-[-115px] mb-[-220px]" />
-      <img src="/images/FO1.png" alt="Top" class="w-[200px] h-auto relative z-20 -ml-[-60px] mb-[-90px]" />
-    </div>
+    <!-- Top right images FO1-->
+    <img src="/images/FO1.png" alt="Middle"
+      class="absolute top-[190px] right-[210px] w-[90px] h-auto pointer-events-none z-20" />
+
+    <!-- center right images iSBM-->
+    <img src="/images/iSBM.png" alt="Middle"
+      class="absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
 
     <!-- ✅ Main Upload Form -->
     <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-2 relative z-10">
       <div class="flex flex-col items-center justify-center mb-14">
         <h1 class="text-xl font-bold text-gray-800 mb-2">Product demo Trials Agents with</h1>
         <img src="/images/title_img.png" alt="AI Agent Logo" class="w-[500px] h-[120px]">
+
+        <!-- Top Description-->
+        <div class="w-[680px] text-center px-2">
+          <p class="text-sm text-[#4E5158]">Upload your Product Demo Trials forms and get instant AI-powered analytics.
+            Understand form performance,
+            user behavior, and conversion insights in seconds.</p>
+        </div>
       </div>
 
       <!-- ✅ Conditional success message OR upload box -->
       <transition name="fade" mode="out-in">
         <div
-          class="bg-white w-[360px] rounded-xl shadow-md border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-4 relative">
+          class="bg-white w-[360px] rounded-xl shadow-lg border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-4 relative">
 
           <!-- ✅ Success message INSIDE card - covers upload area and filename, but NOT buttons -->
           <transition name="fade">
@@ -52,9 +78,10 @@
           </transition>
 
           <!-- ✅ Upload Form -->
-          <form data-uploadform @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave" @drop.prevent="handleDrop"
+          <form data-uploadform @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave"
+            @drop.prevent="handleDrop"
             class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
-            :class="isDragging ? 'border-green-700 bg-green-50' : 'border-green-600 hover:border-green-700'">
+            :class="isDragging ? 'border-black bg-black' : 'border-black hover:border-black'">
             <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png"
               @change="handleFileUpload" />
 
@@ -116,7 +143,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -132,17 +159,17 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div> -->
+          </div>
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
             <!-- Analyze -->
-            <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze" class="flex items-center justify-center gap-2 mt-4 relative z-50">
-              <button @click="startAnalysis"
-                :class="[
-                  'w-[200px] h-10 rounded-lg text-white font-semibold transition',
-                  useJsonFile ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#00853F] hover:bg-[#00953F]'
-                ]">
+            <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze"
+              class="flex items-center justify-center gap-2 mt-4 relative z-50">
+              <button @click="startAnalysis" :class="[
+                'w-[200px] h-10 rounded-lg text-white font-semibold transition',
+                useJsonFile ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#00853F] hover:bg-[#00953F]'
+              ]">
                 {{ useJsonFile ? 'Load from JSON' : 'Analyze Demo Form' }}
               </button>
             </div>
@@ -162,6 +189,38 @@
           </transition>
         </div>
       </transition>
+    </div>
+
+    <!-- Three Cards column-->
+    <div class="flex items-center justify-center -mt-12">
+      <div class=" flex flex-row gap-16">
+        <!-- First card -->
+        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
+          <div class="bg-[#45AAF261] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
+            <img src="/images/magic.png" class="w-8 h-8 object-cover">
+          </div>
+          <h1 class="text-md font-semibold mt-4 px-2">AI-Powered Analysis</h1>
+          <p class="text-md mt-4 px-8">Automatically extract and analyze form fields, patterns, and user behavior</p>
+        </div>
+
+        <!-- Second card -->
+        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
+          <div class="bg-[#1E3E8B3B] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
+            <img src="/images/graph.png" class="w-8 h-8 object-cover">
+          </div>
+          <h1 class="text-md font-semibold mt-4 px-2">Interactive Dashboard</h1>
+          <p class="text-md mt-4 px-8">Visualize form metrics, completion rates, and conversion insights</p>
+        </div>
+
+        <!-- Third card -->
+        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
+          <div class="bg-[#00853F59] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
+            <img src="/images/flash.png" class="w-8 h-8 object-cover">
+          </div>
+          <h1 class="text-md font-semibold mt-4 px-2">Instant Insights</h1>
+          <p class="text-md mt-4 px-8">Get actionable recommendations to improve form performance</p>
+        </div>
+      </div>
     </div>
 
     <!-- Navbar -->
@@ -208,13 +267,8 @@
       </div>
     </transition>
 
-  <LoadingPage 
-  :visible="loadingVisible" 
-  :job-id="jobId"
-  :initial-text="loadingText"
-  @complete="handleJobComplete"
-  @error="handleJobError"
-/>
+    <LoadingPage :visible="loadingVisible" :job-id="jobId" :initial-text="loadingText" @complete="handleJobComplete"
+      @error="handleJobError" />
   </div>
 </template>
 
@@ -280,7 +334,7 @@ function getErrorMessage(err) {
 
   // Extract raw error message first
   let rawError = "";
-  
+
   // Try to get error from response data
   if (err.response?.data) {
     const data = err.response.data;
@@ -425,7 +479,7 @@ async function startAnalysis() {
     showAlert("warning", "No file", "Please upload a file first!");
     return;
   }
-  
+
   loadingText.value = "Analyzing file...";
   loadingVisible.value = true;
   loadingProgress.value = 0;
@@ -435,7 +489,7 @@ async function startAnalysis() {
     const formData = new FormData();
     formData.append("file", uploadedFile.value);
     formData.append("background", "true"); // ✅ Enable background processing
-    
+
     const { data } = await axios.post("/api/analyze-file", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
@@ -474,7 +528,7 @@ async function startAnalysis() {
       console.warn("⚠️ No 'analysis' key found, using full response");
       analysisData.value = data;
     }
-    
+
     // Ensure loading is hidden
     loadingVisible.value = false;
     loadingProgress.value = 0;
@@ -486,7 +540,7 @@ async function startAnalysis() {
 
     successMessage.value = "Successfully Analyze!";
     showSuccessMessage.value = true;
-    
+
     // Hide loading for synchronous mode
     loadingVisible.value = false;
     loadingProgress.value = 0;
@@ -502,7 +556,7 @@ async function startAnalysis() {
 // ✅ Handle job completion from LoadingPage
 function handleJobComplete(result) {
   console.log("✅ Job completed with result:", result);
-  
+
   try {
     // Result structure from backend:
     // {
@@ -517,21 +571,21 @@ function handleJobComplete(result) {
     //     cache_id: "..."
     //   }
     // }
-    
+
     if (!result || (!result.reports && !result.analysis)) {  // ✅ Check for actual data
       showAlert("error", "Invalid Result", "...");
       return;
     }
     const jobResult = result;  // ✅ Use result directly (no nesting)
-    
-    
-    
+
+
+
     // ✅ Extract cache_id first (important for save operation)
     if (jobResult.cache_id) {
       cacheId.value = jobResult.cache_id;
       console.log("✅ Cache ID stored:", cacheId.value);
     }
-    
+
     // ✅ Extract analysis data
     if (jobResult.analysis) {
       // Backend already formatted it for us
@@ -541,7 +595,7 @@ function handleJobComplete(result) {
       // Fallback: extract from reports array
       const firstReport = jobResult.reports[0];
       analysisData.value = firstReport;
-      
+
       // Try to get cache_id from report if not already set
       if (!cacheId.value && firstReport.cache_id) {
         cacheId.value = firstReport.cache_id;
@@ -552,23 +606,23 @@ function handleJobComplete(result) {
       showAlert("error", "No Data", "No analysis data found in the result");
       return;
     }
-    
+
     // ✅ Update UI state
     isAnalyzed.value = true;
     isSaved.value = false;
-    
+
     // ✅ Show success message
     successMessage.value = "Successfully Analyzed!";
     showSuccessMessage.value = true;
-    
+
     showAlert("success", "Analysis Complete", "Your file has been analyzed successfully!");
-    
+
     console.log("✅ Final state:", {
       hasAnalysisData: !!analysisData.value,
       hasCacheId: !!cacheId.value,
       cacheId: cacheId.value
     });
-    
+
   } catch (err) {
     console.error("❌ Error processing job result:", err);
     showAlert("error", "Processing Error", "Failed to process analysis result");
@@ -585,30 +639,30 @@ function handleJobComplete(result) {
 function handleJobError(errorInfo) {
   // Log technical error for debugging
   console.error("❌ Job failed (technical):", errorInfo);
-  
+
   // Extract raw error message
-  const rawErrorMessage = typeof errorInfo === 'string' 
-    ? errorInfo 
+  const rawErrorMessage = typeof errorInfo === 'string'
+    ? errorInfo
     : errorInfo?.message || errorInfo?.error || 'Job processing failed';
-  
+
   // Convert to user-friendly message
   const userFriendlyMessage = getUserFriendlyError(rawErrorMessage);
   const userFriendlyTitle = getUserFriendlyErrorTitle(rawErrorMessage);
-  
+
   // Hide loading page
   loadingVisible.value = false;
   loadingProgress.value = 0;
-  
+
   // Reset job ID
   jobId.value = null;
-  
+
   // Show user-friendly error alert
   showAlert(
-    "error", 
-    userFriendlyTitle, 
+    "error",
+    userFriendlyTitle,
     userFriendlyMessage
   );
-  
+
   // ✅ Reset upload state when job fails
   isUploading.value = false;
 }
@@ -716,7 +770,7 @@ function deleteFile() {
 // ✅ Handle search results from Header component
 function handleSearchResults(searchResult) {
   console.log("🔍 Search result received:", searchResult);
-  
+
   // Check if it's an error
   if (searchResult && searchResult.error) {
     console.error("❌ Search error:", searchResult.message);
@@ -756,11 +810,11 @@ function handleSearchResults(searchResult) {
       graph_suggestions: searchResult.graph_suggestions || { suggested_charts: [] },
       ...searchResult // Include any other properties
     };
-    
+
     // Set the analysis data to display in AI-AgentContext
     analysisData.value = formattedResult;
     isSaved.value = true; // Assume search results are from saved analyses
-    
+
     // Scroll to dashboard section
     setTimeout(() => {
       const dashboardSection = document.getElementById("AI-AgentContext");
@@ -768,7 +822,7 @@ function handleSearchResults(searchResult) {
         dashboardSection.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 100);
-    
+
     console.log("✅ Search result loaded:", analysisData.value);
     showAlert("success", "Result Loaded", "Search result has been loaded successfully!");
   }
