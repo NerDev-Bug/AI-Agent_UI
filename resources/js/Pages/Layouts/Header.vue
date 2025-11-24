@@ -23,9 +23,20 @@
 
     <!-- add this if you need the search ref="searchBtn" @click="showSearch = !showSearch" -->
     <button
-      class="font-semibold px-5 py-2 hover:bg-white hover:text-primary-600 rounded-full transition-all duration-300 relative text-center transform hover:scale-105 active:scale-95"
-      aria-label="Search functionality">
-      List
+      class="font-semibold px-5 py-2 hover:bg-white hover:text-primary-600 rounded-full transition-all duration-300 relative text-center transform hover:scale-105 active:scale-95 group"
+      aria-label="View all reports (Coming soon)"
+      title="View all reports (Coming soon)">
+      <span class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+        </svg>
+        List
+      </span>
+      <!-- Tooltip -->
+      <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+        View all reports (Coming soon)
+        <span class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></span>
+      </span>
     </button>
   </nav>
 

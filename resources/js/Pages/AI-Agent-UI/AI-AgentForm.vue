@@ -1,7 +1,7 @@
 <template>
   <div class="bg-gradient-to-br from-background-light via-background-lighter to-background-light min-h-screen overflow-y-auto z-50">
-    <!-- left leafs-->
-    <div>
+    <!-- left leafs - Hidden on mobile -->
+    <div class="hidden md:block">
       <img src="/images/leaf2.png"
         class="absolute top-[60px] left-[110px] w-[40px] h-auto pointer-events-none z-20 rotate-[-75deg]">
       <img src="/images/leaf2.png"
@@ -16,8 +16,8 @@
         class="absolute w-[50px] h-auto pointer-events-none scale-x-[-1] bottom-[-120px] left-[70px] rotate-[-70deg] z-10">
     </div>
 
-    <!-- right leafs-->
-    <div>
+    <!-- right leafs - Hidden on mobile -->
+    <div class="hidden md:block">
       <img src="/images/leaf1.png"
         class="absolute top-[60px] right-[210px] w-[44px] h-auto pointer-events-none z-20 rotate-[56deg]">
       <img src="/images/leaf1.png"
@@ -31,22 +31,22 @@
         class="absolute w-[50px] h-auto pointer-events-none bottom-[-160px] right-[70px] rotate-[-70deg] z-10">
     </div>
 
-    <!-- Top left image NFBT1-->
+    <!-- Top left image NFBT1 - Hidden on mobile -->
     <img src="/images/NFBT1.png" alt="Middle"
-      class="absolute top-[160px] left-[230px] w-[90px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[160px] left-[230px] w-[90px] h-auto pointer-events-none z-20" />
 
-    <!-- Top right images FO1-->
+    <!-- Top right images FO1 - Hidden on mobile -->
     <img src="/images/FO1.png" alt="Middle"
-      class="absolute top-[190px] right-[210px] w-[90px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[190px] right-[210px] w-[90px] h-auto pointer-events-none z-20" />
 
-    <!-- center right images iSBM-->
+    <!-- center right images iSBM - Hidden on mobile -->
     <img src="/images/iSBM.png" alt="Middle"
-      class="absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
 
     <!-- ✅ Main Upload Form -->
     <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 relative z-10">
       <div class="flex flex-col items-center justify-center mb-12 animate-fadeIn">
-        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+          <h1 class="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
           Product demo Trials Agents with
         </h1>
         <div class="mb-6 animate-scaleIn">
@@ -55,7 +55,7 @@
 
         <!-- Top Description-->
         <div class="w-full max-w-2xl text-center px-4">
-          <p class="text-base md:text-lg text-gray-700 leading-relaxed">
+          <p class="text-sm md:text-base lg:text-lg text-gray-800 leading-relaxed">
             Upload your Product Demo Trials forms and get instant <span class="font-semibold text-primary-600">AI-powered analytics</span>.
             Understand form performance, user behavior, and conversion insights in seconds.
           </p>
@@ -160,9 +160,10 @@
             <button
               @click="toggleJsonMode"
               :class="[
-                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2',
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2',
                 useJsonFile ? 'bg-green-600' : 'bg-gray-300'
-              ]">
+              ]"
+              aria-label="Toggle JSON file mode">
               <span
                 :class="[
                   'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
@@ -179,8 +180,8 @@
             <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze"
               class="flex items-center justify-center gap-2 mt-6 relative z-50">
               <button @click="startAnalysis" :class="[
-                'w-full max-w-[220px] h-12 rounded-xl text-white font-semibold transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4',
-                useJsonFile ? 'bg-gradient-to-r from-secondary-600 to-secondary-700 hover:from-secondary-700 hover:to-secondary-800' : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800'
+                'w-full max-w-[220px] h-12 rounded-xl text-white font-semibold transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4 focus:outline-none focus:ring-2 focus:ring-offset-2',
+                useJsonFile ? 'bg-gradient-to-r from-secondary-600 to-secondary-700 hover:from-secondary-700 hover:to-secondary-800 focus:ring-secondary-500' : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500'
               ]">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
@@ -195,7 +196,7 @@
             <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
               class="flex items-center justify-center gap-3 mt-6 relative z-50">
               <button @click="saveAnalysis"
-                class="bg-gradient-to-r from-primary-600 to-primary-700 w-full max-w-[120px] h-12 rounded-xl text-white font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4">
+                class="bg-gradient-to-r from-primary-600 to-primary-700 w-full max-w-[120px] h-12 rounded-xl text-white font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -204,7 +205,7 @@
                 </span>
               </button>
               <button @click="reanalyze"
-                class="bg-gradient-to-r from-red-600 to-red-700 w-full min-w-[200px] h-12 rounded-xl text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95 px-4">
+                class="bg-gradient-to-r from-red-600 to-red-700 w-full min-w-[200px] h-12 rounded-xl text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95 px-4 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -221,15 +222,15 @@
     <!-- Three Cards column-->
     <div class="flex justify-center items-center -mt-8 mb-8 px-4">
       <img src="/images/Pandoy.png" alt="Pandoy"
-        class="absolute w-[24px] md:w-[210px] h-auto pointer-events-none bottom-[-90px] left-[270px] z-10" />
+        class="hidden md:block absolute w-[210px] h-auto pointer-events-none bottom-[-90px] left-[270px] z-10" />
       <div class="flex flex-col md:flex-row gap-12 md:gap-8 max-w-4xl w-full">
         <!-- First card -->
         <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInLeft group">
           <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
             <img src="/images/magic.png" class="w-8 h-8 object-cover" alt="AI Magic Icon">
           </div>
-          <h1 class="text-lg font-bold text-gray-800 mb-3">AI-Powered Analysis</h1>
-          <p class="text-sm text-gray-600 leading-relaxed">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
+          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">AI-Powered Analysis</h1>
+          <p class="text-sm text-gray-700 leading-relaxed">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
         </div>
 
         <!-- Second card -->
@@ -237,8 +238,8 @@
           <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
             <img src="/images/graph.png" class="w-8 h-8 object-cover" alt="Dashboard Icon">
           </div>
-          <h1 class="text-lg font-bold text-gray-800 mb-3">Interactive Dashboard</h1>
-          <p class="text-sm text-gray-600 leading-relaxed">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
+          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">Interactive Dashboard</h1>
+          <p class="text-sm text-gray-700 leading-relaxed">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
         </div>
 
         <!-- Third card -->
@@ -246,8 +247,8 @@
           <div class="bg-gradient-to-br from-primary-100 to-primary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
             <img src="/images/flash.png" class="w-8 h-8 object-cover" alt="Lightning Icon">
           </div>
-          <h1 class="text-lg font-bold text-gray-800 mb-3">Instant Insights</h1>
-          <p class="text-sm text-gray-600 leading-relaxed">Get actionable recommendations to improve form performance and drive better results</p>
+          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">Instant Insights</h1>
+          <p class="text-sm text-gray-700 leading-relaxed">Get actionable recommendations to improve form performance and drive better results</p>
         </div>
       </div>
     </div>

@@ -6,7 +6,7 @@
                 <br />
                 <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
                 <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
-                    class="bg-gradient-to-r from-secondary-600 to-secondary-700 w-full md:w-[220px] h-12 rounded-xl text-white hover:from-secondary-700 hover:to-secondary-800 transition-all duration-300 shadow-medium hover:shadow-glow-blue flex items-center justify-center gap-2 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                    class="bg-gradient-to-r from-secondary-600 to-secondary-700 w-full md:w-[220px] h-12 rounded-xl text-white hover:from-secondary-700 hover:to-secondary-800 transition-all duration-300 shadow-medium hover:shadow-glow-blue flex items-center justify-center gap-2 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2">
                     <span v-if="!isExporting" class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -53,43 +53,38 @@
                         Basic Information
                     </h4>
                     <ul
-                        class="text-sm md:text-lg grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-gray-700 before:absolute before:inset-0 before:animate-typewriter">
-                        <li>
-                            <b>Applicant:</b>
-                            {{ currentReport.analysis.basic_info.applicant }}
+                        class="text-sm md:text-base grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-2 text-gray-800 leading-relaxed">
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Applicant:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.applicant }}</span>
                         </li>
-                        <li>
-                            <b>Application Date:</b>
-                            {{
-                                currentReport.analysis.basic_info
-                                    .application_date
-                            }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Application Date:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.application_date }}</span>
                         </li>
-                        <li>
-                            <b>Cooperator:</b>
-                            {{ currentReport.analysis.basic_info.cooperator }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Cooperator:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.cooperator }}</span>
                         </li>
-                        <li>
-                            <b>Product:</b>
-                            {{ currentReport.analysis.basic_info.product }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Product:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.product }}</span>
                         </li>
-                        <li>
-                            <b>Location:</b>
-                            {{ currentReport.analysis.basic_info.location }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Location:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.location }}</span>
                         </li>
-                        <li>
-                            <b>Crop:</b>
-                            {{ currentReport.analysis.basic_info.crop }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Crop:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.crop }}</span>
                         </li>
-                        <li>
-                            <b>Plot Size:</b>
-                            {{ currentReport.analysis.basic_info.plot_size }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Plot Size:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.plot_size }}</span>
                         </li>
-                        <li>
-                            <b>Planting Date:</b>
-                            {{
-                                currentReport.analysis.basic_info.planting_date
-                            }}
+                        <li class="flex flex-col sm:flex-row sm:items-start">
+                            <span class="font-semibold text-gray-900 min-w-[140px]">Planting Date:</span>
+                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.planting_date }}</span>
                         </li>
                     </ul>
                 </div>
@@ -172,57 +167,61 @@
                         <p class="text-sm text-gray-600 absolute bottom-4 left-4">Season</p>
                     </div>
 
-                    <!-- Relative Improvement -->
-                    <div
-                        class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
+                        <!-- Relative Improvement -->
+                        <div
+                            class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
 
-                        <!-- Status badge -->
-                        <span v-if="improvementValue > 0"
-                            class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                            <span>↑</span>
-                            <span>Improved</span>
-                        </span>
+                            <!-- Status badge -->
+                            <span v-if="improvementValue > 0"
+                                class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft animate-pulse">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                                </svg>
+                                <span>Improved</span>
+                            </span>
 
-                        <span v-else-if="improvementValue < 0"
-                            class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                            <span>↓</span>
-                            <span>Decreased</span>
-                        </span>
+                            <span v-else-if="improvementValue < 0"
+                                class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                                </svg>
+                                <span>Decreased</span>
+                            </span>
 
-                        <span v-else
-                            class="absolute top-4 right-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-                            <span>→</span>
-                            <span>No Change</span>
-                        </span>
-                        <!-- Main Value -->
-                        <p class="text-4xl font-semibold text-black">
-                            {{ improvementValue.toFixed(2) }}%
-                        </p>
-                        <!-- Label -->
-                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Relative Improvement</p>
-                    </div>
+                            <span v-else
+                                class="absolute top-4 right-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft">
+                                <span>→</span>
+                                <span>No Change</span>
+                            </span>
+                            <!-- Main Value -->
+                            <p class="text-3xl md:text-4xl font-bold text-gray-900">
+                                {{ improvementValue.toFixed(2) }}%
+                            </p>
+                            <!-- Label -->
+                            <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Relative Improvement</p>
+                        </div>
 
                     <!-- Significance -->
                     <div
                         class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-                        <p class="text-4xl font-semibold text-black capitalize">
+                        <p class="text-3xl md:text-4xl font-bold text-gray-900 capitalize">
                             {{
                                 currentReport.analysis.performance_analysis
                                     .statistical_assessment
                                     .improvement_significance
                             }}
                         </p>
-                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Significance</p>
+                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Significance</p>
                     </div>
 
                     <!-- Absolute Difference -->
                     <div
                         class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-                        <p class="text-4xl font-semibold text-black">
+                        <p class="text-3xl md:text-4xl font-bold text-gray-900">
                             {{
                                 currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
                             }}
-                            <span class="text-base text-gray-700">
+                            <span class="text-sm md:text-base text-gray-600 font-normal">
                                 {{
                                     currentReport.analysis.performance_analysis
                                         .calculated_metrics
@@ -230,7 +229,7 @@
                                 }}
                             </span>
                         </p>
-                        <p class="absolute bottom-3 left-6 text-sm text-gray-500">Absolute Difference</p>
+                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Absolute Difference</p>
                     </div>
                 </div>
             </div>
@@ -258,7 +257,7 @@
 
                             <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
 
-                            <p v-if="chart.description" class="text-gray-600 mb-3 text-sm italic px-4">
+                            <p v-if="chart.description" class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic px-2 md:px-4">
                                 {{ chart.description }}
                             </p>
                         </div>
@@ -271,9 +270,11 @@
                                 Treatment Details
                             </h5>
 
-                            <!-- Treatment Details Table -->
-                            <div class="overflow-x-auto">
-                                <table class="w-full border-separate border-spacing-0 border border-gray-600">
+                        <!-- Treatment Details Table -->
+                        <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                            <div class="inline-block min-w-full align-middle">
+                                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-300 border-separate border-spacing-0">
                                     <thead>
                                         <tr>
                                             <th colspan="2"
@@ -352,13 +353,14 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                    </table>
+                                </div>
                             </div>
-
-                            <p class="text-gray-600 mb-3 text-sm italic mt-4 px-4">
-                                {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
-                            </p>
                         </div>
+                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic mt-4 px-2 md:px-4">
+                            {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
+                        </p>
+                    </div>
                     </div>
 
                     <!-- Treatment Details BELOW grid for EVEN counts (2,4,6...) -->
@@ -370,8 +372,10 @@
                         </h5>
 
                         <!-- Treatment Details Table -->
-                        <div class="overflow-x-auto">
-                            <table class="w-full border-separate border-spacing-0 border border-gray-600">
+                        <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                            <div class="inline-block min-w-full align-middle">
+                                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                                    <table class="min-w-full divide-y divide-gray-300 border-separate border-spacing-0">
                                 <thead>
                                     <tr>
                                         <th colspan="2"
@@ -449,11 +453,13 @@
                                             {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
 
-                        <p class="text-gray-600 mb-3 text-lg italic mt-4 px-4">
+                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic mt-4 px-2 md:px-4">
                             {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                         </p>
                     </div>
@@ -464,9 +470,13 @@
 
                 <!-- World Map Card (No Data State) -->
                 <div
-                    class="bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center justify-center min-h-[300px] w-full">
-                    <i class="fa-solid fa-earth-americas text-gray-400 text-6xl mb-4"></i>
-                    <p class="text-gray-500 text-lg font-medium">No Map found</p>
+                    class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-soft border-2 border-dashed border-gray-200 flex flex-col items-center justify-center min-h-[300px] w-full">
+                    <div class="text-gray-300 mb-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 md:w-20 md:h-20">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.944 11.944 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+                    </div>
+                    <p class="text-gray-400 text-sm md:text-base font-medium">Map visualization coming soon</p>
                 </div>
 
                 <!-- Key Findings & Strategic Insights -->
@@ -476,8 +486,8 @@
                     </h2>
 
                     <!-- Opportunities -->
-                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
-                        @click="showOpportunitiesModal = true">
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                        @click="showOpportunitiesModal = true" tabindex="0" @keyup.enter="showOpportunitiesModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
@@ -491,8 +501,8 @@
                     </div>
 
                     <!-- Risks & Limitations -->
-                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-red-300"
-                        @click="showRiskLimitationsModal = true">
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        @click="showRiskLimitationsModal = true" tabindex="0" @keyup.enter="showRiskLimitationsModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-red-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
@@ -506,8 +516,8 @@
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
-                        @click="showExecutiveSummaryModal = true">
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2"
+                        @click="showExecutiveSummaryModal = true" tabindex="0" @keyup.enter="showExecutiveSummaryModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-secondary-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -521,8 +531,8 @@
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
-                        @click="showRecommendationsModal = true">
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                        @click="showRecommendationsModal = true" tabindex="0" @keyup.enter="showRecommendationsModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -539,21 +549,30 @@
         </div>
 
         <!-- Loading/Error/Empty Placeholder -->
-        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center h-[440px] mt-10">
-            <div class="relative flex flex-col items-center justify-center">
-                <div class="bg-white w-32 h-32 rounded-full flex items-center justify-center shadow-md">
-                    <span class="text-[#1f3b70] text-7xl font-semibold">?</span>
+        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[440px] mt-10 px-4">
+            <div class="relative flex flex-col items-center justify-center max-w-lg">
+                <div class="bg-gradient-to-br from-gray-50 to-white w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center shadow-large border-4 border-gray-200">
+                    <span class="text-gray-400 text-5xl md:text-7xl font-semibold">?</span>
                 </div>
 
                 <!-- Text Section -->
-                <div class="text-center mt-8">
-                    <h2 class="text-2xl font-semibold text-[#1f3b70]">
+                <div class="text-center mt-6 md:mt-8">
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
                         No Data Found
                     </h2>
-                    <p class="text-sm mt-2 max-w-md mx-auto">
-                        Upload a file and click the Analyze Demo Form button to
+                    <p class="text-sm md:text-base text-gray-600 leading-relaxed max-w-md mx-auto mb-6">
+                        Upload a file and click the <span class="font-semibold text-primary-600">Analyze Demo Form</span> button to
                         show the analyzed result of your uploaded file.
                     </p>
+                    <!-- CTA Button -->
+                    <button 
+                        @click="scrollToUpload"
+                        class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
+                        </svg>
+                        Get Started
+                    </button>
                 </div>
             </div>
         </div>
@@ -595,42 +614,50 @@
         </transition>
 
         <!-- Opportunities Modal -->
-        <transition name="fade">
+        <transition name="modal">
             <div v-if="showOpportunitiesModal"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-end md:items-center justify-center z-[9999]"
                 @click.self="showOpportunitiesModal = false">
-                <OpportunitiesModal :opportunities="currentReport?.analysis?.opportunities || []"
-                    @close="showOpportunitiesModal = false" />
+                <div class="w-full md:w-auto md:max-w-4xl md:m-4">
+                    <OpportunitiesModal :opportunities="currentReport?.analysis?.opportunities || []"
+                        @close="showOpportunitiesModal = false" />
+                </div>
             </div>
         </transition>
 
         <!-- Risk & Limitations Modal -->
-        <transition name="fade">
+        <transition name="modal">
             <div v-if="showRiskLimitationsModal"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-end md:items-center justify-center z-[9999]"
                 @click.self="showRiskLimitationsModal = false">
-                <RiskLimitationsModal :riskFactors="currentReport?.analysis?.risk_factors || []"
-                    @close="showRiskLimitationsModal = false" />
+                <div class="w-full md:w-auto md:max-w-4xl md:m-4">
+                    <RiskLimitationsModal :riskFactors="currentReport?.analysis?.risk_factors || []"
+                        @close="showRiskLimitationsModal = false" />
+                </div>
             </div>
         </transition>
 
         <!-- Recommendations Modal -->
-        <transition name="fade">
+        <transition name="modal">
             <div v-if="showRecommendationsModal"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-end md:items-center justify-center z-[9999]"
                 @click.self="showRecommendationsModal = false">
-                <RecommendationsModal :recommendations="currentReport?.analysis?.recommendations || []"
-                    @close="showRecommendationsModal = false" />
+                <div class="w-full md:w-auto md:max-w-4xl md:m-4">
+                    <RecommendationsModal :recommendations="currentReport?.analysis?.recommendations || []"
+                        @close="showRecommendationsModal = false" />
+                </div>
             </div>
         </transition>
 
         <!-- Executive Summary Modal -->
-        <transition name="fade">
+        <transition name="modal">
             <div v-if="showExecutiveSummaryModal"
-                class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]"
+                class="fixed inset-0 bg-black bg-opacity-40 flex items-end md:items-center justify-center z-[9999]"
                 @click.self="showExecutiveSummaryModal = false">
-                <ExecutiveSummaryModal :executiveSummary="currentReport?.analysis?.executive_summary || ''"
-                    @close="showExecutiveSummaryModal = false" />
+                <div class="w-full md:w-auto md:max-w-4xl md:m-4">
+                    <ExecutiveSummaryModal :executiveSummary="currentReport?.analysis?.executive_summary || ''"
+                        @close="showExecutiveSummaryModal = false" />
+                </div>
             </div>
         </transition>
     </div>
@@ -1067,6 +1094,14 @@ const handleExportClick = () => {
     exportToPDF();
 };
 
+// Scroll to upload section
+const scrollToUpload = () => {
+    const uploadSection = document.getElementById("AI-AgentForm");
+    if (uploadSection) {
+        uploadSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+};
+
 watch(isExporting, (newVal) => {
     if (newVal) {
         document.body.style.overflow = "hidden"; // disable scroll
@@ -1096,6 +1131,41 @@ canvas {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+
+/* Modal transitions - bottom sheet on mobile, center on desktop */
+.modal-enter-active {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-leave-active {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modal-enter-from {
+    opacity: 0;
+}
+
+.modal-leave-to {
+    opacity: 0;
+}
+
+@media (max-width: 768px) {
+    .modal-enter-from .bg-white {
+        transform: translateY(100%);
+    }
+    .modal-leave-to .bg-white {
+        transform: translateY(100%);
+    }
+}
+
+@media (min-width: 769px) {
+    .modal-enter-from .bg-white {
+        transform: scale(0.95);
+    }
+    .modal-leave-to .bg-white {
+        transform: scale(0.95);
+    }
 }
 
 /* Insight Item Styles */

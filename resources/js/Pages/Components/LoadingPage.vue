@@ -20,13 +20,23 @@
                 </p>
 
                 <!-- Progress Bar -->
-                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                    <div class="bg-green-600 h-3 rounded-full transition-all duration-300 ease-linear"
-                        :style="{ width: progress + '%' }"></div>
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-inner">
+                    <div class="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-300 ease-linear relative"
+                        :style="{ width: progress + '%' }">
+                        <div class="absolute inset-0 bg-white opacity-30 animate-shimmer"></div>
+                    </div>
                 </div>
 
-                <!-- Percentage Label -->
-                <p class="text-sm text-gray-600 font-medium">{{ Math.floor(progress) }}%</p>
+                <!-- Progress Info -->
+                <div class="flex items-center justify-between w-full text-sm">
+                    <p class="text-gray-600 font-medium">{{ Math.floor(progress) }}%</p>
+                    <p class="text-gray-500 text-xs">
+                        <span v-if="estimatedTime > 0">~{{ estimatedTime }}s remaining</span>
+                        <span v-else-if="progress < 50">Analyzing...</span>
+                        <span v-else-if="progress < 90">Processing data...</span>
+                        <span v-else>Finalizing...</span>
+                    </p>
+                </div>
             </div>
         </div>
     </transition>
@@ -57,11 +67,13 @@ const emit = defineEmits(['complete', 'error']);
 
 const progress = ref(0);
 const message = ref(props.initialText);
+const estimatedTime = ref(0);
 let pollInterval = null;
 let isPolling = false;
 let isRequestInProgress = false;
 let currentJobId = null; // Track current job to prevent duplicate polling
 let progressSimulator = null; // Progress simulator instance
+let startTime = null; // Track start time for estimation
 
 // Initialize progress simulator
 const initProgressSimulator = () => {
@@ -118,6 +130,8 @@ const startPolling = () => {
     
     isPolling = true;
     currentJobId = props.jobId;
+    startTime = Date.now(); // Record start time
+    estimatedTime.value = 0;
     
     // Start progress simulator
     initProgressSimulator();
@@ -168,6 +182,15 @@ const pollProgress = async () => {
             progressSimulator.updateFromBackend(data.status);
         }
         
+        // Calculate estimated time remaining
+        if (startTime && progress.value > 0 && progress.value < 100) {
+            const elapsed = (Date.now() - startTime) / 1000; // seconds
+            const rate = progress.value / elapsed; // % per second
+            if (rate > 0) {
+                estimatedTime.value = Math.ceil((100 - progress.value) / rate);
+            }
+        }
+        
         // Check if job is complete - VERIFY RESULT EXISTS FIRST
         if (data.status === 'complete') {
             // ✅ CRITICAL FIX: Verify result exists before marking complete
@@ -184,6 +207,7 @@ const pollProgress = async () => {
             stopPolling();
             progress.value = 100; // Jump to 100% immediately
             message.value = 'Complete!';
+            estimatedTime.value = 0;
             
             // Emit complete event with result
             emit('complete', data.result || data);
@@ -299,6 +323,21 @@ onUnmounted(() => {
     50% {
         transform: translateX(-50%) scale(1.1);
     }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+.animate-shimmer {
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
 }
 
 .animate-grow {
