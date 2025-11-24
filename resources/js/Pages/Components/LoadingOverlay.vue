@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9998]">
             <div class="bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
                 <div class="relative w-24 h-24">
                     <div class="absolute bottom-0 left-0 w-full h-4 bg-green-700 rounded-full"></div>
@@ -18,7 +18,7 @@
                 </div>
 
                 <p class="text-green-900 font-semibold text-lg animate-pulse">
-                    Exporting your report... 🌱
+                    {{ message }}
                 </p>
             </div>
         </div>
@@ -30,6 +30,10 @@ const props = defineProps({
     visible: {
         type: Boolean,
         default: false,
+    },
+    message: {
+        type: String,
+        default: "Exporting your report... 🌱",
     },
 });
 </script>

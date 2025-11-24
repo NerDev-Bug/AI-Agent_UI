@@ -149,11 +149,9 @@
                         </div>
                         <!-- Display Based on Season -->
                         <div class="flex items-center justify-center mt-4">
-                            <!-- DRY = Yellow Sun -->
-                            <div v-if="currentReport.analysis.basic_info.season === 'dry'"
-                                class="w-24 h-24 rounded-full bg-yellow-400"
-                                style="box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2);">
-                            </div>
+                            <!-- DRY = Sun icon -->
+                            <img v-if="currentReport.analysis.basic_info.season === 'dry'"
+                                src="/images/sun.png" alt="Dry Season Icon" class="w-24 h-auto" />
 
                             <!-- WET = Cloud/rain icon -->
                             <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon" class="w-24 h-auto" />

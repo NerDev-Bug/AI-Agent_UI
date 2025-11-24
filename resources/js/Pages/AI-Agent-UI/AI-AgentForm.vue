@@ -143,7 +143,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -159,7 +159,7 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div>
+          </div> -->
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
@@ -269,6 +269,9 @@
 
     <LoadingPage :visible="loadingVisible" :job-id="jobId" :initial-text="loadingText" @complete="handleJobComplete"
       @error="handleJobError" />
+    
+    <!-- Loading Overlay for Save operation (similar to Export PDF) -->
+    <LoadingOverlay :visible="isSaving" message="Saving your analysis..." />
   </div>
 </template>
 
@@ -276,6 +279,7 @@
 import AIAgentContext from "./AI-AgentContext.vue";
 import Navbarheader from "../Layouts/Header.vue";
 import LoadingPage from "../Components/LoadingPage.vue";
+import LoadingOverlay from "../Components/LoadingOverlay.vue";
 import Tour from "../Layouts/Tour.vue";
 import { ref } from "vue";
 import axios from "axios";
@@ -285,6 +289,7 @@ const isDragging = ref(false);
 const isUploading = ref(false);
 const isAnalyzed = ref(false);
 const isSaved = ref(false); // Track if analysis has been saved (for Export PDF button)
+const isSaving = ref(false); // Track if save operation is in progress (for LoadingOverlay)
 const uploadedFile = ref(null);
 const uploadedFileURL = ref(null);
 const analysisData = ref(null);
@@ -323,8 +328,15 @@ function closeAlert() {
   alertVisible.value = false;
 }
 async function confirmAction() {
-  if (confirmCallback) await confirmCallback();
+  // ✅ CRITICAL FIX: Close alert FIRST before executing callback
+  // This prevents LoadingPage from showing behind the alert
   closeAlert();
+  
+  // Small delay to ensure alert closes before showing loading
+  await new Promise(resolve => setTimeout(resolve, 150));
+  
+  // Now execute the callback (which may show loading)
+  if (confirmCallback) await confirmCallback();
 }
 
 
@@ -671,16 +683,22 @@ function handleJobError(errorInfo) {
 async function reanalyze() {
   isReanalyzing.value = true;
 
-  loadingText.value = "Re-analyzing file...";
-  loadingVisible.value = true;
-  loadingProgress.value = 0;
-
+  // ✅ CRITICAL FIX: Reset all state BEFORE showing loading
   showSuccessMessage.value = false;
   isAnalyzed.value = false;
   isSaved.value = false;
   analysisData.value = null;
   cacheId.value = null;
-  jobId.value = null;
+  jobId.value = null; // ✅ Clear jobId FIRST
+  
+  // ✅ Hide loading first, then show again to force reset
+  loadingVisible.value = false;
+  await new Promise(resolve => setTimeout(resolve, 100)); // Small delay to ensure reset
+  
+  // ✅ Now set loading state with fresh values
+  loadingText.value = "Re-analyzing file...";
+  loadingProgress.value = 0;
+  loadingVisible.value = true;
 
   try {
     await startAnalysis();
@@ -704,12 +722,14 @@ async function saveAnalysis() {
     "Confirm Save",
     "Are you sure you want to save it? If yes, click 'Yes'. If not, click 'Cancel' and reanalyze it again.",
     async () => {
-      loadingText.value = "Saving analysis...";
-      loadingVisible.value = true;
+      // ✅ Note: Alert is already closed by confirmAction() before this callback runs
+      // ✅ Use LoadingOverlay (similar to Export PDF) - no progress bar
+      isSaving.value = true;
+      
       try {
         const cacheIdString = String(cacheId.value);
         console.log("💾 Saving analysis with cache_id:", cacheIdString);
-
+        
         const response = await axios.post("/api/confirm-analysis", {
           cache_id: cacheIdString,
           approved: true,
@@ -731,7 +751,8 @@ async function saveAnalysis() {
         console.error("❌ Save error:", err);
         showAlert("error", "Save Failed", getErrorMessage(err));
       } finally {
-        loadingVisible.value = false;
+        // ✅ Always hide loading overlay after save completes
+        isSaving.value = false;
       }
     }
   );

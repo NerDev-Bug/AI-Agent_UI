@@ -1,6 +1,6 @@
 <template>
     <transition name="fade">
-        <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div v-if="visible" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9998]">
             <div class="bg-white p-12 w-[400px] h-auto rounded-2xl shadow-lg flex flex-col items-center justify-center space-y-4">
                 <div class="relative w-full h-40">
                     <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
@@ -93,6 +93,13 @@ const stopPolling = () => {
     if (progressSimulator) {
         progressSimulator.stop();
     }
+    
+    // ✅ CRITICAL FIX: Reset progress when stopping (for Re-analyze and Save buttons)
+    // Don't reset if we're just temporarily stopping (component still visible)
+    if (!props.visible) {
+        progress.value = 0;
+        message.value = props.initialText;
+    }
 };
 
 // Helper function to start polling
@@ -161,14 +168,25 @@ const pollProgress = async () => {
             progressSimulator.updateFromBackend(data.status);
         }
         
-        // Check if job is complete - this handles early completion
+        // Check if job is complete - VERIFY RESULT EXISTS FIRST
         if (data.status === 'complete') {
+            // ✅ CRITICAL FIX: Verify result exists before marking complete
+            // Backend might return 'complete' but result not ready yet
+            if (!data.result || (!data.result.analysis && !data.result.reports && !data.analysis)) {
+                // Backend says complete but no result yet - keep polling
+                console.warn('⚠️ Backend returned complete but no result yet, continuing to poll...');
+                message.value = 'Finalizing result...';
+                // Don't stop polling - wait for actual result
+                isRequestInProgress = false;
+                return;
+            }
+            
             stopPolling();
             progress.value = 100; // Jump to 100% immediately
             message.value = 'Complete!';
             
             // Emit complete event with result
-            emit('complete', data.result);
+            emit('complete', data.result || data);
         } else if (data.status === 'failed') {
             // Job failed - stop polling and show error
             stopPolling();
@@ -232,6 +250,12 @@ const pollProgress = async () => {
 watch(
     () => [props.jobId, props.visible],
     ([newJobId, isVisible]) => {
+        // ✅ CRITICAL FIX: Reset progress when component becomes visible
+        if (isVisible) {
+            progress.value = 0; // Reset progress to 0 when LoadingPage becomes visible
+            message.value = props.initialText; // Reset message
+        }
+        
         if (newJobId && isVisible) {
             startPolling();
         } else {
