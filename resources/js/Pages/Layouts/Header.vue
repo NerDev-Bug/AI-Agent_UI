@@ -25,7 +25,7 @@
     <button
       class="font-semibold px-5 py-2 hover:bg-white hover:text-primary-600 rounded-full transition-all duration-300 relative text-center transform hover:scale-105 active:scale-95"
       aria-label="Search functionality">
-      Search
+      List
     </button>
   </nav>
 

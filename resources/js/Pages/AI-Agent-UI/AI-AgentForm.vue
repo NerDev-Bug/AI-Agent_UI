@@ -5,7 +5,7 @@
       <img src="/images/leaf2.png"
         class="absolute top-[60px] left-[110px] w-[40px] h-auto pointer-events-none z-20 rotate-[-75deg]">
       <img src="/images/leaf2.png"
-        class="absolute w-[60px] h-auto pointer-events-none bottom-[300px] left-[486px] z-10">
+        class="absolute w-[60px] h-auto pointer-events-none bottom-[290px] left-[446px] z-10">
       <img src="/images/leaf1.png"
         class="absolute top-[140px] left-[365px] w-[30px] h-auto pointer-events-none z-20 scale-x-[-1] rotate-[-70deg]">
       <img src="/images/leaf1.png"
@@ -14,8 +14,6 @@
         class="absolute w-[46px] h-auto pointer-events-none bottom-[90px] left-[115px] scale-x-[-1] rotate-[-128deg] z-10">
       <img src="/images/leaf1.png"
         class="absolute w-[50px] h-auto pointer-events-none scale-x-[-1] bottom-[-120px] left-[70px] rotate-[-70deg] z-10">
-      <img src="/images/Pandoy.png" alt="Pandoy"
-        class="absolute w-[270px] h-auto pointer-events-none bottom-[-30px] left-[220px] z-10" />
     </div>
 
     <!-- right leafs-->
@@ -46,7 +44,7 @@
       class="absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
 
     <!-- ✅ Main Upload Form -->
-    <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-20 pb-8 relative z-10">
+    <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 relative z-10">
       <div class="flex flex-col items-center justify-center mb-12 animate-fadeIn">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
           Product demo Trials Agents with
@@ -157,7 +155,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -173,7 +171,7 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div> -->
+          </div>
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
@@ -181,7 +179,7 @@
             <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze"
               class="flex items-center justify-center gap-2 mt-6 relative z-50">
               <button @click="startAnalysis" :class="[
-                'w-full max-w-[220px] h-12 rounded-xl text-white font-semibold transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95',
+                'w-full max-w-[220px] h-12 rounded-xl text-white font-semibold transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4',
                 useJsonFile ? 'bg-gradient-to-r from-secondary-600 to-secondary-700 hover:from-secondary-700 hover:to-secondary-800' : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800'
               ]">
                 <span class="flex items-center justify-center gap-2">
@@ -197,7 +195,7 @@
             <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
               class="flex items-center justify-center gap-3 mt-6 relative z-50">
               <button @click="saveAnalysis"
-                class="bg-gradient-to-r from-primary-600 to-primary-700 w-full max-w-[120px] h-12 rounded-xl text-white font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95">
+                class="bg-gradient-to-r from-primary-600 to-primary-700 w-full max-w-[120px] h-12 rounded-xl text-white font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 px-4">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -206,7 +204,7 @@
                 </span>
               </button>
               <button @click="reanalyze"
-                class="bg-gradient-to-r from-red-600 to-red-700 w-full max-w-[200px] h-12 rounded-xl text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95">
+                class="bg-gradient-to-r from-red-600 to-red-700 w-full min-w-[200px] h-12 rounded-xl text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95 px-4">
                 <span class="flex items-center justify-center gap-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -221,8 +219,10 @@
     </div>
 
     <!-- Three Cards column-->
-    <div class="flex items-center justify-center -mt-8 mb-8 px-4">
-      <div class="flex flex-col md:flex-row gap-6 md:gap-8 max-w-6xl w-full">
+    <div class="flex justify-center items-center -mt-8 mb-8 px-4">
+      <img src="/images/Pandoy.png" alt="Pandoy"
+        class="absolute w-[24px] md:w-[210px] h-auto pointer-events-none bottom-[-90px] left-[270px] z-10" />
+      <div class="flex flex-col md:flex-row gap-12 md:gap-8 max-w-4xl w-full">
         <!-- First card -->
         <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInLeft group">
           <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
