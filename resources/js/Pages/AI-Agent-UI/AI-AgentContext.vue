@@ -1,13 +1,18 @@
 <template>
-    <div class="bg-[#E3EEFF] min-h-screen w-full mt-24">
+    <div class="bg-gradient-to-br from-background-lighter via-background-light to-background-lighter min-h-screen w-full mt-24">
         <!-- Select and Export -->
         <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 px-2">
             <div class="flex-2 w-full md:w-auto">
                 <br />
                 <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
                 <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
-                    class="bg-blue-500 w-full md:w-[210px] h-12 rounded-lg text-white hover:bg-green-600 transition flex items-center justify-center gap-2">
-                    <span v-if="!isExporting">Export to PDF</span>
+                    class="bg-gradient-to-r from-secondary-600 to-secondary-700 w-full md:w-[220px] h-12 rounded-xl text-white hover:from-secondary-700 hover:to-secondary-800 transition-all duration-300 shadow-medium hover:shadow-glow-blue flex items-center justify-center gap-2 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100">
+                    <span v-if="!isExporting" class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        </svg>
+                        Export to PDF
+                    </span>
                     <span v-else class="flex flex-row gap-2">
                         <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                             viewBox="0 0 24 24">
@@ -40,8 +45,11 @@
             <!-- Basic Info -->
             <div class="flex flex-col xl:flex-row gap-2 w-full">
                 <div v-if="currentReport.analysis?.basic_info"
-                    class="bg-white border-l-2 p-4 rounded-xl h-full flex-1 w-full animate-slideInLeft">
-                    <h4 class="text-2xl font-semibold text-black mb-6 md:mb-8">
+                    class="bg-white border-l-4 border-primary-500 p-6 rounded-2xl h-full flex-1 w-full animate-slideInLeft shadow-large hover:shadow-glow transition-all duration-300">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-6 md:mb-8 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-primary-600">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                        </svg>
                         Basic Information
                     </h4>
                     <ul
@@ -86,18 +94,21 @@
                     </ul>
                 </div>
                 <!-- Control + Leads Agri Metrics (Right Side of Basic Info) -->
-                <div class="bg-white p-4 rounded-xl flex flex-col flex-1 w-full xl:mt-0 mt-4">
-                    <div class="flex items-center mb-4">
-                        <h4 class="text-2xl font-semibold text-black">
+                <div class="bg-white p-6 rounded-2xl flex flex-col flex-1 w-full xl:mt-0 mt-4 shadow-large hover:shadow-glow transition-all duration-300">
+                    <div class="flex items-center mb-6">
+                        <h4 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-secondary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                            </svg>
                             Performance Metrics
                         </h4>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-4">
                         <!-- Control Average -->
                         <div
-                            class="relative rounded-3xl bg-gradient-to-r from-[#1E3E8B] to-[#346BF1] text-white h-36 px-10 shadow flex items-center justify-center">
+                            class="relative rounded-3xl bg-gradient-to-br from-secondary-700 via-secondary-600 to-secondary-500 text-white h-40 px-6 shadow-large flex items-center justify-center transform transition-all duration-300 hover:scale-105 hover:shadow-glow-blue">
                             <!-- Centered Number -->
-                            <p class="text-5xl font-semibold leading-none">
+                            <p class="text-5xl font-bold leading-none">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.control_average.toFixed(
                                         2
@@ -105,16 +116,16 @@
                                 }}
                             </p>
                             <!-- Bottom-Left Label -->
-                            <p class="absolute bottom-3 left-6 text-sm opacity-90">
+                            <p class="absolute bottom-4 left-6 text-sm font-medium opacity-95">
                                 Control Average
                             </p>
                         </div>
 
                         <!-- Leads Agri Average -->
                         <div
-                            class="relative rounded-3xl bg-gradient-to-r from-[#00853F] to-[#4CAF50] text-white h-36 px-10 shadow flex items-center justify-center">
+                            class="relative rounded-3xl bg-gradient-to-br from-primary-700 via-primary-600 to-primary-500 text-white h-40 px-6 shadow-large flex items-center justify-center transform transition-all duration-300 hover:scale-105 hover:shadow-glow">
                             <!-- Centered Number -->
-                            <p class="text-5xl font-semibold leading-none">
+                            <p class="text-5xl font-bold leading-none">
                                 {{
                                     currentReport.analysis.performance_analysis.calculated_metrics.leads_average.toFixed(
                                         2
@@ -122,7 +133,7 @@
                                 }}
                             </p>
                             <!-- Bottom-Left Label -->
-                            <p class="absolute bottom-3 left-6 text-sm opacity-90">
+                            <p class="absolute bottom-4 left-6 text-sm font-medium opacity-95">
                                 Leads Agri Average
                             </p>
                         </div>
@@ -135,7 +146,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2">
                     <!-- Season -->
                     <div
-                        class="bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[150px]">
+                        class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[180px] shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
                         <!-- Season Badge (top right) -->
                         <div :class="[
                             'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1.5 rounded-full capitalize',
@@ -163,7 +174,7 @@
 
                     <!-- Relative Improvement -->
                     <div
-                        class="bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative">
+                        class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
 
                         <!-- Status badge -->
                         <span v-if="improvementValue > 0"
@@ -193,7 +204,7 @@
 
                     <!-- Significance -->
                     <div
-                        class="relative bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+                        class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
                         <p class="text-4xl font-semibold text-black capitalize">
                             {{
                                 currentReport.analysis.performance_analysis
@@ -206,7 +217,7 @@
 
                     <!-- Absolute Difference -->
                     <div
-                        class="relative bg-white border border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center">
+                        class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
                         <p class="text-4xl font-semibold text-black">
                             {{
                                 currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
@@ -240,7 +251,7 @@
 
                         <!-- Render CHARTS -->
                         <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                            class="chart-card bg-white rounded-2xl shadow p-4">
+                            class="chart-card bg-white rounded-2xl shadow-large p-6 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-1">
                             <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
                                 {{ chart.title }}
                             </h5>
@@ -465,41 +476,61 @@
                     </h2>
 
                     <!-- Opportunities -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
                         @click="showOpportunitiesModal = true">
-                        <span class="text-gray-700 text-lg font-semibold">Opportunities</span>
+                        <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                            </svg>
+                            Opportunities
+                        </span>
                         <button
-                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                            class="see-more-btn bg-gradient-to-r from-accent-yellow to-yellow-500 text-gray-900 text-xs px-4 py-2 rounded-full font-bold shadow-soft hover:shadow-medium transition-all duration-300 transform hover:scale-105">
                             See more
                         </button>
                     </div>
 
                     <!-- Risks & Limitations -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-red-300"
                         @click="showRiskLimitationsModal = true">
-                        <span class="text-gray-700 text-lg font-semibold">Risks & Limitations</span>
+                        <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-red-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            </svg>
+                            Risks & Limitations
+                        </span>
                         <button
-                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                            class="see-more-btn bg-gradient-to-r from-accent-yellow to-yellow-500 text-gray-900 text-xs px-4 py-2 rounded-full font-bold shadow-soft hover:shadow-medium transition-all duration-300 transform hover:scale-105">
                             See more
                         </button>
                     </div>
 
                     <!-- Executive Summary -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
                         @click="showExecutiveSummaryModal = true">
-                        <span class="text-gray-700 text-lg font-semibold">Executive Summary</span>
+                        <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-secondary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            </svg>
+                            Executive Summary
+                        </span>
                         <button
-                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                            class="see-more-btn bg-gradient-to-r from-accent-yellow to-yellow-500 text-gray-900 text-xs px-4 py-2 rounded-full font-bold shadow-soft hover:shadow-medium transition-all duration-300 transform hover:scale-105">
                             See more
                         </button>
                     </div>
 
                     <!-- Recommendations -->
-                    <div class="insight-item bg-gray-200 rounded-lg px-4 py-3 mb-3 flex items-center justify-between cursor-pointer shadow-md"
+                    <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300"
                         @click="showRecommendationsModal = true">
-                        <span class="text-gray-700 text-lg font-semibold">Recommendations</span>
+                        <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Recommendations
+                        </span>
                         <button
-                            class="see-more-btn bg-yellow-400 text-black text-xs px-4 py-1 rounded-full font-medium">
+                            class="see-more-btn bg-gradient-to-r from-accent-yellow to-yellow-500 text-gray-900 text-xs px-4 py-2 rounded-full font-bold shadow-soft hover:shadow-medium transition-all duration-300 transform hover:scale-105">
                             See more
                         </button>
                     </div>
@@ -1069,27 +1100,32 @@ canvas {
 
 /* Insight Item Styles */
 .insight-item {
-    transition: all 300ms;
+    transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .insight-item:hover {
-    background-color: #16a34a !important;
-    /* green-600 */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%) !important;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 25px rgba(22, 163, 74, 0.3) !important;
 }
 
 .insight-item:hover span {
     color: white !important;
 }
 
-/* See more button - hidden by default, shown on hover */
+.insight-item:hover svg {
+    color: white !important;
+}
+
+/* See more button - always visible with modern design */
 .see-more-btn {
-    opacity: 0;
-    transition: opacity 0.3s;
+    opacity: 1;
+    transition: all 0.3s;
 }
 
 .insight-item:hover .see-more-btn {
-    opacity: 1;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%) !important;
+    color: white !important;
+    transform: scale(1.1);
 }
 </style>

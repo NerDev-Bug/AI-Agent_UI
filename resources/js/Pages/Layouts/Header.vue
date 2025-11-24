@@ -1,29 +1,30 @@
 <template>
   <!-- Navigation Bar -->
-  <nav class="text-white rounded-full px-4 sm:px-6 py-2 w-full max-w-[650px] h-auto flex flex-col sm:flex-row gap-2 sm:gap-0 items-stretch sm:items-center justify-between
-           fixed top-4 sm:top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300"
-    style="background: linear-gradient(to right, #00953F, #005F0F);">
+  <nav class="text-white rounded-full px-4 sm:px-6 py-3 w-full max-w-[680px] h-auto flex flex-col sm:flex-row gap-2 sm:gap-0 items-stretch sm:items-center justify-between
+           fixed top-4 sm:top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 shadow-large backdrop-blur-sm"
+    style="background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%);">
     <button @click="scrollToSection('home')" :class="[
-      'font-semibold px-4 py-1 rounded-full transition text-center',
+      'font-semibold px-5 py-2 rounded-full transition-all duration-300 text-center transform hover:scale-105 active:scale-95',
       activeSection === 'home'
-        ? 'bg-white text-[#00853F]'
-        : 'hover:bg-white hover:text-[#00853F]'
-    ]">
+        ? 'bg-white text-primary-600 shadow-medium'
+        : 'hover:bg-white hover:text-primary-600 hover:shadow-soft'
+    ]" aria-label="Navigate to Home section">
       Home
     </button>
 
     <button @click="scrollToSection('dashboard')" :class="[
-      'font-semibold px-4 py-1 rounded-full transition text-center',
+      'font-semibold px-5 py-2 rounded-full transition-all duration-300 text-center transform hover:scale-105 active:scale-95',
       activeSection === 'dashboard'
-        ? 'bg-white text-[#00853F]'
-        : 'hover:bg-white hover:text-[#00853F]'
-    ]">
+        ? 'bg-white text-primary-600 shadow-medium'
+        : 'hover:bg-white hover:text-primary-600 hover:shadow-soft'
+    ]" aria-label="Navigate to Dashboard section">
       Dashboard
     </button>
 
     <!-- add this if you need the search ref="searchBtn" @click="showSearch = !showSearch" -->
     <button
-      class="font-semibold px-4 py-1 hover:bg-white hover:text-[#00853F] rounded-full transition relative text-center">
+      class="font-semibold px-5 py-2 hover:bg-white hover:text-primary-600 rounded-full transition-all duration-300 relative text-center transform hover:scale-105 active:scale-95"
+      aria-label="Search functionality">
       Search
     </button>
   </nav>
@@ -82,9 +83,14 @@
     <div v-if="showChat"
       class="bg-white w-[90vw] max-w-md h-[70vh] max-h-[520px] rounded-2xl border border-gray-300 shadow-xl flex flex-col overflow-hidden">
       <!-- Chat Header -->
-      <div class="bg-green-500 text-white px-4 py-4 font-semibold flex justify-between items-center">
-        <h1>Pandoy AI Assistant</h1>
-        <button @click="showChat = false" class="text-white font-bold text-xl">×</button>
+      <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-4 font-semibold flex justify-between items-center shadow-medium">
+        <h1 class="flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+          </svg>
+          Pandoy AI Assistant
+        </h1>
+        <button @click="showChat = false" class="text-white font-bold text-2xl hover:bg-white hover:bg-opacity-20 rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-200" aria-label="Close chat">×</button>
       </div>
 
       <!-- Messages -->
@@ -105,7 +111,7 @@
         <input v-model="newMessage" type="text" placeholder="Type a message..."
           class="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
         <button type="submit"
-          class="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition-colors duration-300">
+          class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-2 rounded-full hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-soft hover:shadow-medium transform hover:scale-105 active:scale-95 font-semibold">
           Send
         </button>
       </form>
@@ -113,7 +119,8 @@
 
     <!-- Chat Avatar -->
     <button @click="showChat = !showChat"
-      class="bg-gray-400 w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-full border-2 border-green-500 shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
+      class="bg-white w-14 h-14 sm:w-[60px] sm:h-[60px] rounded-full border-4 border-primary-500 shadow-large overflow-hidden hover:scale-110 hover:shadow-glow transition-all duration-300 transform hover:rotate-6 active:scale-95"
+      aria-label="Open AI Assistant Chat">
       <img src="/images/Pandoy.png" alt="Chat Avatar" class="w-full h-full object-cover" />
     </button>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-[#E2E8F3] min-h-screen overflow-y-auto z-50">
+  <div class="bg-gradient-to-br from-background-light via-background-lighter to-background-light min-h-screen overflow-y-auto z-50">
     <!-- left leafs-->
     <div>
       <img src="/images/leaf2.png"
@@ -46,63 +46,77 @@
       class="absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
 
     <!-- ✅ Main Upload Form -->
-    <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-2 relative z-10">
-      <div class="flex flex-col items-center justify-center mb-14">
-        <h1 class="text-xl font-bold text-gray-800 mb-2">Product demo Trials Agents with</h1>
-        <img src="/images/title_img.png" alt="AI Agent Logo" class="w-[500px] h-[120px]">
+    <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-20 pb-8 relative z-10">
+      <div class="flex flex-col items-center justify-center mb-12 animate-fadeIn">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-4 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+          Product demo Trials Agents with
+        </h1>
+        <div class="mb-6 animate-scaleIn">
+          <img src="/images/title_img.png" alt="AI Agent Logo" class="w-[400px] md:w-[500px] h-auto drop-shadow-large">
+        </div>
 
         <!-- Top Description-->
-        <div class="w-[680px] text-center px-2">
-          <p class="text-sm text-[#4E5158]">Upload your Product Demo Trials forms and get instant AI-powered analytics.
-            Understand form performance,
-            user behavior, and conversion insights in seconds.</p>
+        <div class="w-full max-w-2xl text-center px-4">
+          <p class="text-base md:text-lg text-gray-700 leading-relaxed">
+            Upload your Product Demo Trials forms and get instant <span class="font-semibold text-primary-600">AI-powered analytics</span>.
+            Understand form performance, user behavior, and conversion insights in seconds.
+          </p>
         </div>
       </div>
 
       <!-- ✅ Conditional success message OR upload box -->
-      <transition name="fade" mode="out-in">
+      <transition name="scaleIn" mode="out-in">
         <div
-          class="bg-white w-[360px] rounded-xl shadow-lg border-4 border-green-700 flex flex-col items-center justify-center mb-10 px-2 py-4 relative">
+          class="bg-white w-full max-w-md rounded-3xl shadow-large border-4 border-primary-500 flex flex-col items-center justify-center mb-10 px-6 py-6 relative animate-scaleIn hover:shadow-glow transition-all duration-300">
 
           <!-- ✅ Success message INSIDE card - covers upload area and filename, but NOT buttons -->
-          <transition name="fade">
+          <transition name="bounceIn">
             <div v-if="showSuccessMessage"
-              class="absolute top-0 left-0 right-0 flex flex-col items-center justify-center text-center z-40 pointer-events-none bg-white rounded-t-xl shadow-md"
-              style="height: calc(100% - 70px); bottom: 70px;">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
-                stroke="currentColor" class="w-16 h-16 text-green-600 mb-3 animate-bounce">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              <h2 class="text-lg font-bold text-green-700">{{ successMessage }}</h2>
+              class="absolute top-0 left-0 right-0 flex flex-col items-center justify-center text-center z-40 pointer-events-none bg-gradient-to-br from-green-50 to-emerald-50 rounded-t-3xl shadow-medium"
+              style="height: calc(100% - 80px); bottom: 80px;">
+              <div class="relative">
+                <div class="absolute inset-0 bg-green-400 rounded-full blur-xl opacity-30 animate-pulse"></div>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
+                  stroke="currentColor" class="w-20 h-20 text-primary-600 mb-4 relative z-10 animate-bounceIn">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <h2 class="text-xl font-bold text-primary-700 mb-2">{{ successMessage }}</h2>
+              <p class="text-sm text-gray-600">Your analysis is ready!</p>
             </div>
           </transition>
 
           <!-- ✅ Upload Form -->
           <form data-uploadform @dragover.prevent="onDragOver" @dragleave.prevent="onDragLeave"
             @drop.prevent="handleDrop"
-            class="relative bg-white w-[280px] h-[160px] rounded-xl shadow-md flex flex-col items-center justify-center border-4 border-dashed transition"
-            :class="isDragging ? 'border-black bg-black' : 'border-black hover:border-black'">
+            class="relative bg-gradient-to-br from-gray-50 to-white w-full max-w-xs h-48 rounded-2xl shadow-soft flex flex-col items-center justify-center border-2 border-dashed transition-all duration-300"
+            :class="isDragging ? 'border-primary-500 bg-primary-50 scale-105 shadow-glow' : 'border-gray-300 hover:border-primary-400 hover:bg-primary-50/50'">
             <input id="fileUpload" ref="fileInput" type="file" class="hidden" accept=".pdf,.jpeg,.jpg,.png"
               @change="handleFileUpload" />
 
             <label for="fileUpload"
-              class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-green-600 transition text-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-12 h-12 mb-2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
-              </svg>
-              <span class="text-sm font-medium">
-                Drag & Drop or Click to Upload<br />
-                <span class="text-xs text-gray-500">(PDF, JPEG, JPG, PNG)</span>
+              class="cursor-pointer flex flex-col items-center justify-center text-gray-600 hover:text-primary-600 transition-all duration-300 text-center group">
+              <div class="mb-3 p-3 rounded-full bg-primary-100 group-hover:bg-primary-200 transition-colors duration-300">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                  stroke="currentColor" class="w-8 h-8 text-primary-600">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
+                </svg>
+              </div>
+              <span class="text-sm font-semibold mb-1">
+                Drag & Drop or Click to Upload
               </span>
+              <span class="text-xs text-gray-500">(PDF, JPEG, JPG, PNG)</span>
             </label>
 
             <!-- Dragging Indicator -->
-            <transition name="fade">
+            <transition name="scaleIn">
               <div v-if="isDragging"
-                class="absolute inset-0 flex flex-col items-center justify-center bg-green-600 bg-opacity-70 rounded-xl text-white text-lg font-semibold z-20 animate-pulse">
-                📂 Drop your file here
+                class="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary-600 to-primary-700 bg-opacity-95 rounded-2xl text-white text-lg font-semibold z-20 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 mb-2 animate-bounce">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                </svg>
+                <span>Drop your file here</span>
               </div>
             </transition>
 
@@ -165,25 +179,40 @@
           <transition name="fade" mode="out-in">
             <!-- Analyze -->
             <div data-analyzebtn v-if="!isAnalyzed && !isUploading" key="analyze"
-              class="flex items-center justify-center gap-2 mt-4 relative z-50">
+              class="flex items-center justify-center gap-2 mt-6 relative z-50">
               <button @click="startAnalysis" :class="[
-                'w-[200px] h-10 rounded-lg text-white font-semibold transition',
-                useJsonFile ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#00853F] hover:bg-[#00953F]'
+                'w-full max-w-[220px] h-12 rounded-xl text-white font-semibold transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95',
+                useJsonFile ? 'bg-gradient-to-r from-secondary-600 to-secondary-700 hover:from-secondary-700 hover:to-secondary-800' : 'bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800'
               ]">
-                {{ useJsonFile ? 'Load from JSON' : 'Analyze Demo Form' }}
+                <span class="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                  </svg>
+                  {{ useJsonFile ? 'Load from JSON' : 'Analyze Demo Form' }}
+                </span>
               </button>
             </div>
 
             <!-- Save & Reanalyze -->
             <div v-else-if="isAnalyzed && !isUploading" key="save-reanalyze"
-              class="flex items-center justify-center gap-4 mt-4 relative z-50">
+              class="flex items-center justify-center gap-3 mt-6 relative z-50">
               <button @click="saveAnalysis"
-                class="bg-[#00853F] w-[100px] h-10 rounded-lg text-white font-semibold hover:bg-green-600 transition">
-                Save
+                class="bg-gradient-to-r from-primary-600 to-primary-700 w-full max-w-[120px] h-12 rounded-xl text-white font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95">
+                <span class="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                  </svg>
+                  Save
+                </span>
               </button>
               <button @click="reanalyze"
-                class="bg-red-600 w-[200px] h-10 rounded-lg text-white font-semibold hover:bg-red-700 transition">
-                Re-analyze
+                class="bg-gradient-to-r from-red-600 to-red-700 w-full max-w-[200px] h-12 rounded-xl text-white font-semibold hover:from-red-700 hover:to-red-800 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95">
+                <span class="flex items-center justify-center gap-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  Re-analyze
+                </span>
               </button>
             </div>
           </transition>
@@ -192,33 +221,33 @@
     </div>
 
     <!-- Three Cards column-->
-    <div class="flex items-center justify-center -mt-12">
-      <div class=" flex flex-row gap-16">
+    <div class="flex items-center justify-center -mt-8 mb-8 px-4">
+      <div class="flex flex-col md:flex-row gap-6 md:gap-8 max-w-6xl w-full">
         <!-- First card -->
-        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
-          <div class="bg-[#45AAF261] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
-            <img src="/images/magic.png" class="w-8 h-8 object-cover">
+        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInLeft group">
+          <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
+            <img src="/images/magic.png" class="w-8 h-8 object-cover" alt="AI Magic Icon">
           </div>
-          <h1 class="text-md font-semibold mt-4 px-2">AI-Powered Analysis</h1>
-          <p class="text-md mt-4 px-8">Automatically extract and analyze form fields, patterns, and user behavior</p>
+          <h1 class="text-lg font-bold text-gray-800 mb-3">AI-Powered Analysis</h1>
+          <p class="text-sm text-gray-600 leading-relaxed">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
         </div>
 
         <!-- Second card -->
-        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
-          <div class="bg-[#1E3E8B3B] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
-            <img src="/images/graph.png" class="w-8 h-8 object-cover">
+        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInUp group">
+          <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
+            <img src="/images/graph.png" class="w-8 h-8 object-cover" alt="Dashboard Icon">
           </div>
-          <h1 class="text-md font-semibold mt-4 px-2">Interactive Dashboard</h1>
-          <p class="text-md mt-4 px-8">Visualize form metrics, completion rates, and conversion insights</p>
+          <h1 class="text-lg font-bold text-gray-800 mb-3">Interactive Dashboard</h1>
+          <p class="text-sm text-gray-600 leading-relaxed">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
         </div>
 
         <!-- Third card -->
-        <div class="bg-white w-72 h-auto rounded-xl shadow-xl px-4 py-4 z-20">
-          <div class="bg-[#00853F59] w-[44px] h-[44px] rounded-xl flex justify-center items-center">
-            <img src="/images/flash.png" class="w-8 h-8 object-cover">
+        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInRight group">
+          <div class="bg-gradient-to-br from-primary-100 to-primary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
+            <img src="/images/flash.png" class="w-8 h-8 object-cover" alt="Lightning Icon">
           </div>
-          <h1 class="text-md font-semibold mt-4 px-2">Instant Insights</h1>
-          <p class="text-md mt-4 px-8">Get actionable recommendations to improve form performance</p>
+          <h1 class="text-lg font-bold text-gray-800 mb-3">Instant Insights</h1>
+          <p class="text-sm text-gray-600 leading-relaxed">Get actionable recommendations to improve form performance and drive better results</p>
         </div>
       </div>
     </div>
@@ -240,26 +269,29 @@
     </button> -->
 
     <!-- ✅ SweetAlert-style Modal -->
-    <transition name="fade">
-      <div v-if="alertVisible" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-[9999]">
-        <div class="bg-white rounded-2xl shadow-lg w-[360px] p-6 text-center border-4" :class="{
-          'border-green-600': alertType === 'success',
-          'border-red-600': alertType === 'error',
-          'border-yellow-500': alertType === 'warning'
+    <transition name="scaleIn">
+      <div v-if="alertVisible" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+        <div class="bg-white rounded-3xl shadow-large w-full max-w-md p-8 text-center border-4 animate-scaleIn" :class="{
+          'border-primary-500': alertType === 'success',
+          'border-red-500': alertType === 'error',
+          'border-yellow-400': alertType === 'warning'
         }">
-          <div class="text-5xl mb-3" :class="{
-            'text-green-600': alertType === 'success',
+          <div class="text-6xl mb-4 animate-bounceIn" :class="{
+            'text-primary-600': alertType === 'success',
             'text-red-600': alertType === 'error',
             'text-yellow-500': alertType === 'warning'
           }">
             {{ alertIcon }}
           </div>
-          <h2 class="text-2xl font-bold mb-2">{{ alertTitle }}</h2>
-          <p class="text-gray-600 mb-5">{{ alertMessage }}</p>
+          <h2 class="text-2xl font-bold mb-3 text-gray-800">{{ alertTitle }}</h2>
+          <p class="text-gray-600 mb-6 leading-relaxed">{{ alertMessage }}</p>
           <div class="flex justify-center gap-3">
             <button v-if="alertType === 'warning'" @click="confirmAction"
-              class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">Yes</button>
-            <button @click="closeAlert" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+              class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 font-semibold">
+              Yes
+            </button>
+            <button @click="closeAlert" 
+              class="bg-gradient-to-r from-gray-400 to-gray-500 text-white px-6 py-3 rounded-xl hover:from-gray-500 hover:to-gray-600 transition-all duration-300 shadow-medium hover:shadow-lg transform hover:scale-105 active:scale-95 font-semibold">
               {{ alertType === 'warning' ? 'Cancel' : 'OK' }}
             </button>
           </div>
@@ -875,6 +907,37 @@ canvas {
 
 .fade-enter-from,
 .fade-leave-to {
+  opacity: 0;
+}
+
+.scaleIn-enter-active {
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.scaleIn-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.scaleIn-enter-from {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.scaleIn-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.bounceIn-enter-active {
+  animation: bounceIn 0.6s ease-out;
+}
+
+.bounceIn-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.bounceIn-enter-from,
+.bounceIn-leave-to {
   opacity: 0;
 }
 </style>
