@@ -220,10 +220,10 @@
     </div>
 
     <!-- Three Cards column-->
-    <div class="flex justify-center items-center mt-12 md:mt-16 mb-8 px-4">
+    <div class="flex justify-center items-center mt-12 md:mt-16 mb-24 md:mb-32 px-4 relative">
       <img src="/images/Pandoy.png" alt="Pandoy"
-        class="hidden md:block absolute w-[280px] md:w-[340px] h-auto pointer-events-none bottom-[-30px] md:bottom-[-10px] left-[200px] md:left-[240px] z-10" />
-      <div class="flex flex-col md:flex-row gap-12 md:gap-8 max-w-6xl w-full">
+        class="hidden md:block absolute w-[280px] md:w-[340px] h-auto pointer-events-none bottom-[20px] md:bottom-[240px] left-[180px] md:left-[220px] z-10" />
+      <div class="flex flex-col md:flex-row gap-4 md:gap-8 max-w-6xl w-full">
         <!-- First card -->
         <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary-500/30 animate-slideInLeft group border-2 border-transparent hover:border-primary-200">
           <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
@@ -259,7 +259,7 @@
     </div>
 
     <!-- Context -->
-    <div id="AI-AgentContext" class="p-2 pt-24" data-resultssection>
+    <div id="AI-AgentContext" class="p-2" data-resultssection>
       <AIAgentContext :analysisData="analysisData" :isSaved="isSaved" />
     </div>
 

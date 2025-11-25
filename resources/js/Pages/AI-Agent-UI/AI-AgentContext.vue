@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-24 relative">
+    <div class="bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-12 relative">
         <!-- Subtle pattern overlay -->
         <div class="fixed inset-0 opacity-[0.02] pointer-events-none z-0"
             style="background-image: radial-gradient(circle at 2px 2px, #16a34a 1px, transparent 0); background-size: 40px 40px;">
@@ -755,10 +755,14 @@
         </div>
 
         <!-- Loading/Error/Empty Placeholder -->
-        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[500px] mt-10 px-4">
+        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[500px] mt-10 px-4 relative">
+            <!-- Pandoy Character Above -->
+            <img src="/images/Pandoy.png" alt="Pandoy"
+                class="absolute w-[140px] sm:w-[160px] md:w-[180px] lg:w-[190px] xl:w-[200px] h-auto pointer-events-none -top-[30px] sm:-top-[50px] md:-top-[100px] lg:-top-[200px] xl:-top-[220px] left-1/2 transform -translate-x-1/2 z-10" />
+            
             <div class="relative flex flex-col items-center justify-center max-w-2xl w-full">
                 <!-- Modern Card Container -->
-                <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 w-full border-2 border-primary-100 relative overflow-hidden">
+                <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 w-full border-2 border-primary-100 relative overflow-hidden z-20">
                     <!-- Decorative Background Elements -->
                     <div class="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full blur-3xl opacity-30 -mr-32 -mt-32"></div>
                     <div class="absolute bottom-0 left-0 w-48 h-48 bg-emerald-100 rounded-full blur-3xl opacity-20 -ml-24 -mb-24"></div>
