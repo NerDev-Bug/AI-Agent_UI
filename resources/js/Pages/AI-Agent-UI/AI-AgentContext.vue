@@ -1,5 +1,7 @@
 <template>
-    <div class="bg-gradient-to-br from-background-lighter via-background-light to-background-lighter min-h-screen w-full mt-24">
+    <div class="bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-24 relative">
+        <!-- Subtle pattern overlay -->
+        <div class="fixed inset-0 opacity-[0.02] pointer-events-none z-0" style="background-image: radial-gradient(circle at 2px 2px, #16a34a 1px, transparent 0); background-size: 40px 40px;"></div>
         <!-- Select and Export -->
         <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 px-2">
             <div class="flex-2 w-full md:w-auto">
@@ -45,7 +47,7 @@
             <!-- Basic Info -->
             <div class="flex flex-col xl:flex-row gap-2 w-full">
                 <div v-if="currentReport.analysis?.basic_info"
-                    class="bg-white border-l-4 border-primary-500 p-6 rounded-2xl h-full flex-1 w-full animate-slideInLeft shadow-large hover:shadow-glow transition-all duration-300">
+                    class="bg-gradient-to-br from-white via-primary-50/20 to-white border-l-4 border-primary-500 p-6 rounded-2xl h-full flex-1 w-full animate-slideInLeft shadow-large hover:shadow-glow transition-all duration-300">
                     <h4 class="text-2xl font-bold text-gray-800 mb-6 md:mb-8 flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-primary-600">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
@@ -89,7 +91,8 @@
                     </ul>
                 </div>
                 <!-- Control + Leads Agri Metrics (Right Side of Basic Info) -->
-                <div class="bg-white p-6 rounded-2xl flex flex-col flex-1 w-full xl:mt-0 mt-4 shadow-large hover:shadow-glow transition-all duration-300">
+                <div class="bg-gradient-to-br from-white via-secondary-50/20 to-white p-6 rounded-2xl flex flex-col flex-1 w-full xl:mt-0 mt-4 shadow-large hover:shadow-glow transition-all duration-300"
+                    style="box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1), 0 4px 6px -2px rgba(37, 99, 235, 0.05);">
                     <div class="flex items-center mb-6">
                         <h4 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-secondary-600">
@@ -141,39 +144,74 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2">
                     <!-- Season -->
                     <div
-                        class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[180px] shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-                        <!-- Season Badge (top right) -->
+                        :class="[
+                            'bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[180px] shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105',
+                            currentReport.analysis.basic_info.season === 'dry'
+                                ? 'from-yellow-100 via-amber-100/80 to-yellow-100'
+                                : 'from-sky-100 via-blue-100/80 to-sky-100'
+                        ]"
+                        :style="currentReport.analysis.basic_info.season === 'dry' 
+                            ? 'box-shadow: 0 10px 15px -3px rgba(250, 204, 21, 0.15), 0 4px 6px -2px rgba(250, 204, 21, 0.1);'
+                            : 'box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.15), 0 4px 6px -2px rgba(56, 189, 248, 0.1);'">
+                        <!-- Decorative corner accent -->
                         <div :class="[
-                            'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1.5 rounded-full capitalize',
+                            'absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-10',
                             currentReport.analysis.basic_info.season === 'dry'
                                 ? 'bg-yellow-400'
                                 : 'bg-sky-400'
+                        ]"></div>
+                        <!-- Season Badge (top right) -->
+                        <div :class="[
+                            'absolute top-4 right-4 text-white text-sm font-semibold px-4 py-1.5 rounded-full capitalize shadow-medium z-10',
+                            currentReport.analysis.basic_info.season === 'dry'
+                                ? 'bg-gradient-to-r from-yellow-400 to-amber-500'
+                                : 'bg-gradient-to-r from-sky-400 to-blue-500'
                         ]">
                             {{
                                 currentReport.analysis.basic_info.season
                             }}
                         </div>
                         <!-- Display Based on Season -->
-                        <div class="flex items-center justify-center mt-4">
+                        <div class="flex items-center justify-center mt-4 relative z-10">
                             <!-- DRY = Sun icon -->
                             <img v-if="currentReport.analysis.basic_info.season === 'dry'"
-                                src="/images/sun.png" alt="Dry Season Icon" class="w-24 h-auto" />
+                                src="/images/sun.png" alt="Dry Season Icon" class="w-24 h-auto drop-shadow-md" />
 
                             <!-- WET = Cloud/rain icon -->
-                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon" class="w-24 h-auto" />
+                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon" class="w-24 h-auto drop-shadow-md" />
                         </div>
 
                         <!-- Season Label (bottom left) -->
-                        <p class="text-sm text-gray-600 absolute bottom-4 left-4">Season</p>
+                        <p class="text-sm font-semibold text-gray-700 absolute bottom-4 left-4 z-10">Season</p>
                     </div>
 
                         <!-- Relative Improvement -->
                         <div
-                            class="bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-
+                            :class="[
+                                'bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105',
+                                improvementValue > 0
+                                    ? 'from-green-100 via-emerald-100/80 to-green-100'
+                                    : improvementValue < 0
+                                    ? 'from-red-100 via-rose-100/80 to-red-100'
+                                    : 'from-gray-100 via-slate-100/80 to-gray-100'
+                            ]"
+                            :style="improvementValue > 0
+                                ? 'box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.15), 0 4px 6px -2px rgba(34, 197, 94, 0.1);'
+                                : improvementValue < 0
+                                ? 'box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.15), 0 4px 6px -2px rgba(239, 68, 68, 0.1);'
+                                : 'box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.1), 0 4px 6px -2px rgba(107, 114, 128, 0.05);'">
+                            <!-- Decorative corner accent -->
+                            <div :class="[
+                                'absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-10',
+                                improvementValue > 0
+                                    ? 'bg-green-500'
+                                    : improvementValue < 0
+                                    ? 'bg-red-500'
+                                    : 'bg-gray-400'
+                            ]"></div>
                             <!-- Status badge -->
                             <span v-if="improvementValue > 0"
-                                class="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft animate-pulse">
+                                class="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium animate-pulse z-10">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                                 </svg>
@@ -181,7 +219,7 @@
                             </span>
 
                             <span v-else-if="improvementValue < 0"
-                                class="absolute top-4 right-4 bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft">
+                                class="absolute top-4 right-4 bg-gradient-to-r from-red-600 to-rose-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                 </svg>
@@ -189,39 +227,70 @@
                             </span>
 
                             <span v-else
-                                class="absolute top-4 right-4 bg-gray-400 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-soft">
+                                class="absolute top-4 right-4 bg-gradient-to-r from-gray-400 to-slate-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
                                 <span>→</span>
                                 <span>No Change</span>
                             </span>
+                            <!-- Icon background -->
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                                </svg>
+                            </div>
                             <!-- Main Value -->
-                            <p class="text-3xl md:text-4xl font-bold text-gray-900">
+                            <p :class="[
+                                'text-3xl md:text-4xl font-bold relative z-10',
+                                improvementValue > 0
+                                    ? 'text-green-700'
+                                    : improvementValue < 0
+                                    ? 'text-red-700'
+                                    : 'text-gray-700'
+                            ]">
                                 {{ improvementValue.toFixed(2) }}%
                             </p>
                             <!-- Label -->
-                            <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Relative Improvement</p>
+                            <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Relative Improvement</p>
                         </div>
 
                     <!-- Significance -->
                     <div
-                        class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-                        <p class="text-3xl md:text-4xl font-bold text-gray-900 capitalize">
+                        class="relative bg-gradient-to-br from-blue-100 via-indigo-100/80 to-blue-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105"
+                        style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.15), 0 4px 6px -2px rgba(59, 130, 246, 0.1);">
+                        <!-- Decorative corner accent -->
+                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
+                        <!-- Icon background -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            </svg>
+                        </div>
+                        <p class="text-3xl md:text-4xl font-bold text-blue-700 capitalize relative z-10">
                             {{
                                 currentReport.analysis.performance_analysis
                                     .statistical_assessment
                                     .improvement_significance
                             }}
                         </p>
-                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Significance</p>
+                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Significance</p>
                     </div>
 
                     <!-- Absolute Difference -->
                     <div
-                        class="relative bg-white border-2 border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-soft hover:shadow-medium transition-all duration-300 hover:border-primary-300">
-                        <p class="text-3xl md:text-4xl font-bold text-gray-900">
+                        class="relative bg-gradient-to-br from-purple-100 via-violet-100/80 to-purple-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105"
+                        style="box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.15), 0 4px 6px -2px rgba(168, 85, 247, 0.1);">
+                        <!-- Decorative corner accent -->
+                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-purple-400 opacity-10"></div>
+                        <!-- Icon background -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                            </svg>
+                        </div>
+                        <p class="text-3xl md:text-4xl font-bold text-purple-700 relative z-10">
                             {{
                                 currentReport.analysis.performance_analysis.calculated_metrics.absolute_difference.toFixed(2)
                             }}
-                            <span class="text-sm md:text-base text-gray-600 font-normal">
+                            <span class="text-sm md:text-base text-purple-600 font-normal">
                                 {{
                                     currentReport.analysis.performance_analysis
                                         .calculated_metrics
@@ -229,7 +298,7 @@
                                 }}
                             </span>
                         </p>
-                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-600 font-medium">Absolute Difference</p>
+                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Absolute Difference</p>
                     </div>
                 </div>
             </div>
@@ -250,105 +319,143 @@
 
                         <!-- Render CHARTS -->
                         <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                            class="chart-card bg-white rounded-2xl shadow-large p-6 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-1">
-                            <h5 class="text-2xl font-semibold mb-6 text-gray-800 px-2">
+                            :class="[
+                                'chart-card bg-gradient-to-br rounded-2xl shadow-large p-6 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden',
+                                idx % 2 === 0
+                                    ? 'from-white via-primary-50/20 to-white'
+                                    : 'from-white via-secondary-50/20 to-white'
+                            ]"
+                            :style="idx % 2 === 0
+                                ? 'box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.12), 0 4px 6px -2px rgba(22, 163, 74, 0.08);'
+                                : 'box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.12), 0 4px 6px -2px rgba(37, 99, 235, 0.08);'">
+                            <!-- Decorative top accent -->
+                            <div :class="[
+                                'absolute top-0 left-0 right-0 h-1',
+                                idx % 2 === 0
+                                    ? 'bg-gradient-to-r from-primary-500 to-primary-300'
+                                    : 'bg-gradient-to-r from-secondary-500 to-secondary-300'
+                            ]"></div>
+                            <!-- Chart type icon -->
+                            <div class="absolute top-4 right-4 opacity-10">
+                                <svg v-if="chart.chart_type?.toLowerCase().includes('line')" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                                </svg>
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                                </svg>
+                            </div>
+                            <h5 :class="[
+                                'text-2xl font-semibold mb-6 px-2 relative z-10',
+                                idx % 2 === 0
+                                    ? 'text-primary-800'
+                                    : 'text-secondary-800'
+                            ]">
                                 {{ chart.title }}
                             </h5>
 
-                            <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
+                            <div class="relative z-10 min-h-[350px] flex items-center justify-center">
+                                <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
+                            </div>
 
-                            <p v-if="chart.description" class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic px-2 md:px-4">
+                            <p v-if="chart.description" class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic px-2 md:px-4 relative z-10 mt-4 bg-white/50 rounded-lg p-3">
                                 {{ chart.description }}
                             </p>
                         </div>
 
                         <!-- Treatment Details INSIDE grid for ODD counts (1,3,5,7...) -->
                         <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
-                            class="chart-card bg-white rounded-lg shadow p-4">
+                            class="chart-card bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 relative overflow-hidden"
+                            style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.12), 0 4px 6px -2px rgba(59, 130, 246, 0.08);">
+                            <!-- Decorative top accent -->
+                            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                            <!-- Decorative corner accent -->
+                            <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
 
-                            <h5 class="text-2xl font-semibold mb-2 text-gray-800 px-2">
+                            <h5 class="text-2xl font-semibold mb-4 text-blue-800 px-2 relative z-10">
                                 Treatment Details
                             </h5>
 
                         <!-- Treatment Details Table -->
-                        <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                        <div class="overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0 relative z-10">
                             <div class="inline-block min-w-full align-middle">
-                                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-300 border-separate border-spacing-0">
+                                <div class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
+                                    <table class="min-w-full divide-y divide-gray-100">
                                     <thead>
                                         <tr>
                                             <th colspan="2"
-                                                class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                                class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
+                                                style="background: linear-gradient(to right, #2563eb, #1d4ed8, #1e40af);">
                                                 Standard Practice
                                             </th>
                                             <th colspan="2"
-                                                class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                                class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
+                                                style="background: linear-gradient(to right, #16a34a, #15803d, #166534);">
                                                 Leads Agri Treatment
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr>
+                                    <tbody class="bg-white divide-y divide-gray-100">
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Product:</b>
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Product:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.control.product }}
                                             </td>
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Product:</b>
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Product:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Rate:</b>
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Rate:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.control.rate }}
                                             </td>
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Rate:</b>
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Rate:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Timing:</b>
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Timing:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.control.timing }}
                                             </td>
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Timing:</b>
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Timing:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Method:</b>
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Method:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.control.method }}
                                             </td>
                                             <td
-                                                class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                                <b>Method:</b>
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Method:
                                             </td>
-                                            <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
                                                 {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
                                             </td>
                                         </tr>
@@ -357,7 +464,8 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic mt-4 px-2 md:px-4">
+                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed mt-6 px-2 md:px-4 bg-blue-50/30 rounded-lg p-4 border border-blue-200/50 relative z-10"
+                            style="box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.08), 0 2px 4px -1px rgba(59, 130, 246, 0.04);">
                             {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                         </p>
                     </div>
@@ -365,101 +473,107 @@
 
                     <!-- Treatment Details BELOW grid for EVEN counts (2,4,6...) -->
                     <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
-                        class="bg-white rounded-2xl shadow p-4 mt-2">
+                        class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 mt-2 relative overflow-hidden"
+                        style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.12), 0 4px 6px -2px rgba(59, 130, 246, 0.08);">
+                        <!-- Decorative top accent -->
+                        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                        <!-- Decorative corner accent -->
+                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
 
-                        <h5 class="text-2xl font-semibold mb-2 text-gray-800">
+                        <h5 class="text-2xl font-semibold mb-4 text-blue-800 px-2 relative z-10">
                             Treatment Details
                         </h5>
 
                         <!-- Treatment Details Table -->
-                        <div class="overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0">
+                        <div class="overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0 relative z-10">
                             <div class="inline-block min-w-full align-middle">
-                                <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                                    <table class="min-w-full divide-y divide-gray-300 border-separate border-spacing-0">
+                                <div class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
+                                    <table class="min-w-full divide-y divide-gray-100">
                                 <thead>
                                     <tr>
                                         <th colspan="2"
-                                            class="bg-blue-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
                                             Standard Practice
                                         </th>
                                         <th colspan="2"
-                                            class="bg-green-600 text-white px-4 py-3 text-left font-semibold border-[0.2px] border-gray-600">
+                                            class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
                                             Leads Agri Treatment
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Product:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.control.product }}
-                                        </td>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Product:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Rate:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.control.rate }}
-                                        </td>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Rate:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Timing:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.control.timing }}
-                                        </td>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Timing:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Method:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.control.method }}
-                                        </td>
-                                        <td
-                                            class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black font-semibold">
-                                            <b>Method:</b>
-                                        </td>
-                                        <td class="bg-white border-[0.2px] border-gray-600 px-4 py-3 text-black">
-                                            {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
-                                        </td>
-                                    </tr>
+                                    <tbody class="bg-white divide-y divide-gray-100">
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                            <td
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Product:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.control.product }}
+                                            </td>
+                                            <td
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Product:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                            <td
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Rate:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                            </td>
+                                            <td
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Rate:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                            <td
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Timing:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                            </td>
+                                            <td
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Timing:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                            <td
+                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                Method:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.control.method }}
+                                            </td>
+                                            <td
+                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                Method:
+                                            </td>
+                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
+                                            </td>
+                                        </tr>
                                     </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
 
-                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic mt-4 px-2 md:px-4">
+                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed mt-6 px-2 md:px-4 bg-blue-50/30 rounded-lg p-4 border border-blue-200/50 relative z-10"
+                            style="box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.08), 0 2px 4px -1px rgba(59, 130, 246, 0.04);">
                             {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
                         </p>
                     </div>
@@ -698,6 +812,102 @@ ChartJS.register(
     RadialLinearScale
 );
 
+// Plugin to create gradients and add data labels
+const modernChartPlugin = {
+    id: 'modernChart',
+    beforeDraw(chart) {
+        // Create gradients for bar charts
+        if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return;
+            
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                if (dataset._gradientStart && dataset._gradientEnd) {
+                    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    gradient.addColorStop(0, dataset._gradientEnd);
+                    gradient.addColorStop(1, dataset._gradientStart);
+                    
+                    // Apply gradient to all bars in dataset
+                    if (Array.isArray(dataset.backgroundColor)) {
+                        dataset.backgroundColor = dataset.data.map(() => gradient);
+                    } else {
+                        dataset.backgroundColor = gradient;
+                    }
+                }
+            });
+        }
+        
+        // Create gradients for line chart fills
+        if (chart.config.type === 'line') {
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return;
+            
+            chart.data.datasets.forEach((dataset) => {
+                if (dataset._gradientFill && dataset.borderColor) {
+                    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                    const borderColor = typeof dataset.borderColor === 'string' ? dataset.borderColor : dataset.borderColor[0] || '#3b82f6';
+                    gradient.addColorStop(0, borderColor.replace('rgb', 'rgba').replace(')', ', 0.3)'));
+                    gradient.addColorStop(1, borderColor.replace('rgb', 'rgba').replace(')', ', 0.05)'));
+                    dataset.backgroundColor = gradient;
+                }
+            });
+        }
+    },
+    afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        ctx.save();
+        
+        // Add data labels on top of bars (like in the reference image)
+        if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
+            chart.data.datasets.forEach((dataset, datasetIndex) => {
+                const meta = chart.getDatasetMeta(datasetIndex);
+                meta.data.forEach((bar, index) => {
+                    const value = dataset.data[index];
+                    if (value !== null && value !== undefined && typeof value === 'number') {
+                        const x = bar.x;
+                        const y = bar.y - 15;
+                        
+                        // Use orange color for data labels (like in reference image)
+                        const labelColor = '#f97316'; // Orange
+                        
+                        // Format value to show decimals if needed
+                        const formattedValue = value % 1 === 0 ? value.toString() : value.toFixed(2);
+                        
+                        // Draw circle background with shadow
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+                        ctx.shadowBlur = 6;
+                        ctx.shadowOffsetX = 0;
+                        ctx.shadowOffsetY = 3;
+                        ctx.fillStyle = labelColor;
+                        ctx.beginPath();
+                        ctx.arc(x, y - 8, 16, 0, 2 * Math.PI);
+                        ctx.fill();
+                        
+                        // Reset shadow
+                        ctx.shadowColor = 'transparent';
+                        ctx.shadowBlur = 0;
+                        
+                        // Draw white border (thicker for better visibility)
+                        ctx.strokeStyle = '#ffffff';
+                        ctx.lineWidth = 3;
+                        ctx.stroke();
+                        
+                        // Draw text (white, bold, slightly larger)
+                        ctx.fillStyle = '#ffffff';
+                        ctx.font = 'bold 13px Inter, system-ui, sans-serif';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(formattedValue, x, y - 8);
+                    }
+                });
+            });
+        }
+        ctx.restore();
+    }
+};
+
+ChartJS.register(modernChartPlugin);
+
 const props = defineProps({
     analysisData: {
         type: Object,
@@ -788,16 +998,128 @@ watchEffect(() => {
 
                     const newMax = maxValue + 1;
 
+                    // Enhance datasets with modern styling
+                    if (type.includes("bar") && !type.includes("horizontal_bar")) {
+                        chartData.datasets.forEach((dataset, idx) => {
+                            const originalColor = dataset.backgroundColor || (idx === 0 ? '#3b82f6' : '#22c55e');
+                            
+                            // Create vibrant color palette based on index
+                            const colorPalette = [
+                                { start: '#f97316', end: '#ea580c' }, // Orange
+                                { start: '#ef4444', end: '#dc2626' }, // Red
+                                { start: '#14b8a6', end: '#0d9488' }, // Teal
+                                { start: '#3b82f6', end: '#2563eb' }, // Blue
+                                { start: '#a855f7', end: '#9333ea' }, // Purple
+                                { start: '#22c55e', end: '#16a34a' }, // Green
+                            ];
+                            
+                            const colors = colorPalette[idx % colorPalette.length];
+                            
+                            // Store gradient colors for plugin to use
+                            if (typeof originalColor === 'string') {
+                                dataset._gradientStart = colors.start;
+                                dataset._gradientEnd = colors.end;
+                                dataset.borderColor = colors.end;
+                                dataset.borderWidth = 0; // No border, gradient handles it
+                            } else if (Array.isArray(originalColor)) {
+                                dataset._gradientStart = colors.start;
+                                dataset._gradientEnd = colors.end;
+                                dataset.borderColor = originalColor.map(() => colors.end);
+                                dataset.borderWidth = 0;
+                            }
+                        });
+                    }
+                    
+                    // Enhance line charts with gradient fills
+                    if (type.includes("line")) {
+                        chartData.datasets.forEach((dataset, idx) => {
+                            // Match colors to reference: Blue for Control, Green for Leads Agri
+                            const colorPalette = [
+                                { line: '#3b82f6', fill: 'rgba(59, 130, 246, 0.15)' }, // Blue (Control)
+                                { line: '#22c55e', fill: 'rgba(34, 197, 94, 0.15)' }, // Green (Leads Agri)
+                                { line: '#f97316', fill: 'rgba(249, 115, 22, 0.15)' }, // Orange
+                                { line: '#a855f7', fill: 'rgba(168, 85, 247, 0.15)' }, // Purple
+                            ];
+                            
+                            const colors = colorPalette[idx % colorPalette.length];
+                            if (!dataset.borderColor) {
+                                dataset.borderColor = colors.line;
+                            }
+                            if (!dataset.backgroundColor) {
+                                dataset.backgroundColor = colors.fill;
+                            }
+                            dataset.fill = true;
+                            dataset._gradientFill = true;
+                            // Ensure point colors match line color with white border
+                            if (!dataset.pointBackgroundColor) {
+                                dataset.pointBackgroundColor = colors.line;
+                            }
+                            if (!dataset.pointBorderColor) {
+                                dataset.pointBorderColor = '#ffffff';
+                            }
+                            if (!dataset.pointBorderWidth) {
+                                dataset.pointBorderWidth = 3;
+                            }
+                        });
+                    }
+
                     if (type.includes("line")) {
                         component = Line;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
+                            interaction: {
+                                intersect: false,
+                                mode: 'index'
+                            },
                             scales: {
                                 ...options.scales,
+                                x: {
+                                    ...options.scales?.x,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
                                 y: {
                                     ...options.scales?.y,
                                     max: newMax,
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                        callback: function(value) {
+                                            return value;
+                                        }
+                                    }
                                 },
                             },
                             plugins: {
@@ -805,6 +1127,65 @@ watchEffect(() => {
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                    callbacks: {
+                                        label: function(context) {
+                                            return context.dataset.label + ': ' + context.parsed.y;
+                                        }
+                                    }
+                                }
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0.5,
+                                    borderWidth: 4,
+                                    fill: true,
+                                    capBezierPoints: true,
+                                },
+                                point: {
+                                    radius: 7,
+                                    hoverRadius: 10,
+                                    borderWidth: 3,
+                                    hoverBorderWidth: 4,
+                                    backgroundColor: '#ffffff',
+                                    hoverBackgroundColor: '#ffffff',
                                 }
                             }
                         };
@@ -812,6 +1193,12 @@ watchEffect(() => {
                         component = Bar;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
                             indexAxis: "y",
                             scales: {
                                 ...options.scales,
@@ -819,6 +1206,38 @@ watchEffect(() => {
                                     ...options.scales?.x,
                                     max: newMax,
                                     beginAtZero: options.scales?.x?.beginAtZero ?? true,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                                y: {
+                                    ...options.scales?.y,
+                                    grid: {
+                                        display: false,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
                                 },
                             },
                             plugins: {
@@ -826,6 +1245,60 @@ watchEffect(() => {
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                }
+                            },
+                            elements: {
+                                bar: {
+                                    borderRadius: {
+                                        topLeft: 14,
+                                        topRight: 14,
+                                        bottomLeft: 0,
+                                        bottomRight: 0
+                                    },
+                                    borderSkipped: false,
+                                    borderWidth: 0,
+                                    shadowOffsetX: 0,
+                                    shadowOffsetY: 6,
+                                    shadowBlur: 10,
+                                    shadowColor: 'rgba(0, 0, 0, 0.12)',
                                 }
                             }
                         };
@@ -833,12 +1306,53 @@ watchEffect(() => {
                         component = Bar;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
                             scales: {
                                 ...options.scales,
+                                x: {
+                                    ...options.scales?.x,
+                                    grid: {
+                                        display: false,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
                                 y: {
                                     ...options.scales?.y,
                                     max: newMax,
                                     beginAtZero: options.scales?.y?.beginAtZero ?? true,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                        callback: function(value) {
+                                            return value;
+                                        }
+                                    }
                                 },
                             },
                             plugins: {
@@ -846,6 +1360,60 @@ watchEffect(() => {
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                }
+                            },
+                            elements: {
+                                bar: {
+                                    borderRadius: {
+                                        topLeft: 14,
+                                        topRight: 14,
+                                        bottomLeft: 0,
+                                        bottomRight: 0
+                                    },
+                                    borderSkipped: false,
+                                    borderWidth: 0,
+                                    shadowOffsetX: 0,
+                                    shadowOffsetY: 6,
+                                    shadowBlur: 10,
+                                    shadowColor: 'rgba(0, 0, 0, 0.12)',
                                 }
                             }
                         };
@@ -856,11 +1424,115 @@ watchEffect(() => {
                         component = Line;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
+                            interaction: {
+                                intersect: false,
+                                mode: 'index'
+                            },
+                            scales: {
+                                ...options.scales,
+                                x: {
+                                    ...options.scales?.x,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                                y: {
+                                    ...options.scales?.y,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                            },
                             plugins: {
                                 ...options.plugins,
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                }
+                            },
+                            elements: {
+                                line: {
+                                    tension: 0.5,
+                                    borderWidth: 4,
+                                    fill: true,
+                                    capBezierPoints: true,
+                                },
+                                point: {
+                                    radius: 7,
+                                    hoverRadius: 10,
+                                    borderWidth: 3,
+                                    hoverBorderWidth: 4,
+                                    backgroundColor: '#ffffff',
+                                    hoverBackgroundColor: '#ffffff',
                                 }
                             }
                         };
@@ -868,12 +1540,110 @@ watchEffect(() => {
                         component = Bar;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
                             indexAxis: "y",
+                            scales: {
+                                ...options.scales,
+                                x: {
+                                    ...options.scales?.x,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                                y: {
+                                    ...options.scales?.y,
+                                    grid: {
+                                        display: false,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                            },
                             plugins: {
                                 ...options.plugins,
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                }
+                            },
+                            elements: {
+                                bar: {
+                                    borderRadius: {
+                                        topLeft: 14,
+                                        topRight: 14,
+                                        bottomLeft: 0,
+                                        bottomRight: 0
+                                    },
+                                    borderSkipped: false,
+                                    borderWidth: 0,
+                                    shadowOffsetX: 0,
+                                    shadowOffsetY: 6,
+                                    shadowBlur: 10,
+                                    shadowColor: 'rgba(0, 0, 0, 0.12)',
                                 }
                             }
                         };
@@ -881,11 +1651,109 @@ watchEffect(() => {
                         component = Bar;
                         options = {
                             ...options,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            animation: {
+                                duration: 1000,
+                                easing: 'easeInOutQuart'
+                            },
+                            scales: {
+                                ...options.scales,
+                                x: {
+                                    ...options.scales?.x,
+                                    grid: {
+                                        display: false,
+                                        drawBorder: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                                y: {
+                                    ...options.scales?.y,
+                                    grid: {
+                                        display: true,
+                                        color: 'rgba(0, 0, 0, 0.08)',
+                                        lineWidth: 1.5,
+                                        drawBorder: false,
+                                        drawTicks: false,
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#64748b',
+                                        padding: 10,
+                                    }
+                                },
+                            },
                             plugins: {
                                 ...options.plugins,
                                 title: {
                                     ...options.plugins?.title,
                                     display: false
+                                },
+                                legend: {
+                                    display: options.plugins?.legend?.display !== false,
+                                    position: 'bottom',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 15,
+                                        font: {
+                                            size: 13,
+                                            weight: '600',
+                                            family: "'Inter', 'system-ui', sans-serif"
+                                        },
+                                        color: '#1e293b',
+                                        boxWidth: 12,
+                                        boxHeight: 12,
+                                    }
+                                },
+                                tooltip: {
+                                    backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                                    titleColor: '#ffffff',
+                                    bodyColor: '#ffffff',
+                                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                                    borderWidth: 1,
+                                    padding: 12,
+                                    titleFont: {
+                                        size: 14,
+                                        weight: '600',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    bodyFont: {
+                                        size: 13,
+                                        weight: '500',
+                                        family: "'Inter', 'system-ui', sans-serif"
+                                    },
+                                    cornerRadius: 8,
+                                    displayColors: true,
+                                    boxPadding: 6,
+                                    usePointStyle: true,
+                                }
+                            },
+                            elements: {
+                                bar: {
+                                    borderRadius: {
+                                        topLeft: 14,
+                                        topRight: 14,
+                                        bottomLeft: 0,
+                                        bottomRight: 0
+                                    },
+                                    borderSkipped: false,
+                                    borderWidth: 0,
+                                    shadowOffsetX: 0,
+                                    shadowOffsetY: 6,
+                                    shadowBlur: 10,
+                                    shadowColor: 'rgba(0, 0, 0, 0.12)',
                                 }
                             }
                         };
@@ -897,11 +1765,72 @@ watchEffect(() => {
                 const { scales, ...optionsWithoutScales } = options;
                 options = {
                     ...optionsWithoutScales,
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart',
+                        animateRotate: true,
+                        animateScale: true
+                    },
                     plugins: {
                         ...options.plugins,
                         title: {
                             ...options.plugins?.title,
                             display: false
+                        },
+                        legend: {
+                            display: options.plugins?.legend?.display !== false,
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: {
+                                    size: 13,
+                                    weight: '600',
+                                    family: "'Inter', 'system-ui', sans-serif"
+                                },
+                                color: '#1e293b',
+                                boxWidth: 12,
+                                boxHeight: 12,
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            padding: 12,
+                            titleFont: {
+                                size: 14,
+                                weight: '600',
+                                family: "'Inter', 'system-ui', sans-serif"
+                            },
+                            bodyFont: {
+                                size: 13,
+                                weight: '500',
+                                family: "'Inter', 'system-ui', sans-serif"
+                            },
+                            cornerRadius: 8,
+                            displayColors: true,
+                            boxPadding: 6,
+                            usePointStyle: true,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return label + ': ' + value + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    },
+                    elements: {
+                        arc: {
+                            borderWidth: 2,
+                            borderColor: '#ffffff',
                         }
                     }
                 };
@@ -1113,7 +2042,8 @@ watch(isExporting, (newVal) => {
 
 <style scoped>
 canvas {
-    max-height: 290px;
+    max-height: 400px;
+    min-height: 350px;
 }
 
 .chart-card {
