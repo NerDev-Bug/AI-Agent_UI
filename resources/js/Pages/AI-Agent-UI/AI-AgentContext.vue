@@ -930,19 +930,49 @@ ChartJS.register(
 const modernChartPlugin = {
     id: 'modernChart',
     beforeDraw(chart) {
-        // Create gradients for bar charts
-        if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
+        // Create gradients for bar charts (both vertical and horizontal)
+        if (chart.config.type === 'bar') {
             const { ctx, chartArea } = chart;
             if (!chartArea) return;
 
+            const isHorizontal = chart.config.options.indexAxis === 'y';
+
             chart.data.datasets.forEach((dataset, datasetIndex) => {
-                if (dataset._gradientStart && dataset._gradientEnd) {
-                    const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                // Check if we have per-bar gradients (based on x-axis labels)
+                if (dataset._barGradients && Array.isArray(dataset._barGradients)) {
+                    // Create a different gradient for each bar based on label
+                    const gradients = dataset._barGradients.map((barGradient) => {
+                        let gradient;
+                        if (isHorizontal) {
+                            // Horizontal bars: gradient from left to right
+                            gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+                        } else {
+                            // Vertical bars: gradient from bottom to top
+                            gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                        }
+                        gradient.addColorStop(0, barGradient.end);
+                        gradient.addColorStop(1, barGradient.start);
+                        return gradient;
+                    });
+                    
+                    // Apply gradients to bars
+                    dataset.backgroundColor = gradients;
+                } else if (dataset._gradientStart && dataset._gradientEnd) {
+                    // Fallback: single gradient for entire dataset
+                    let gradient;
+                    if (isHorizontal) {
+                        // Horizontal bars: gradient from left to right
+                        gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
+                    } else {
+                        // Vertical bars: gradient from bottom to top
+                        gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+                    }
                     gradient.addColorStop(0, dataset._gradientEnd);
                     gradient.addColorStop(1, dataset._gradientStart);
 
                     // Apply gradient to all bars in dataset
-                    dataset.backgroundColor = dataset.data.map(() => gradient);
+                    const dataLength = dataset.data ? dataset.data.length : 0;
+                    dataset.backgroundColor = Array(dataLength).fill(gradient);
                 }
             });
         }
@@ -968,20 +998,44 @@ const modernChartPlugin = {
         ctx.save();
 
         // Add data labels on top of bars (like in the reference image)
-        if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
+        if (chart.config.type === 'bar') {
+            const isHorizontal = chart.config.options.indexAxis === 'y';
             chart.data.datasets.forEach((dataset, datasetIndex) => {
                 const meta = chart.getDatasetMeta(datasetIndex);
                 meta.data.forEach((bar, index) => {
                     const value = dataset.data[index];
                     if (value !== null && value !== undefined && typeof value === 'number') {
-                        const x = bar.x;
-                        const y = bar.y - 15;
-
-                        // Use orange color for data labels (like in reference image)
-                        const labelColor = '#f97316'; // Orange
+                        // Get label color based on the bar's color
+                        let labelColor = '#f97316'; // Default orange fallback
+                        
+                        if (dataset._barGradients && Array.isArray(dataset._barGradients) && dataset._barGradients[index]) {
+                            // Use the gradient end color (darker shade) for this specific bar
+                            labelColor = dataset._barGradients[index].end;
+                        } else if (dataset._gradientEnd) {
+                            // Use the single gradient end color
+                            labelColor = dataset._gradientEnd;
+                        } else if (Array.isArray(dataset.borderColor) && dataset.borderColor[index]) {
+                            // Use border color if available
+                            labelColor = dataset.borderColor[index];
+                        } else if (typeof dataset.borderColor === 'string') {
+                            // Use single border color
+                            labelColor = dataset.borderColor;
+                        }
 
                         // Format value to show decimals if needed
                         const formattedValue = value % 1 === 0 ? value.toString() : value.toFixed(2);
+
+                        // Position label based on bar orientation
+                        let labelX, labelY;
+                        if (isHorizontal) {
+                            // Horizontal bars: label on the right side of the bar
+                            labelX = bar.x + 15;
+                            labelY = bar.y;
+                        } else {
+                            // Vertical bars: label on top of the bar
+                            labelX = bar.x;
+                            labelY = bar.y - 15;
+                        }
 
                         // Draw circle background with shadow
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
@@ -990,7 +1044,11 @@ const modernChartPlugin = {
                         ctx.shadowOffsetY = 3;
                         ctx.fillStyle = labelColor;
                         ctx.beginPath();
-                        ctx.arc(x, y - 8, 16, 0, 2 * Math.PI);
+                        if (isHorizontal) {
+                            ctx.arc(labelX, labelY, 16, 0, 2 * Math.PI);
+                        } else {
+                            ctx.arc(labelX, labelY - 8, 16, 0, 2 * Math.PI);
+                        }
                         ctx.fill();
 
                         // Reset shadow
@@ -1007,7 +1065,11 @@ const modernChartPlugin = {
                         ctx.font = 'bold 13px Inter, system-ui, sans-serif';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
-                        ctx.fillText(formattedValue, x, y - 8);
+                        if (isHorizontal) {
+                            ctx.fillText(formattedValue, labelX, labelY);
+                        } else {
+                            ctx.fillText(formattedValue, labelX, labelY - 8);
+                        }
                     }
                 });
             });
@@ -1108,29 +1170,83 @@ watchEffect(() => {
 
                     const newMax = maxValue + 1;
 
-                    // Enhance datasets with modern styling
-                    if (type.includes("bar") && !type.includes("horizontal_bar")) {
-                        chartData.datasets.forEach((dataset, idx) => {
+                    // Enhance datasets with modern styling for ALL bar charts
+                    if (type.includes("bar")) {
+                        chartData.datasets.forEach((dataset, datasetIdx) => {
+                            // Check if we have x-axis labels to determine colors per bar
+                            const xAxisLabels = chartData.labels || [];
+                            
+                            // Determine colors based on x-axis labels or dataset label
+                            const getColorForLabel = (label) => {
+                                if (!label) return null;
+                                const labelLower = label.toLowerCase();
+                                if (labelLower.includes('control') || labelLower.includes('standard') || labelLower.includes('fp/untreated')) {
+                                    return { start: '#3b82f6', end: '#2563eb' }; // Blue
+                                } else if (labelLower.includes('leads') || labelLower.includes('leadsagri') || labelLower.includes('leads agri')) {
+                                    return { start: '#22c55e', end: '#16a34a' }; // Green
+                                }
+                                return null;
+                            };
 
-                            // Force only BLUE and GREEN palette
-                            const fixedPalette = [
-                                { start: '#3b82f6', end: '#2563eb' }, // Blue
-                                { start: '#22c55e', end: '#16a34a' }, // Green
-                            ];
-
-                            // If someone adds more datasets, cycle only through blue/green
-                            const colors = fixedPalette[idx % 2];
-
-                            // Apply gradient settings
-                            dataset._gradientStart = colors.start;
-                            dataset._gradientEnd = colors.end;
-                            dataset.borderColor = colors.end;
-                            dataset.borderWidth = 0;
-
-                            // If user passed array of colors, map them to the same palette
-                            if (Array.isArray(dataset.backgroundColor)) {
-                                dataset.borderColor = dataset.backgroundColor.map(() => colors.end);
+                            // If we have x-axis labels, assign colors per bar based on labels
+                            if (xAxisLabels.length > 0 && dataset.data && Array.isArray(dataset.data)) {
+                                const barColors = [];
+                                const barGradients = [];
+                                
+                                xAxisLabels.forEach((label, labelIdx) => {
+                                    const colors = getColorForLabel(label);
+                                    if (colors) {
+                                        barGradients.push({
+                                            start: colors.start,
+                                            end: colors.end,
+                                            index: labelIdx
+                                        });
+                                        barColors.push(colors.end);
+                                    } else {
+                                        // Fallback: use index-based
+                                        const fixedPalette = [
+                                            { start: '#3b82f6', end: '#2563eb' }, // Blue
+                                            { start: '#22c55e', end: '#16a34a' }, // Green
+                                        ];
+                                        const fallbackColors = fixedPalette[labelIdx % 2];
+                                        barGradients.push({
+                                            start: fallbackColors.start,
+                                            end: fallbackColors.end,
+                                            index: labelIdx
+                                        });
+                                        barColors.push(fallbackColors.end);
+                                    }
+                                });
+                                
+                                // Store gradient info per bar
+                                dataset._barGradients = barGradients;
+                                dataset.borderColor = barColors;
+                                dataset.borderWidth = 0;
+                            } else {
+                                // Fallback: use dataset label or index
+                                const datasetLabel = dataset.label || '';
+                                const colors = getColorForLabel(datasetLabel);
+                                
+                                if (colors) {
+                                    dataset._gradientStart = colors.start;
+                                    dataset._gradientEnd = colors.end;
+                                    dataset.borderColor = colors.end;
+                                } else {
+                                    // Use index-based fallback
+                                    const fixedPalette = [
+                                        { start: '#3b82f6', end: '#2563eb' }, // Blue
+                                        { start: '#22c55e', end: '#16a34a' }, // Green
+                                    ];
+                                    const fallbackColors = fixedPalette[datasetIdx % 2];
+                                    dataset._gradientStart = fallbackColors.start;
+                                    dataset._gradientEnd = fallbackColors.end;
+                                    dataset.borderColor = fallbackColors.end;
+                                }
+                                dataset.borderWidth = 0;
                             }
+
+                            // Clear any existing backgroundColor to let plugin handle it
+                            dataset.backgroundColor = undefined;
                         });
                     }
 
