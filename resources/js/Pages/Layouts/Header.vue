@@ -118,27 +118,42 @@
       </div>
 
       <!-- Messages -->
-      <div ref="chatBody" class="flex-1 overflow-y-auto p-4 bg-white flex flex-col space-y-3">
-        <div v-for="(msg, index) in messages" :key="index" :class="[
-          'p-3 rounded-2xl max-w-[75%] break-words',
-          msg.sender === 'ai'
-            ? 'bg-gray-200 text-gray-800 self-start ml-2'
-            : 'bg-green-500 text-white self-end mr-2'
-        ]">
-          {{ msg.text }}
+      <div ref="chatBody" class="flex-1 overflow-y-auto p-4 bg-white flex flex-col items-center justify-center">
+        <!-- Coming Soon Message -->
+        <div class="flex flex-col items-center justify-center text-center px-6 py-8">
+          <div class="bg-gradient-to-br from-primary-100 to-primary-50 rounded-full p-6 mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-12 h-12 text-primary-600">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Coming Soon</h3>
+          <p class="text-gray-600 text-sm leading-relaxed max-w-sm">
+            Pandoy AI Assistant is currently under development. We're working hard to bring you an intelligent assistant that can help answer your questions about your analysis reports.
+          </p>
+          <div class="mt-4 flex items-center gap-2 text-primary-600 text-sm font-medium">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>Stay tuned for updates!</span>
+          </div>
         </div>
       </div>
 
-
-      <!-- Input -->
-      <form @submit.prevent="sendMessage" class="flex items-center gap-2 p-3 border-t border-gray-200">
-        <input v-model="newMessage" type="text" placeholder="Type a message..."
-          class="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-        <button type="submit"
-          class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-2 rounded-full hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-soft hover:shadow-medium transform hover:scale-105 active:scale-95 font-semibold">
+      <!-- Input (Disabled) -->
+      <div class="flex items-center gap-2 p-3 border-t border-gray-200 bg-gray-50">
+        <input 
+          type="text" 
+          placeholder="Coming soon..." 
+          disabled
+          class="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm bg-white text-gray-400 cursor-not-allowed" 
+        />
+        <button 
+          type="button"
+          disabled
+          class="bg-gray-300 text-gray-500 px-5 py-2 rounded-full cursor-not-allowed font-semibold">
           Send
         </button>
-      </form>
+      </div>
     </div>
 
     <!-- Chat Avatar -->
@@ -171,10 +186,7 @@ const searchResults = ref([]);
 const searchPerformed = ref(false);
 const lastSearchedQuery = ref(""); // Store the last query that was actually searched
 
-const messages = ref([
-  { text: "Hello! How can I help you today?", sender: "ai" },
-]);
-
+const messages = ref([]);
 const newMessage = ref("");
 const chatBody = ref(null);
 const handleResize = () => {
@@ -182,16 +194,8 @@ const handleResize = () => {
 };
 
 function sendMessage() {
-  if (!newMessage.value.trim()) return;
-
-  // Push user's message
-  messages.value.push({ text: newMessage.value, sender: "user" });
-  newMessage.value = "";
-
-  // Auto scroll to bottom
-  nextTick(() => {
-    chatBody.value.scrollTop = chatBody.value.scrollHeight;
-  });
+  // Disabled - Coming Soon
+  return;
 }
 
 function scrollToSection(section) {

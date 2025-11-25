@@ -9,37 +9,19 @@
             <div class="flex-2 w-full md:w-auto">
                 <br />
                 <!-- ✅ Export PDF button - only show after save (for Quadrant memory storage) -->
-                <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
-                    class="bg-gradient-to-r from-secondary-600 to-secondary-700 w-full md:w-[220px] h-12 rounded-xl text-white hover:from-secondary-700 hover:to-secondary-800 transition-all duration-300 shadow-medium hover:shadow-glow-blue flex items-center justify-center gap-2 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2">
-                    <span v-if="!isExporting" class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                        </svg>
-                        Export to PDF
-                    </span>
-                    <span v-else class="flex flex-row gap-2">
-                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
-                        </svg>
-                        Exporting...
-                    </span>
-                </button>
+                <ExportPDFButton
+                    :currentReport="currentReport"
+                    :isSaved="isSaved"
+                    :isExporting="isExporting"
+                    :handleExportClick="handleExportClick"
+                />
             </div>
 
-            <div class="w-full md:w-auto md:ml-auto" v-if="uniqueApplicants.length > 1">
-                <label class="block text-sm text-black mb-1">Select Applicant:</label>
-                <select v-model="applicant" class="p-2 rounded-md w-full md:w-72" :disabled="!currentReport">
-                    <option value="">-- Choose Applicant --</option>
-                    <option v-for="app in uniqueApplicants" :key="app" :value="app">
-                        {{ app }}
-                    </option>
-                </select>
-            </div>
+            <ApplicantSelector
+                :uniqueApplicants="uniqueApplicants"
+                v-model="applicant"
+                :currentReport="currentReport"
+            />
         </div>
 
         <!-- Report Display -->
@@ -893,6 +875,8 @@
 
 <script setup>
 import LoadingOverlay from "../Components/LoadingOverlay.vue";
+import ExportPDFButton from "../Components/ExportPDFButton.vue";
+import ApplicantSelector from "../Components/ApplicantSelector.vue";
 import OpportunitiesModal from "../Modals/Opportunities.vue";
 import RiskLimitationsModal from "../Modals/Risk-Limitations.vue";
 import RecommendationsModal from "../Modals/Recommendations.vue";
@@ -913,6 +897,12 @@ import {
     RadialLinearScale,
 } from "chart.js";
 
+// Import composables
+import { usePDFExport } from "./composables/usePDFExport.js";
+import { useAlertSystem } from "./composables/useAlertSystem.js";
+import { createChartPlugin } from "./composables/useChartPlugin.js";
+import { applyBarChartColors } from "./composables/useChartColors.js";
+
 ChartJS.register(
     Title,
     Tooltip,
@@ -926,158 +916,8 @@ ChartJS.register(
     RadialLinearScale
 );
 
-// Plugin to create gradients and add data labels
-const modernChartPlugin = {
-    id: 'modernChart',
-    beforeDraw(chart) {
-        // Create gradients for bar charts (both vertical and horizontal)
-        if (chart.config.type === 'bar') {
-            const { ctx, chartArea } = chart;
-            if (!chartArea) return;
-
-            const isHorizontal = chart.config.options.indexAxis === 'y';
-
-            chart.data.datasets.forEach((dataset, datasetIndex) => {
-                // Check if we have per-bar gradients (based on x-axis labels)
-                if (dataset._barGradients && Array.isArray(dataset._barGradients)) {
-                    // Create a different gradient for each bar based on label
-                    const gradients = dataset._barGradients.map((barGradient) => {
-                        let gradient;
-                        if (isHorizontal) {
-                            // Horizontal bars: gradient from left to right
-                            gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
-                        } else {
-                            // Vertical bars: gradient from bottom to top
-                            gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                        }
-                        gradient.addColorStop(0, barGradient.end);
-                        gradient.addColorStop(1, barGradient.start);
-                        return gradient;
-                    });
-                    
-                    // Apply gradients to bars
-                    dataset.backgroundColor = gradients;
-                } else if (dataset._gradientStart && dataset._gradientEnd) {
-                    // Fallback: single gradient for entire dataset
-                    let gradient;
-                    if (isHorizontal) {
-                        // Horizontal bars: gradient from left to right
-                        gradient = ctx.createLinearGradient(chartArea.left, 0, chartArea.right, 0);
-                    } else {
-                        // Vertical bars: gradient from bottom to top
-                        gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                    }
-                    gradient.addColorStop(0, dataset._gradientEnd);
-                    gradient.addColorStop(1, dataset._gradientStart);
-
-                    // Apply gradient to all bars in dataset
-                    const dataLength = dataset.data ? dataset.data.length : 0;
-                    dataset.backgroundColor = Array(dataLength).fill(gradient);
-                }
-            });
-        }
-
-        // Create gradients for line chart fills
-        if (chart.config.type === 'line') {
-            const { ctx, chartArea } = chart;
-            if (!chartArea) return;
-
-            chart.data.datasets.forEach((dataset) => {
-                if (dataset._gradientFill && dataset.borderColor) {
-                    const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-                    const borderColor = typeof dataset.borderColor === 'string' ? dataset.borderColor : dataset.borderColor[0] || '#3b82f6';
-                    gradient.addColorStop(0, borderColor.replace('rgb', 'rgba').replace(')', ', 0.3)'));
-                    gradient.addColorStop(1, borderColor.replace('rgb', 'rgba').replace(')', ', 0.05)'));
-                    dataset.backgroundColor = gradient;
-                }
-            });
-        }
-    },
-    afterDatasetsDraw(chart) {
-        const { ctx } = chart;
-        ctx.save();
-
-        // Add data labels on top of bars (like in the reference image)
-        if (chart.config.type === 'bar') {
-            const isHorizontal = chart.config.options.indexAxis === 'y';
-            chart.data.datasets.forEach((dataset, datasetIndex) => {
-                const meta = chart.getDatasetMeta(datasetIndex);
-                meta.data.forEach((bar, index) => {
-                    const value = dataset.data[index];
-                    if (value !== null && value !== undefined && typeof value === 'number') {
-                        // Get label color based on the bar's color
-                        let labelColor = '#f97316'; // Default orange fallback
-                        
-                        if (dataset._barGradients && Array.isArray(dataset._barGradients) && dataset._barGradients[index]) {
-                            // Use the gradient end color (darker shade) for this specific bar
-                            labelColor = dataset._barGradients[index].end;
-                        } else if (dataset._gradientEnd) {
-                            // Use the single gradient end color
-                            labelColor = dataset._gradientEnd;
-                        } else if (Array.isArray(dataset.borderColor) && dataset.borderColor[index]) {
-                            // Use border color if available
-                            labelColor = dataset.borderColor[index];
-                        } else if (typeof dataset.borderColor === 'string') {
-                            // Use single border color
-                            labelColor = dataset.borderColor;
-                        }
-
-                        // Format value to show decimals if needed
-                        const formattedValue = value % 1 === 0 ? value.toString() : value.toFixed(2);
-
-                        // Position label based on bar orientation
-                        let labelX, labelY;
-                        if (isHorizontal) {
-                            // Horizontal bars: label on the right side of the bar
-                            labelX = bar.x + 15;
-                            labelY = bar.y;
-                        } else {
-                            // Vertical bars: label on top of the bar
-                            labelX = bar.x;
-                            labelY = bar.y - 15;
-                        }
-
-                        // Draw circle background with shadow
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-                        ctx.shadowBlur = 6;
-                        ctx.shadowOffsetX = 0;
-                        ctx.shadowOffsetY = 3;
-                        ctx.fillStyle = labelColor;
-                        ctx.beginPath();
-                        if (isHorizontal) {
-                            ctx.arc(labelX, labelY, 16, 0, 2 * Math.PI);
-                        } else {
-                            ctx.arc(labelX, labelY - 8, 16, 0, 2 * Math.PI);
-                        }
-                        ctx.fill();
-
-                        // Reset shadow
-                        ctx.shadowColor = 'transparent';
-                        ctx.shadowBlur = 0;
-
-                        // Draw white border (thicker for better visibility)
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.lineWidth = 3;
-                        ctx.stroke();
-
-                        // Draw text (white, bold, slightly larger)
-                        ctx.fillStyle = '#ffffff';
-                        ctx.font = 'bold 13px Inter, system-ui, sans-serif';
-                        ctx.textAlign = 'center';
-                        ctx.textBaseline = 'middle';
-                        if (isHorizontal) {
-                            ctx.fillText(formattedValue, labelX, labelY);
-                        } else {
-                            ctx.fillText(formattedValue, labelX, labelY - 8);
-                        }
-                    }
-                });
-            });
-        }
-        ctx.restore();
-    }
-};
-
+// Register chart plugin
+const modernChartPlugin = createChartPlugin();
 ChartJS.register(modernChartPlugin);
 
 const props = defineProps({
@@ -1103,30 +943,26 @@ const showRiskLimitationsModal = ref(false);
 const showRecommendationsModal = ref(false);
 const showExecutiveSummaryModal = ref(false);
 
-// 🧩 Custom Alert System
-const alertVisible = ref(false);
-const alertType = ref("success");
-const alertTitle = ref("");
-const alertMessage = ref("");
-const alertIcon = ref("");
-let confirmCallback = null;
+// Initialize alert system
+const {
+    alertVisible,
+    alertType,
+    alertTitle,
+    alertMessage,
+    alertIcon,
+    showAlert,
+    closeAlert,
+    confirmAction
+} = useAlertSystem();
 
-function showAlert(type, title, message, onConfirm = null) {
-    alertType.value = type;
-    alertTitle.value = title;
-    alertMessage.value = message;
-    alertVisible.value = true;
-    confirmCallback = onConfirm;
-    alertIcon.value =
-        type === "success" ? "✔️" : type === "error" ? "❌" : "⚠️";
-}
-function closeAlert() {
-    alertVisible.value = false;
-}
-function confirmAction() {
-    if (confirmCallback) confirmCallback();
-    closeAlert();
-}
+// Initialize PDF export
+const { handleExportClick } = usePDFExport(
+    currentReport,
+    chartMap,
+    isExporting,
+    showAlert
+);
+
 
 watchEffect(() => {
     console.log(
@@ -1170,84 +1006,9 @@ watchEffect(() => {
 
                     const newMax = maxValue + 1;
 
-                    // Enhance datasets with modern styling for ALL bar charts
+                    // Apply bar chart colors using modular function
                     if (type.includes("bar")) {
-                        chartData.datasets.forEach((dataset, datasetIdx) => {
-                            // Check if we have x-axis labels to determine colors per bar
-                            const xAxisLabels = chartData.labels || [];
-                            
-                            // Determine colors based on x-axis labels or dataset label
-                            const getColorForLabel = (label) => {
-                                if (!label) return null;
-                                const labelLower = label.toLowerCase();
-                                if (labelLower.includes('control') || labelLower.includes('standard') || labelLower.includes('fp/untreated')) {
-                                    return { start: '#3b82f6', end: '#2563eb' }; // Blue
-                                } else if (labelLower.includes('leads') || labelLower.includes('leadsagri') || labelLower.includes('leads agri')) {
-                                    return { start: '#22c55e', end: '#16a34a' }; // Green
-                                }
-                                return null;
-                            };
-
-                            // If we have x-axis labels, assign colors per bar based on labels
-                            if (xAxisLabels.length > 0 && dataset.data && Array.isArray(dataset.data)) {
-                                const barColors = [];
-                                const barGradients = [];
-                                
-                                xAxisLabels.forEach((label, labelIdx) => {
-                                    const colors = getColorForLabel(label);
-                                    if (colors) {
-                                        barGradients.push({
-                                            start: colors.start,
-                                            end: colors.end,
-                                            index: labelIdx
-                                        });
-                                        barColors.push(colors.end);
-                                    } else {
-                                        // Fallback: use index-based
-                                        const fixedPalette = [
-                                            { start: '#3b82f6', end: '#2563eb' }, // Blue
-                                            { start: '#22c55e', end: '#16a34a' }, // Green
-                                        ];
-                                        const fallbackColors = fixedPalette[labelIdx % 2];
-                                        barGradients.push({
-                                            start: fallbackColors.start,
-                                            end: fallbackColors.end,
-                                            index: labelIdx
-                                        });
-                                        barColors.push(fallbackColors.end);
-                                    }
-                                });
-                                
-                                // Store gradient info per bar
-                                dataset._barGradients = barGradients;
-                                dataset.borderColor = barColors;
-                                dataset.borderWidth = 0;
-                            } else {
-                                // Fallback: use dataset label or index
-                                const datasetLabel = dataset.label || '';
-                                const colors = getColorForLabel(datasetLabel);
-                                
-                                if (colors) {
-                                    dataset._gradientStart = colors.start;
-                                    dataset._gradientEnd = colors.end;
-                                    dataset.borderColor = colors.end;
-                                } else {
-                                    // Use index-based fallback
-                                    const fixedPalette = [
-                                        { start: '#3b82f6', end: '#2563eb' }, // Blue
-                                        { start: '#22c55e', end: '#16a34a' }, // Green
-                                    ];
-                                    const fallbackColors = fixedPalette[datasetIdx % 2];
-                                    dataset._gradientStart = fallbackColors.start;
-                                    dataset._gradientEnd = fallbackColors.end;
-                                    dataset.borderColor = fallbackColors.end;
-                                }
-                                dataset.borderWidth = 0;
-                            }
-
-                            // Clear any existing backgroundColor to let plugin handle it
-                            dataset.backgroundColor = undefined;
-                        });
+                        applyBarChartColors(chartData, type);
                     }
 
                     // Enhance line charts with gradient fills
@@ -2140,110 +1901,7 @@ watch(applicant, (newApplicant) => {
     currentReport.value = match || null;
 });
 
-const exportToPDF = async () => {
-    if (!currentReport.value) {
-        showAlert(
-            "error",
-            "Export Failed",
-            "No report data available to export."
-        );
-        return;
-    }
-
-    isExporting.value = true;
-    try {
-        const chartImages = [];
-        const chartsData = chartMap.value[currentReport.value.form_id] || [];
-        const canvases = document.querySelectorAll("canvas");
-
-        const targetWidth = 1200;
-        const targetHeight = 700;
-        const exportScale = 2.5;
-
-        canvases.forEach((canvas, index) => {
-            const tmpCanvas = document.createElement("canvas");
-            tmpCanvas.width = targetWidth * exportScale;
-            tmpCanvas.height = targetHeight * exportScale;
-            const ctx = tmpCanvas.getContext("2d");
-            ctx.fillStyle = "#fff";
-            ctx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
-            ctx.drawImage(canvas, 0, 0, tmpCanvas.width, tmpCanvas.height);
-
-            chartImages.push({
-                title: chartsData[index]?.title || `Chart ${index + 1}`,
-                description: chartsData[index]?.description || "",
-                data: tmpCanvas.toDataURL("image/png"),
-            });
-        });
-
-        const payload = { report: currentReport.value, charts: chartImages };
-        const csrf = document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute("content");
-
-        const response = await fetch("/export-report-pdf", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": csrf,
-                Accept: "application/pdf",
-            },
-            body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-            // Try to get error message from response
-            const contentType = response.headers.get("content-type");
-            if (contentType && contentType.includes("application/json")) {
-                const errorData = await response.json();
-                throw new Error(
-                    errorData.error ||
-                    errorData.message ||
-                    "Failed to export PDF"
-                );
-            }
-            throw new Error(
-                `Failed to export PDF: ${response.status} ${response.statusText}`
-            );
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `Report-${new Date().toISOString().slice(0, 10)}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showAlert(
-            "success",
-            "Export Successful",
-            "Analyze Report was successfully exported to PDF!"
-        );
-    } catch (error) {
-        console.error("PDF Export Error:", error);
-        showAlert(
-            "error",
-            "Error exporting PDF: " + (error.message || "Please try again.")
-        );
-    } finally {
-        isExporting.value = false;
-    }
-};
-
-const isValidReport = computed(() => !!currentReport.value);
-
-const handleExportClick = () => {
-    if (!isValidReport.value) {
-        showAlert(
-            "warning",
-            "⚠️ Please select a valid report before exporting to PDF."
-        );
-        return;
-    }
-    exportToPDF();
-};
+// PDF export functions are now in composables/usePDFExport.js
 
 // Scroll to upload section
 const scrollToUpload = () => {

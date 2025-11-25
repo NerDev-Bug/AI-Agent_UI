@@ -48,7 +48,9 @@ class FastAPIController extends Controller
      */
 public function analyzeFile(Request $request)
 {
-    ini_set('max_execution_time', 600);
+    // ✅ Increase execution time and memory limit for large files with many reports
+    ini_set('max_execution_time', 600); // 10 minutes
+    ini_set('memory_limit', '512M'); // Increase memory for large JSON responses (10-30+ reports)
     
     try {
         $analyzeUrl = $this->getAnalyzeUrl();
@@ -67,10 +69,11 @@ public function analyzeFile(Request $request)
         $userId = $request->header('X-User-ID', '0');
         
         // ✅ FIXED: Properly send background as query parameter or form field
+        // ✅ Increased timeout for large files (10-30+ reports can take longer)
         $httpRequest = Http::withHeaders([
             'X-API-Key' => $apiKey,
             'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
-        ])->timeout(600);
+        ])->timeout(600); // 10 minutes timeout
         
         // Build multipart request
         $multipart = [
@@ -108,18 +111,25 @@ public function analyzeFile(Request $request)
             }
             
             // Transform FastAPI response for synchronous mode
+            // ✅ Handle multiple reports (10, 20, 30+ reports)
             if (isset($responseData['reports']) && is_array($responseData['reports']) && count($responseData['reports']) > 0) {
-                $firstReport = $responseData['reports'][0];
+                $reports = $responseData['reports'];
+                $totalReports = count($reports);
+                $firstReport = $reports[0];
                 
+                // ✅ Return all reports for frontend to handle multiple reports
+                // Frontend can select which report to display
                 return response()->json([
-                    'analysis' => $firstReport,
+                    'analysis' => $firstReport, // ✅ Keep first report for backward compatibility
+                    'reports' => $reports, // ✅ Include all reports for multi-report support
                     'status' => $responseData['status'] ?? 'success',
-                    'total_reports' => $responseData['total_reports'] ?? 1,
-                    'cache_id' => $firstReport['cache_id'] ?? null, // ✅ Extract from first report
+                    'total_reports' => $responseData['total_reports'] ?? $totalReports,
+                    'cache_id' => $firstReport['cache_id'] ?? $responseData['cache_id'] ?? null,
                     'report_metadata' => [
                         'file_name' => $firstReport['file_name'] ?? 'Unknown',
                         'form_type' => $firstReport['form_type'] ?? 'Unknown',
-                        'report_number' => $firstReport['report_number'] ?? 1
+                        'report_number' => $firstReport['report_number'] ?? 1,
+                        'total_reports' => $totalReports
                     ]
                 ]);
             }
@@ -143,6 +153,9 @@ public function analyzeFile(Request $request)
 
 public function getProgress(Request $request, $jobId)
 {
+    // ✅ Increase memory limit for large JSON responses (10-30+ reports)
+    ini_set('memory_limit', '512M');
+    
     try {
         $baseUrl = $this->getAnalyzeUrl();
         $baseUrl = preg_replace('/\/api\/agent$/', '', $baseUrl);
@@ -153,11 +166,13 @@ public function getProgress(Request $request, $jobId)
         // ✅ Get user_id from request header (fallback to "0" for testing)
         $userId = $request->header('X-User-ID', '0');
         
+        // ✅ Increased timeout for large files with many reports (30 seconds)
+        // Large JSON responses with 10-30+ reports may take longer to parse
         $response = Http::withHeaders([
             'X-API-Key' => $apiKey,
             'X-User-ID' => $userId,  // ✅ Forward user_id to FastAPI
             'Content-Type' => 'application/json',
-        ])->timeout(10)
+        ])->timeout(30) // ✅ Increased from 10 to 30 seconds for large responses
           ->get($progressUrl);
 
         if ($response->successful()) {
@@ -176,22 +191,33 @@ public function getProgress(Request $request, $jobId)
             }
             
             // ✅ Transform result structure to match frontend expectations (only for successful jobs)
+            // ✅ Handle multiple reports (10, 20, 30+ reports)
             if (isset($data['result']) && isset($data['result']['reports'])) {
-                // Extract first report and cache_id
                 $reports = $data['result']['reports'];
+                $totalReports = count($reports);
+                
                 if (!empty($reports)) {
                     $firstReport = $reports[0];
                     
                     // Add cache_id from result if available
                     if (isset($data['result']['cache_id'])) {
                         $firstReport['cache_id'] = $data['result']['cache_id'];
+                        // Also add cache_id to all reports for consistency
+                        foreach ($reports as &$report) {
+                            if (!isset($report['cache_id'])) {
+                                $report['cache_id'] = $data['result']['cache_id'];
+                            }
+                        }
+                        unset($report); // Break reference
                     }
                     
+                    // ✅ Return all reports for frontend to handle multiple reports
                     $data['result'] = [
-                        'analysis' => $firstReport,
+                        'analysis' => $firstReport, // ✅ Keep first report for backward compatibility
+                        'reports' => $reports, // ✅ Include all reports for multi-report support
                         'status' => $data['result']['status'] ?? 'success',
-                        'total_reports' => count($reports),
-                        'cache_id' => $firstReport['cache_id'] ?? null
+                        'total_reports' => $totalReports,
+                        'cache_id' => $firstReport['cache_id'] ?? $data['result']['cache_id'] ?? null
                     ];
                 }
             }
@@ -217,8 +243,9 @@ public function getProgress(Request $request, $jobId)
      */
     public function confirmAnalysis(Request $request)
     {
-        // Increase PHP execution time limit for confirmation (5 minutes)
-        ini_set('max_execution_time', 300);
+        // ✅ Increase PHP execution time and memory limit for large files with many reports
+        ini_set('max_execution_time', 300); // 5 minutes
+        ini_set('memory_limit', '512M'); // Increase memory for large JSON responses
         
         try {
             $confirmUrl = $this->getConfirmUrl();
@@ -259,8 +286,9 @@ public function getProgress(Request $request, $jobId)
      */
     public function proxy(Request $request, $endpoint)
     {
-        // Increase PHP execution time limit for proxy requests (5 minutes)
-        ini_set('max_execution_time', 300);
+        // ✅ Increase PHP execution time and memory limit for large files with many reports
+        ini_set('max_execution_time', 300); // 5 minutes
+        ini_set('memory_limit', '512M'); // Increase memory for large JSON responses
         
         try {
             // For generic proxy, use analyze URL as base (remove /api/agent if present)
