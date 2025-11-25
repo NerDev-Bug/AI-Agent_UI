@@ -155,7 +155,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -172,7 +172,7 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div>
+          </div> -->
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
