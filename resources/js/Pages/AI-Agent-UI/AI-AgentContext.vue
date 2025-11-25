@@ -755,34 +755,83 @@
         </div>
 
         <!-- Loading/Error/Empty Placeholder -->
-        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[440px] mt-10 px-4">
-            <div class="relative flex flex-col items-center justify-center max-w-lg">
-                <div
-                    class="bg-gradient-to-br from-gray-50 to-white w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center shadow-large border-4 border-gray-200">
-                    <span class="text-gray-400 text-5xl md:text-7xl font-semibold">?</span>
-                </div>
+        <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[500px] mt-10 px-4">
+            <div class="relative flex flex-col items-center justify-center max-w-2xl w-full">
+                <!-- Modern Card Container -->
+                <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 w-full border-2 border-primary-100 relative overflow-hidden">
+                    <!-- Decorative Background Elements -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary-100 rounded-full blur-3xl opacity-30 -mr-32 -mt-32"></div>
+                    <div class="absolute bottom-0 left-0 w-48 h-48 bg-emerald-100 rounded-full blur-3xl opacity-20 -ml-24 -mb-24"></div>
+                    
+                    <div class="relative z-10 flex flex-col items-center">
+                        <!-- Modern Icon Container -->
+                        <div class="relative mb-6">
+                            <!-- Icon Illustration - Not Clickable -->
+                            <div class="flex items-center justify-center">
+                                <div class="relative">
+                                    <!-- Main Document Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-24 h-24 md:w-32 md:h-32 text-primary-400">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                    <!-- Decorative Lines Inside Document -->
+                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 md:w-20 md:h-20 pointer-events-none">
+                                        <div class="absolute top-1/3 left-1/4 right-1/4 h-0.5 bg-primary-300 rounded"></div>
+                                        <div class="absolute top-1/2 left-1/4 right-1/3 h-0.5 bg-primary-300 rounded"></div>
+                                        <div class="absolute top-2/3 left-1/4 right-1/2 h-0.5 bg-primary-300 rounded"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                <!-- Text Section -->
-                <div class="text-center mt-6 md:mt-8">
-                    <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-3">
-                        No Data Found
-                    </h2>
-                    <p class="text-sm md:text-base text-gray-600 leading-relaxed max-w-md mx-auto mb-6">
-                        Upload a file and click the <span class="font-semibold text-primary-600">Analyze Demo
-                            Form</span> button
-                        to
-                        show the analyzed result of your uploaded file.
-                    </p>
-                    <!-- CTA Button -->
-                    <button @click="scrollToUpload"
-                        class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
-                        </svg>
-                        Get Started
-                    </button>
+                        <!-- Text Section -->
+                        <div class="text-center">
+                            <h2 class="text-2xl md:text-3xl font-bold text-gray-900 mb-3 bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent">
+                                No Data Found
+                            </h2>
+                            <p class="text-base md:text-lg text-gray-600 leading-relaxed max-w-lg mx-auto mb-8">
+                                Upload a file and click the <span class="font-semibold text-primary-600">Analyze Demo Form</span> button to show the analyzed result of your uploaded file.
+                            </p>
+                            
+                            <!-- Feature Icons -->
+                            <div class="flex items-center justify-center gap-6 mb-8 flex-wrap">
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <div class="bg-primary-100 rounded-lg p-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                        </svg>
+                                    </div>
+                                    <span>PDF Support</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <div class="bg-primary-100 rounded-lg p-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                                        </svg>
+                                    </div>
+                                    <span>AI Analysis</span>
+                                </div>
+                                <div class="flex items-center gap-2 text-sm text-gray-600">
+                                    <div class="bg-primary-100 rounded-lg p-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                        </svg>
+                                    </div>
+                                    <span>Instant Results</span>
+                                </div>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <button @click="scrollToUpload"
+                                class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-8 py-4 rounded-xl font-bold text-base md:text-lg hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 active:scale-95 flex items-center gap-3 mx-auto group">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                    stroke="currentColor" class="w-6 h-6 group-hover:translate-y-[-2px] transition-transform">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
+                                </svg>
+                                Get Started
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

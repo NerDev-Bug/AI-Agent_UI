@@ -220,35 +220,35 @@
     </div>
 
     <!-- Three Cards column-->
-    <div class="flex justify-center items-center -mt-8 mb-8 px-4">
+    <div class="flex justify-center items-center mt-12 md:mt-16 mb-8 px-4">
       <img src="/images/Pandoy.png" alt="Pandoy"
-        class="hidden md:block absolute w-[210px] h-auto pointer-events-none bottom-[-90px] left-[270px] z-10" />
-      <div class="flex flex-col md:flex-row gap-12 md:gap-8 max-w-4xl w-full">
+        class="hidden md:block absolute w-[280px] md:w-[340px] h-auto pointer-events-none bottom-[-30px] md:bottom-[-10px] left-[200px] md:left-[240px] z-10" />
+      <div class="flex flex-col md:flex-row gap-12 md:gap-8 max-w-6xl w-full">
         <!-- First card -->
-        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInLeft group">
-          <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <img src="/images/magic.png" class="w-8 h-8 object-cover" alt="AI Magic Icon">
+        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary-500/30 animate-slideInLeft group border-2 border-transparent hover:border-primary-200">
+          <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
+            <img src="/images/magic.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="AI Magic Icon">
           </div>
-          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">AI-Powered Analysis</h1>
-          <p class="text-sm text-gray-700 leading-relaxed">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
+          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors duration-300">AI-Powered Analysis</h1>
+          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
         </div>
 
         <!-- Second card -->
-        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInUp group">
-          <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <img src="/images/graph.png" class="w-8 h-8 object-cover" alt="Dashboard Icon">
+        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-secondary-500/30 animate-slideInUp group border-2 border-transparent hover:border-secondary-200">
+          <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
+            <img src="/images/graph.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="Dashboard Icon">
           </div>
-          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">Interactive Dashboard</h1>
-          <p class="text-sm text-gray-700 leading-relaxed">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
+          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-secondary-600 transition-colors duration-300">Interactive Dashboard</h1>
+          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
         </div>
 
         <!-- Third card -->
-        <div class="bg-white w-full md:w-80 h-auto rounded-2xl shadow-large px-6 py-6 z-20 transform transition-all duration-300 hover:scale-105 hover:shadow-glow animate-slideInRight group">
-          <div class="bg-gradient-to-br from-primary-100 to-primary-200 w-14 h-14 rounded-2xl flex justify-center items-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <img src="/images/flash.png" class="w-8 h-8 object-cover" alt="Lightning Icon">
+        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary-500/30 animate-slideInRight group border-2 border-transparent hover:border-primary-200">
+          <div class="bg-gradient-to-br from-primary-100 to-primary-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
+            <img src="/images/flash.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="Lightning Icon">
           </div>
-          <h1 class="text-base md:text-lg font-bold text-gray-900 mb-3">Instant Insights</h1>
-          <p class="text-sm text-gray-700 leading-relaxed">Get actionable recommendations to improve form performance and drive better results</p>
+          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors duration-300">Instant Insights</h1>
+          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Get actionable recommendations to improve form performance and drive better results</p>
         </div>
       </div>
     </div>
