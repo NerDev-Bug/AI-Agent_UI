@@ -1,7 +1,9 @@
 <template>
     <div class="bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-24 relative">
         <!-- Subtle pattern overlay -->
-        <div class="fixed inset-0 opacity-[0.02] pointer-events-none z-0" style="background-image: radial-gradient(circle at 2px 2px, #16a34a 1px, transparent 0); background-size: 40px 40px;"></div>
+        <div class="fixed inset-0 opacity-[0.02] pointer-events-none z-0"
+            style="background-image: radial-gradient(circle at 2px 2px, #16a34a 1px, transparent 0); background-size: 40px 40px;">
+        </div>
         <!-- Select and Export -->
         <div class="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 mb-8 px-2">
             <div class="flex-2 w-full md:w-auto">
@@ -10,8 +12,10 @@
                 <button v-if="currentReport && isSaved" @click="handleExportClick" :disabled="isExporting"
                     class="bg-gradient-to-r from-secondary-600 to-secondary-700 w-full md:w-[220px] h-12 rounded-xl text-white hover:from-secondary-700 hover:to-secondary-800 transition-all duration-300 shadow-medium hover:shadow-glow-blue flex items-center justify-center gap-2 font-semibold transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2">
                     <span v-if="!isExporting" class="flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                         </svg>
                         Export to PDF
                     </span>
@@ -47,56 +51,108 @@
             <!-- Basic Info -->
             <div class="flex flex-col xl:flex-row gap-2 w-full">
                 <div v-if="currentReport.analysis?.basic_info"
-                    class="bg-gradient-to-br from-white via-primary-50/20 to-white border-l-4 border-primary-500 p-6 rounded-2xl h-full flex-1 w-full animate-slideInLeft shadow-large hover:shadow-glow transition-all duration-300">
-                    <h4 class="text-2xl font-bold text-gray-800 mb-6 md:mb-8 flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-primary-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                    class="bg-white border-l-4 border-primary-500 p-6 rounded-2xl h-full flex-1 w-full animate-slideInLeft shadow-large hover:shadow-glow transition-all duration-300">
+                    <h4 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-6 h-6 text-primary-600">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                         </svg>
                         Basic Information
                     </h4>
-                    <ul
-                        class="text-sm md:text-base grid grid-cols-1 sm:grid-cols-2 gap-x-6 md:gap-x-8 gap-y-3 md:gap-y-2 text-gray-800 leading-relaxed">
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Applicant:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.applicant }}</span>
+                    <ul class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-gray-800">
+                        <!-- Item -->
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Applicant</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.applicant }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Application Date:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.application_date }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-calendar-alt"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Application Date</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.application_date
+                                }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Cooperator:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.cooperator }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-handshake"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Cooperator</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.cooperator }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Product:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.product }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-box-open"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Product</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.product }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Location:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.location }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Location</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.location }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Crop:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.crop }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-leaf"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Crop</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.crop }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Plot Size:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.plot_size }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-ruler-combined"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Plot Size</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.plot_size }}</span>
+                            </div>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start">
-                            <span class="font-semibold text-gray-900 min-w-[140px]">Planting Date:</span>
-                            <span class="text-gray-700">{{ currentReport.analysis.basic_info.planting_date }}</span>
+
+                        <li class="flex items-start gap-3">
+                            <span class="text-primary-600 pt-1">
+                                <i class="fas fa-seedling"></i>
+                            </span>
+                            <div class="flex flex-col">
+                                <span class="font-semibold text-gray-900">Planting Date</span>
+                                <span class="text-gray-700">{{ currentReport.analysis.basic_info.planting_date }}</span>
+                            </div>
                         </li>
                     </ul>
                 </div>
                 <!-- Control + Leads Agri Metrics (Right Side of Basic Info) -->
-                <div class="bg-gradient-to-br from-white via-secondary-50/20 to-white p-6 rounded-2xl flex flex-col flex-1 w-full xl:mt-0 mt-4 shadow-large hover:shadow-glow transition-all duration-300"
+                <div class="border-l-4 border-secondary-500 bg-gradient-to-br from-white via-secondary-50/20 to-white p-6 rounded-2xl flex flex-col flex-1 w-full xl:mt-0 mt-4 shadow-large hover:shadow-glow transition-all duration-300"
                     style="box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.1), 0 4px 6px -2px rgba(37, 99, 235, 0.05);">
                     <div class="flex items-center mb-6">
                         <h4 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6 text-secondary-600">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-6 h-6 text-secondary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                             </svg>
                             Performance Metrics
                         </h4>
@@ -141,24 +197,23 @@
 
             <!-- Performance Metrics Section -->
             <div v-if="currentReport.analysis?.performance_analysis">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-2">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-2 pt-4">
                     <!-- Season -->
-                    <div
-                        :class="[
-                            'bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[180px] shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105',
-                            currentReport.analysis.basic_info.season === 'dry'
-                                ? 'from-yellow-100 via-amber-100/80 to-yellow-100'
-                                : 'from-sky-100 via-blue-100/80 to-sky-100'
-                        ]"
-                        :style="currentReport.analysis.basic_info.season === 'dry' 
+                    <div :class="[
+                        'overflow-hidden bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center relative min-h-[180px] shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105 border-2',
+                        currentReport.analysis.basic_info.season === 'dry'
+                            ? 'from-yellow-100 via-amber-100/80 to-yellow-100 border-yellow-300/60'
+                            : 'from-sky-100 via-blue-100/80 to-sky-100 border-sky-300/60'
+                    ]"
+                        :style="currentReport.analysis.basic_info.season === 'dry'
                             ? 'box-shadow: 0 10px 15px -3px rgba(250, 204, 21, 0.15), 0 4px 6px -2px rgba(250, 204, 21, 0.1);'
                             : 'box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.15), 0 4px 6px -2px rgba(56, 189, 248, 0.1);'">
                         <!-- Decorative corner accent -->
                         <div :class="[
                             'absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-10',
                             currentReport.analysis.basic_info.season === 'dry'
-                                ? 'bg-yellow-400'
-                                : 'bg-sky-400'
+                                ? 'bg-yellow-700'
+                                : 'bg-sky-700'
                         ]"></div>
                         <!-- Season Badge (top right) -->
                         <div :class="[
@@ -174,94 +229,101 @@
                         <!-- Display Based on Season -->
                         <div class="flex items-center justify-center mt-4 relative z-10">
                             <!-- DRY = Sun icon -->
-                            <img v-if="currentReport.analysis.basic_info.season === 'dry'"
-                                src="/images/sun.png" alt="Dry Season Icon" class="w-24 h-auto drop-shadow-md" />
+                            <img v-if="currentReport.analysis.basic_info.season === 'dry'" src="/images/sun.png"
+                                alt="Dry Season Icon" class="w-24 h-auto drop-shadow-md" />
 
                             <!-- WET = Cloud/rain icon -->
-                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon" class="w-24 h-auto drop-shadow-md" />
+                            <img v-else src="/images/cloud_with_rain.png" alt="Wet Season Icon"
+                                class="w-24 h-auto drop-shadow-md" />
                         </div>
 
                         <!-- Season Label (bottom left) -->
                         <p class="text-sm font-semibold text-gray-700 absolute bottom-4 left-4 z-10">Season</p>
                     </div>
 
-                        <!-- Relative Improvement -->
-                        <div
-                            :class="[
-                                'bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105',
-                                improvementValue > 0
-                                    ? 'from-green-100 via-emerald-100/80 to-green-100'
-                                    : improvementValue < 0
-                                    ? 'from-red-100 via-rose-100/80 to-red-100'
-                                    : 'from-gray-100 via-slate-100/80 to-gray-100'
-                            ]"
-                            :style="improvementValue > 0
-                                ? 'box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.15), 0 4px 6px -2px rgba(34, 197, 94, 0.1);'
-                                : improvementValue < 0
+                    <!-- Relative Improvement -->
+                    <div :class="[
+                        'overflow-hidden bg-gradient-to-br rounded-2xl p-8 flex flex-col items-center justify-center text-center relative shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105 border-2',
+                        improvementValue > 0
+                            ? 'from-green-100 via-emerald-100/80 to-green-100 border-green-300/60'
+                            : improvementValue < 0
+                                ? 'from-red-100 via-rose-100/80 to-red-100 border-red-300/60'
+                                : 'from-gray-100 via-slate-100/80 to-gray-100 border-gray-300/60'
+                    ]"
+                        :style="improvementValue > 0
+                            ? 'box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.15), 0 4px 6px -2px rgba(34, 197, 94, 0.1);'
+                            : improvementValue < 0
                                 ? 'box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.15), 0 4px 6px -2px rgba(239, 68, 68, 0.1);'
                                 : 'box-shadow: 0 10px 15px -3px rgba(107, 114, 128, 0.1), 0 4px 6px -2px rgba(107, 114, 128, 0.05);'">
-                            <!-- Decorative corner accent -->
-                            <div :class="[
-                                'absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-10',
-                                improvementValue > 0
-                                    ? 'bg-green-500'
-                                    : improvementValue < 0
-                                    ? 'bg-red-500'
-                                    : 'bg-gray-400'
-                            ]"></div>
-                            <!-- Status badge -->
-                            <span v-if="improvementValue > 0"
-                                class="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium animate-pulse z-10">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
-                                </svg>
-                                <span>Improved</span>
-                            </span>
-
-                            <span v-else-if="improvementValue < 0"
-                                class="absolute top-4 right-4 bg-gradient-to-r from-red-600 to-rose-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-3.5 h-3.5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                                </svg>
-                                <span>Decreased</span>
-                            </span>
-
-                            <span v-else
-                                class="absolute top-4 right-4 bg-gradient-to-r from-gray-400 to-slate-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
-                                <span>→</span>
-                                <span>No Change</span>
-                            </span>
-                            <!-- Icon background -->
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
-                                </svg>
-                            </div>
-                            <!-- Main Value -->
-                            <p :class="[
-                                'text-3xl md:text-4xl font-bold relative z-10',
-                                improvementValue > 0
-                                    ? 'text-green-700'
-                                    : improvementValue < 0
-                                    ? 'text-red-700'
-                                    : 'text-gray-700'
-                            ]">
-                                {{ improvementValue.toFixed(2) }}%
-                            </p>
-                            <!-- Label -->
-                            <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Relative Improvement</p>
-                        </div>
-
-                    <!-- Significance -->
-                    <div
-                        class="relative bg-gradient-to-br from-blue-100 via-indigo-100/80 to-blue-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105"
-                        style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.15), 0 4px 6px -2px rgba(59, 130, 246, 0.1);">
                         <!-- Decorative corner accent -->
-                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
+                        <div :class="[
+                            'absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-10',
+                            improvementValue > 0
+                                ? 'bg-green-700'
+                                : improvementValue < 0
+                                    ? 'bg-red-700'
+                                    : 'bg-gray-700'
+                        ]"></div>
+                        <!-- Status badge -->
+                        <span v-if="improvementValue > 0"
+                            class="absolute top-4 right-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium animate-pulse z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+                            </svg>
+                            <span>Improved</span>
+                        </span>
+
+                        <span v-else-if="improvementValue < 0"
+                            class="absolute top-4 right-4 bg-gradient-to-r from-red-600 to-rose-600 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                                stroke="currentColor" class="w-3.5 h-3.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                            <span>Decreased</span>
+                        </span>
+
+                        <span v-else
+                            class="absolute top-4 right-4 bg-gradient-to-r from-gray-400 to-slate-500 text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 shadow-medium z-10">
+                            <span>→</span>
+                            <span>No Change</span>
+                        </span>
                         <!-- Icon background -->
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                                stroke="currentColor" class="w-32 h-32">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                            </svg>
+                        </div>
+                        <!-- Main Value -->
+                        <p :class="[
+                            'text-3xl md:text-4xl font-bold relative z-10',
+                            improvementValue > 0
+                                ? 'text-green-700'
+                                : improvementValue < 0
+                                    ? 'text-red-700'
+                                    : 'text-gray-700'
+                        ]">
+                            {{ improvementValue.toFixed(2) }}%
+                        </p>
+                        <!-- Label -->
+                        <p
+                            class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">
+                            Relative Improvement</p>
+                    </div>
+
+                    <!-- Significance -->
+                    <div class="relative overflow-hidden bg-gradient-to-br from-blue-100 via-indigo-100/80 to-blue-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105 border border-blue-300/60"
+                        style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.15), 0 4px 6px -2px rgba(59, 130, 246, 0.1);">
+                        <!-- Decorative corner accent -->
+                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-700 opacity-10"></div>
+                        <!-- Icon background -->
+                        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                                stroke="currentColor" class="w-32 h-32">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
                             </svg>
                         </div>
                         <p class="text-3xl md:text-4xl font-bold text-blue-700 capitalize relative z-10">
@@ -271,19 +333,26 @@
                                     .improvement_significance
                             }}
                         </p>
-                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Significance</p>
+                        <p
+                            class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">
+                            Significance</p>
                     </div>
 
                     <!-- Absolute Difference -->
-                    <div
-                        class="relative bg-gradient-to-br from-purple-100 via-violet-100/80 to-purple-100 rounded-2xl p-8 flex flex-col items-center justify-center text-center shadow-large hover:shadow-glow transition-all duration-300 transform hover:scale-105"
-                        style="box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.15), 0 4px 6px -2px rgba(168, 85, 247, 0.1);">
+                    <div class="relative overflow-hidden bg-gradient-to-br 
+    from-purple-100 via-violet-100/80 to-purple-100 
+    rounded-2xl p-8 flex flex-col items-center justify-center 
+    text-center shadow-large hover:shadow-glow transition-all 
+    duration-300 transform hover:scale-105 border border-purple-300/60" style="box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.15),
+    0 4px 6px -2px rgba(168, 85, 247, 0.1);">
                         <!-- Decorative corner accent -->
-                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-purple-400 opacity-10"></div>
+                        <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-purple-700 opacity-10"></div>
                         <!-- Icon background -->
                         <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 opacity-5">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-32 h-32">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+                                stroke="currentColor" class="w-32 h-32">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
                             </svg>
                         </div>
                         <p class="text-3xl md:text-4xl font-bold text-purple-700 relative z-10">
@@ -298,14 +367,16 @@
                                 }}
                             </span>
                         </p>
-                        <p class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">Absolute Difference</p>
+                        <p
+                            class="absolute bottom-3 left-4 md:left-6 text-xs md:text-sm text-gray-700 font-semibold z-10">
+                            Absolute Difference</p>
                     </div>
                 </div>
             </div>
 
             <!-- Responsive Charts + Treatment Details -->
             <div v-if="currentReport.analysis?.performance_analysis || chartMap[currentReport.form_id]?.length"
-                class="flex flex-col gap-2 pt-2 w-full">
+                class="flex flex-col gap-2 pt-4 w-full">
 
                 <template v-if="chartMap[currentReport.form_id]">
 
@@ -318,30 +389,27 @@
                     <div class="grid gap-2 w-full md:grid-cols-2">
 
                         <!-- Render CHARTS -->
-                        <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx"
-                            :class="[
-                                'chart-card bg-gradient-to-br rounded-2xl shadow-large p-6 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden',
-                                idx % 2 === 0
-                                    ? 'from-white via-primary-50/20 to-white'
-                                    : 'from-white via-secondary-50/20 to-white'
-                            ]"
+                        <div v-for="(chart, idx) in chartMap[currentReport.form_id]" :key="idx" :class="[
+                            'chart-card bg-gradient-to-br rounded-2xl shadow-large p-6 hover:shadow-glow transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden border',
+                            idx % 2 === 0
+                                ? 'border-primary-500 from-white via-primary-50/20 to-white'
+                                : 'border-secondary-500 from-white via-secondary-50/20 to-white'
+                        ]"
                             :style="idx % 2 === 0
                                 ? 'box-shadow: 0 10px 15px -3px rgba(22, 163, 74, 0.12), 0 4px 6px -2px rgba(22, 163, 74, 0.08);'
                                 : 'box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.12), 0 4px 6px -2px rgba(37, 99, 235, 0.08);'">
-                            <!-- Decorative top accent -->
-                            <div :class="[
-                                'absolute top-0 left-0 right-0 h-1',
-                                idx % 2 === 0
-                                    ? 'bg-gradient-to-r from-primary-500 to-primary-300'
-                                    : 'bg-gradient-to-r from-secondary-500 to-secondary-300'
-                            ]"></div>
                             <!-- Chart type icon -->
                             <div class="absolute top-4 right-4 opacity-10">
-                                <svg v-if="chart.chart_type?.toLowerCase().includes('line')" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
+                                <svg v-if="chart.chart_type?.toLowerCase().includes('line')"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941" />
                                 </svg>
-                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                                <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-16 h-16">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
                                 </svg>
                             </div>
                             <h5 :class="[
@@ -354,20 +422,23 @@
                             </h5>
 
                             <div class="relative z-10 min-h-[350px] flex items-center justify-center">
-                                <component :is="chart.component" :data="chart.chart_data" :options="chart.chart_options" />
+                                <component :is="chart.component" :data="chart.chart_data"
+                                    :options="chart.chart_options" />
                             </div>
 
-                            <p v-if="chart.description" class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic px-2 md:px-4 relative z-10 mt-4 bg-white/50 rounded-lg p-3">
+                            <p v-if="chart.description"
+                                class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed italic px-2 md:px-4 relative z-10 mt-4 bg-white/50 rounded-lg p-3">
                                 {{ chart.description }}
                             </p>
                         </div>
 
                         <!-- Treatment Details INSIDE grid for ODD counts (1,3,5,7...) -->
                         <div v-if="chartCount % 2 === 1 && currentReport.analysis?.treatment_comparison"
-                            class="chart-card bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 relative overflow-hidden"
+                            class="chart-card bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 relative overflow-hidden border border-blue-500"
                             style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.12), 0 4px 6px -2px rgba(59, 130, 246, 0.08);">
                             <!-- Decorative top accent -->
-                            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                            <!-- <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300">
+                            </div> -->
                             <!-- Decorative corner accent -->
                             <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
 
@@ -375,108 +446,124 @@
                                 Treatment Details
                             </h5>
 
-                        <!-- Treatment Details Table -->
-                        <div class="overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0 relative z-10">
-                            <div class="inline-block min-w-full align-middle">
-                                <div class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
-                                    <table class="min-w-full divide-y divide-gray-100">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2"
-                                                class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
-                                                style="background: linear-gradient(to right, #2563eb, #1d4ed8, #1e40af);">
-                                                Standard Practice
-                                            </th>
-                                            <th colspan="2"
-                                                class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
-                                                style="background: linear-gradient(to right, #16a34a, #15803d, #166534);">
-                                                Leads Agri Treatment
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-100">
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Product:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.product }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Product:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Rate:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.rate }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Rate:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Timing:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.timing }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Timing:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Method:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.method }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Method:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    </table>
+                            <!-- Treatment Details Table -->
+                            <div class="overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0 relative z-10">
+                                <div class="inline-block min-w-full align-middle">
+                                    <div
+                                        class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
+                                        <table class="min-w-full divide-y divide-gray-100">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2"
+                                                        class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
+                                                        style="background: linear-gradient(to right, #2563eb, #1d4ed8, #1e40af);">
+                                                        Standard Practice
+                                                    </th>
+                                                    <th colspan="2"
+                                                        class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md"
+                                                        style="background: linear-gradient(to right, #16a34a, #15803d, #166534);">
+                                                        Leads Agri Treatment
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-100">
+                                                <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                    <td
+                                                        class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                        Product:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.control.product
+                                                        }}
+                                                    </td>
+                                                    <td
+                                                        class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                        Product:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                        {{
+                                                            currentReport.analysis.treatment_comparison.leads_agri.product
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                    <td
+                                                        class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                        Rate:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                                    </td>
+                                                    <td
+                                                        class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                        Rate:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.leads_agri.rate
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                    <td
+                                                        class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                        Timing:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                                    </td>
+                                                    <td
+                                                        class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                        Timing:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.leads_agri.timing
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                                <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                    <td
+                                                        class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                        Method:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.control.method }}
+                                                    </td>
+                                                    <td
+                                                        class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                        Method:
+                                                    </td>
+                                                    <td
+                                                        class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                        {{ currentReport.analysis.treatment_comparison.leads_agri.method
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
+                            <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed mt-6 px-2 md:px-4 bg-blue-50/30 rounded-lg p-4 border border-blue-200/50 relative z-10"
+                                style="box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.08), 0 2px 4px -1px rgba(59, 130, 246, 0.04);">
+                                {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
+                            </p>
                         </div>
-                        <p class="text-gray-700 mb-3 text-sm md:text-base leading-relaxed mt-6 px-2 md:px-4 bg-blue-50/30 rounded-lg p-4 border border-blue-200/50 relative z-10"
-                            style="box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.08), 0 2px 4px -1px rgba(59, 130, 246, 0.04);">
-                            {{ currentReport.analysis.treatment_comparison.protocol_assessment }}
-                        </p>
-                    </div>
                     </div>
 
                     <!-- Treatment Details BELOW grid for EVEN counts (2,4,6...) -->
                     <div v-if="chartCount % 2 === 0 && currentReport.analysis?.treatment_comparison"
-                        class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 mt-2 relative overflow-hidden"
+                        class="bg-gradient-to-br from-white via-blue-50/50 to-white rounded-2xl shadow-large p-6 mt-2 relative overflow-hidden border border-blue-500"
                         style="box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.12), 0 4px 6px -2px rgba(59, 130, 246, 0.08);">
                         <!-- Decorative top accent -->
-                        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300"></div>
+                        <!-- <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 to-blue-300">
+                        </div> -->
                         <!-- Decorative corner accent -->
                         <div class="absolute top-0 right-0 w-20 h-20 rounded-bl-full bg-blue-400 opacity-10"></div>
 
@@ -487,86 +574,95 @@
                         <!-- Treatment Details Table -->
                         <div class="overflow-x-auto -mx-2 px-2 md:mx-0 md:px-0 relative z-10">
                             <div class="inline-block min-w-full align-middle">
-                                <div class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
+                                <div
+                                    class="overflow-hidden shadow-xl md:rounded-xl bg-white/90 backdrop-blur-sm border border-gray-200/50">
                                     <table class="min-w-full divide-y divide-gray-100">
-                                <thead>
-                                    <tr>
-                                        <th colspan="2"
-                                            class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
-                                            Standard Practice
-                                        </th>
-                                        <th colspan="2"
-                                            class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
-                                            Leads Agri Treatment
-                                        </th>
-                                    </tr>
-                                </thead>
-                                    <tbody class="bg-white divide-y divide-gray-100">
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Product:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.product }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Product:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Rate:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.rate }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Rate:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Timing:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.timing }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Timing:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
-                                            </td>
-                                        </tr>
-                                        <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
-                                            <td
-                                                class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
-                                                Method:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.control.method }}
-                                            </td>
-                                            <td
-                                                class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
-                                                Method:
-                                            </td>
-                                            <td class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
-                                                {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2"
+                                                    class="bg-gradient-to-r from-blue-600 via-blue-650 to-blue-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
+                                                    Standard Practice
+                                                </th>
+                                                <th colspan="2"
+                                                    class="bg-gradient-to-r from-green-600 via-green-650 to-green-700 text-white px-6 py-5 text-left font-bold text-sm uppercase tracking-wider shadow-md">
+                                                    Leads Agri Treatment
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-gray-100">
+                                            <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                <td
+                                                    class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                    Product:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.control.product }}
+                                                </td>
+                                                <td
+                                                    class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                    Product:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.leads_agri.product }}
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                <td
+                                                    class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                    Rate:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.control.rate }}
+                                                </td>
+                                                <td
+                                                    class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                    Rate:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.leads_agri.rate }}
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                <td
+                                                    class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                    Timing:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.control.timing }}
+                                                </td>
+                                                <td
+                                                    class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                    Timing:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.leads_agri.timing }}
+                                                </td>
+                                            </tr>
+                                            <tr class="hover:bg-blue-50/50 transition-all duration-200 group">
+                                                <td
+                                                    class="bg-gradient-to-r from-blue-50/80 to-blue-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-blue-100 group-hover:from-blue-100/80 group-hover:to-blue-100/60">
+                                                    Method:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 border-r border-gray-100 group-hover:bg-blue-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.control.method }}
+                                                </td>
+                                                <td
+                                                    class="bg-gradient-to-r from-green-50/80 to-green-50/60 px-6 py-4 text-gray-800 font-bold text-sm border-r border-green-100 group-hover:from-green-100/80 group-hover:to-green-100/60">
+                                                    Method:
+                                                </td>
+                                                <td
+                                                    class="bg-white/90 px-6 py-4 text-gray-700 group-hover:bg-green-50/20">
+                                                    {{ currentReport.analysis.treatment_comparison.leads_agri.method }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
@@ -586,25 +682,30 @@
                 <div
                     class="bg-gradient-to-br from-gray-50 to-white p-8 rounded-2xl shadow-soft border-2 border-dashed border-gray-200 flex flex-col items-center justify-center min-h-[300px] w-full">
                     <div class="text-gray-300 mb-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-16 h-16 md:w-20 md:h-20">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.944 11.944 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-16 h-16 md:w-20 md:h-20">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.944 11.944 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
                         </svg>
                     </div>
                     <p class="text-gray-400 text-sm md:text-base font-medium">Map visualization coming soon</p>
                 </div>
 
                 <!-- Key Findings & Strategic Insights -->
-                <div class="bg-gray-100 p-8 rounded-2xl shadow-lg w-full">
+                <div class="bg-gray-100 p-6 rounded-2xl shadow-lg w-full">
                     <h2 class="text-xl font-semibold mb-6 text-gray-800">
                         Key Findings & Strategic Insights
                     </h2>
 
                     <!-- Opportunities -->
                     <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                        @click="showOpportunitiesModal = true" tabindex="0" @keyup.enter="showOpportunitiesModal = true">
+                        @click="showOpportunitiesModal = true" tabindex="0"
+                        @keyup.enter="showOpportunitiesModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
                             </svg>
                             Opportunities
                         </span>
@@ -616,10 +717,13 @@
 
                     <!-- Risks & Limitations -->
                     <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                        @click="showRiskLimitationsModal = true" tabindex="0" @keyup.enter="showRiskLimitationsModal = true">
+                        @click="showRiskLimitationsModal = true" tabindex="0"
+                        @keyup.enter="showRiskLimitationsModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-red-600">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-5 h-5 text-red-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                             </svg>
                             Risks & Limitations
                         </span>
@@ -631,10 +735,13 @@
 
                     <!-- Executive Summary -->
                     <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:ring-offset-2"
-                        @click="showExecutiveSummaryModal = true" tabindex="0" @keyup.enter="showExecutiveSummaryModal = true">
+                        @click="showExecutiveSummaryModal = true" tabindex="0"
+                        @keyup.enter="showExecutiveSummaryModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-secondary-600">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-5 h-5 text-secondary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                             </svg>
                             Executive Summary
                         </span>
@@ -646,10 +753,13 @@
 
                     <!-- Recommendations -->
                     <div class="insight-item bg-gradient-to-r from-gray-100 to-gray-50 rounded-xl px-5 py-4 mb-3 flex items-center justify-between cursor-pointer shadow-soft hover:shadow-medium transition-all duration-300 border-2 border-transparent hover:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                        @click="showRecommendationsModal = true" tabindex="0" @keyup.enter="showRecommendationsModal = true">
+                        @click="showRecommendationsModal = true" tabindex="0"
+                        @keyup.enter="showRecommendationsModal = true">
                         <span class="text-gray-800 text-lg font-bold flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 text-primary-600">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" class="w-5 h-5 text-primary-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Recommendations
                         </span>
@@ -665,7 +775,8 @@
         <!-- Loading/Error/Empty Placeholder -->
         <div v-else-if="!currentReport" class="flex flex-col items-center justify-center min-h-[440px] mt-10 px-4">
             <div class="relative flex flex-col items-center justify-center max-w-lg">
-                <div class="bg-gradient-to-br from-gray-50 to-white w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center shadow-large border-4 border-gray-200">
+                <div
+                    class="bg-gradient-to-br from-gray-50 to-white w-28 h-28 md:w-32 md:h-32 rounded-full flex items-center justify-center shadow-large border-4 border-gray-200">
                     <span class="text-gray-400 text-5xl md:text-7xl font-semibold">?</span>
                 </div>
 
@@ -675,15 +786,18 @@
                         No Data Found
                     </h2>
                     <p class="text-sm md:text-base text-gray-600 leading-relaxed max-w-md mx-auto mb-6">
-                        Upload a file and click the <span class="font-semibold text-primary-600">Analyze Demo Form</span> button to
+                        Upload a file and click the <span class="font-semibold text-primary-600">Analyze Demo
+                            Form</span> button
+                        to
                         show the analyzed result of your uploaded file.
                     </p>
                     <!-- CTA Button -->
-                    <button 
-                        @click="scrollToUpload"
+                    <button @click="scrollToUpload"
                         class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-3 rounded-xl font-semibold hover:from-primary-700 hover:to-primary-800 transition-all duration-300 shadow-medium hover:shadow-glow transform hover:scale-105 active:scale-95 flex items-center gap-2 mx-auto">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 16.5V3.75m0 0L6.75 9m5.25-5.25L17.25 9M3.75 19.5h16.5" />
                         </svg>
                         Get Started
                     </button>
@@ -820,28 +934,24 @@ const modernChartPlugin = {
         if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
             const { ctx, chartArea } = chart;
             if (!chartArea) return;
-            
+
             chart.data.datasets.forEach((dataset, datasetIndex) => {
                 if (dataset._gradientStart && dataset._gradientEnd) {
                     const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
                     gradient.addColorStop(0, dataset._gradientEnd);
                     gradient.addColorStop(1, dataset._gradientStart);
-                    
+
                     // Apply gradient to all bars in dataset
-                    if (Array.isArray(dataset.backgroundColor)) {
-                        dataset.backgroundColor = dataset.data.map(() => gradient);
-                    } else {
-                        dataset.backgroundColor = gradient;
-                    }
+                    dataset.backgroundColor = dataset.data.map(() => gradient);
                 }
             });
         }
-        
+
         // Create gradients for line chart fills
         if (chart.config.type === 'line') {
             const { ctx, chartArea } = chart;
             if (!chartArea) return;
-            
+
             chart.data.datasets.forEach((dataset) => {
                 if (dataset._gradientFill && dataset.borderColor) {
                     const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
@@ -856,7 +966,7 @@ const modernChartPlugin = {
     afterDatasetsDraw(chart) {
         const { ctx } = chart;
         ctx.save();
-        
+
         // Add data labels on top of bars (like in the reference image)
         if (chart.config.type === 'bar' && chart.config.options.indexAxis !== 'y') {
             chart.data.datasets.forEach((dataset, datasetIndex) => {
@@ -866,13 +976,13 @@ const modernChartPlugin = {
                     if (value !== null && value !== undefined && typeof value === 'number') {
                         const x = bar.x;
                         const y = bar.y - 15;
-                        
+
                         // Use orange color for data labels (like in reference image)
                         const labelColor = '#f97316'; // Orange
-                        
+
                         // Format value to show decimals if needed
                         const formattedValue = value % 1 === 0 ? value.toString() : value.toFixed(2);
-                        
+
                         // Draw circle background with shadow
                         ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
                         ctx.shadowBlur = 6;
@@ -882,16 +992,16 @@ const modernChartPlugin = {
                         ctx.beginPath();
                         ctx.arc(x, y - 8, 16, 0, 2 * Math.PI);
                         ctx.fill();
-                        
+
                         // Reset shadow
                         ctx.shadowColor = 'transparent';
                         ctx.shadowBlur = 0;
-                        
+
                         // Draw white border (thicker for better visibility)
                         ctx.strokeStyle = '#ffffff';
                         ctx.lineWidth = 3;
                         ctx.stroke();
-                        
+
                         // Draw text (white, bold, slightly larger)
                         ctx.fillStyle = '#ffffff';
                         ctx.font = 'bold 13px Inter, system-ui, sans-serif';
@@ -1001,35 +1111,29 @@ watchEffect(() => {
                     // Enhance datasets with modern styling
                     if (type.includes("bar") && !type.includes("horizontal_bar")) {
                         chartData.datasets.forEach((dataset, idx) => {
-                            const originalColor = dataset.backgroundColor || (idx === 0 ? '#3b82f6' : '#22c55e');
-                            
-                            // Create vibrant color palette based on index
-                            const colorPalette = [
-                                { start: '#f97316', end: '#ea580c' }, // Orange
-                                { start: '#ef4444', end: '#dc2626' }, // Red
-                                { start: '#14b8a6', end: '#0d9488' }, // Teal
+
+                            // Force only BLUE and GREEN palette
+                            const fixedPalette = [
                                 { start: '#3b82f6', end: '#2563eb' }, // Blue
-                                { start: '#a855f7', end: '#9333ea' }, // Purple
                                 { start: '#22c55e', end: '#16a34a' }, // Green
                             ];
-                            
-                            const colors = colorPalette[idx % colorPalette.length];
-                            
-                            // Store gradient colors for plugin to use
-                            if (typeof originalColor === 'string') {
-                                dataset._gradientStart = colors.start;
-                                dataset._gradientEnd = colors.end;
-                                dataset.borderColor = colors.end;
-                                dataset.borderWidth = 0; // No border, gradient handles it
-                            } else if (Array.isArray(originalColor)) {
-                                dataset._gradientStart = colors.start;
-                                dataset._gradientEnd = colors.end;
-                                dataset.borderColor = originalColor.map(() => colors.end);
-                                dataset.borderWidth = 0;
+
+                            // If someone adds more datasets, cycle only through blue/green
+                            const colors = fixedPalette[idx % 2];
+
+                            // Apply gradient settings
+                            dataset._gradientStart = colors.start;
+                            dataset._gradientEnd = colors.end;
+                            dataset.borderColor = colors.end;
+                            dataset.borderWidth = 0;
+
+                            // If user passed array of colors, map them to the same palette
+                            if (Array.isArray(dataset.backgroundColor)) {
+                                dataset.borderColor = dataset.backgroundColor.map(() => colors.end);
                             }
                         });
                     }
-                    
+
                     // Enhance line charts with gradient fills
                     if (type.includes("line")) {
                         chartData.datasets.forEach((dataset, idx) => {
@@ -1037,10 +1141,12 @@ watchEffect(() => {
                             const colorPalette = [
                                 { line: '#3b82f6', fill: 'rgba(59, 130, 246, 0.15)' }, // Blue (Control)
                                 { line: '#22c55e', fill: 'rgba(34, 197, 94, 0.15)' }, // Green (Leads Agri)
-                                { line: '#f97316', fill: 'rgba(249, 115, 22, 0.15)' }, // Orange
+                                { line: '#f59e0b', fill: 'rgba(245, 158, 11, 0.15)' }, // Amber
+                                { line: '#ef4444', fill: 'rgba(239, 68, 68, 0.15)' }, // Red
+                                { line: '#14b8a6', fill: 'rgba(20, 184, 166, 0.15)' }, // Teal
                                 { line: '#a855f7', fill: 'rgba(168, 85, 247, 0.15)' }, // Purple
                             ];
-                            
+
                             const colors = colorPalette[idx % colorPalette.length];
                             if (!dataset.borderColor) {
                                 dataset.borderColor = colors.line;
@@ -1116,7 +1222,7 @@ watchEffect(() => {
                                         },
                                         color: '#64748b',
                                         padding: 10,
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return value;
                                         }
                                     }
@@ -1166,7 +1272,7 @@ watchEffect(() => {
                                     boxPadding: 6,
                                     usePointStyle: true,
                                     callbacks: {
-                                        label: function(context) {
+                                        label: function (context) {
                                             return context.dataset.label + ': ' + context.parsed.y;
                                         }
                                     }
@@ -1349,7 +1455,7 @@ watchEffect(() => {
                                         },
                                         color: '#64748b',
                                         padding: 10,
-                                        callback: function(value) {
+                                        callback: function (value) {
                                             return value;
                                         }
                                     }
@@ -1817,7 +1923,7 @@ watchEffect(() => {
                             boxPadding: 6,
                             usePointStyle: true,
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     const label = context.label || '';
                                     const value = context.parsed || 0;
                                     const total = context.dataset.data.reduce((a, b) => a + b, 0);
@@ -2084,6 +2190,7 @@ canvas {
     .modal-enter-from .bg-white {
         transform: translateY(100%);
     }
+
     .modal-leave-to .bg-white {
         transform: translateY(100%);
     }
@@ -2093,6 +2200,7 @@ canvas {
     .modal-enter-from .bg-white {
         transform: scale(0.95);
     }
+
     .modal-leave-to .bg-white {
         transform: scale(0.95);
     }

@@ -1,44 +1,52 @@
 <template>
   <!-- Navigation Bar -->
-  <nav class="text-white rounded-full px-4 sm:px-6 py-3 w-full max-w-[680px] h-auto flex flex-col sm:flex-row gap-2 sm:gap-0 items-stretch sm:items-center justify-between
-           fixed top-4 sm:top-5 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-300 shadow-large backdrop-blur-sm"
+  <nav class="text-white rounded-full px-3 sm:px-6 py-2 sm:py-3 w-[92vw] sm:w-full max-w-[680px]
+         flex flex-row sm:flex-row items-center justify-between gap-2
+         fixed top-3 sm:top-5 left-1/2 -translate-x-1/2 z-50
+         shadow-large backdrop-blur-sm transition-all duration-300"
     style="background: linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%);">
+
+    <!-- HOME -->
     <button @click="scrollToSection('home')" :class="[
-      'font-semibold px-5 py-2 rounded-full transition-all duration-300 text-center transform hover:scale-105 active:scale-95',
+      'flex-1 sm:flex-none font-semibold px-4 py-2 rounded-full transition-all duration-300 text-center hover:scale-105 active:scale-95',
       activeSection === 'home'
         ? 'bg-white text-primary-600 shadow-medium'
         : 'hover:bg-white hover:text-primary-600 hover:shadow-soft'
-    ]" aria-label="Navigate to Home section">
+    ]">
       Home
     </button>
 
+    <!-- DASHBOARD -->
     <button @click="scrollToSection('dashboard')" :class="[
-      'font-semibold px-5 py-2 rounded-full transition-all duration-300 text-center transform hover:scale-105 active:scale-95',
+      'flex-1 sm:flex-none font-semibold px-4 py-2 rounded-full transition-all duration-300 text-center hover:scale-105 active:scale-95',
       activeSection === 'dashboard'
         ? 'bg-white text-primary-600 shadow-medium'
         : 'hover:bg-white hover:text-primary-600 hover:shadow-soft'
-    ]" aria-label="Navigate to Dashboard section">
+    ]">
       Dashboard
     </button>
 
-    <!-- add this if you need the search ref="searchBtn" @click="showSearch = !showSearch" -->
+    <!-- LIST BUTTON -->
     <button
-      class="font-semibold px-5 py-2 hover:bg-white hover:text-primary-600 rounded-full transition-all duration-300 relative text-center transform hover:scale-105 active:scale-95 group"
-      aria-label="View all reports (Coming soon)"
-      title="View all reports (Coming soon)">
-      <span class="flex items-center gap-2">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 17.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+      class="flex-1 sm:flex-none font-semibold px-4 py-2 rounded-full transition-all duration-300 text-center hover:bg-white hover:text-primary-600 hover:scale-105 active:scale-95 relative group">
+      <span class="flex items-center justify-center sm:gap-2 gap-1">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+          class="w-4 h-4 sm:w-5 sm:h-5">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v..." />
         </svg>
-        List
+        <span class="hidden sm:inline">List</span>
       </span>
-      <!-- Tooltip -->
-      <span class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+
+      <!-- Tooltip (mobile-safe) -->
+      <span class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1.5 bg-gray-900 text-white text-xs rounded-lg
+             opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap hidden sm:block z-50">
         View all reports (Coming soon)
-        <span class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></span>
+        <span class="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900"></span>
       </span>
     </button>
   </nav>
+
 
   <!-- Search Input + Dropdown Panel -->
   <!-- <div v-if="showSearch" class="absolute z-50 w-full px-4 sm:px-0" :style="searchBarStyle">
@@ -94,14 +102,19 @@
     <div v-if="showChat"
       class="bg-white w-[90vw] max-w-md h-[70vh] max-h-[520px] rounded-2xl border border-gray-300 shadow-xl flex flex-col overflow-hidden">
       <!-- Chat Header -->
-      <div class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-4 font-semibold flex justify-between items-center shadow-medium">
+      <div
+        class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-4 font-semibold flex justify-between items-center shadow-medium">
         <h1 class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+            class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
           </svg>
           Pandoy AI Assistant
         </h1>
-        <button @click="showChat = false" class="text-white font-bold text-2xl hover:bg-white hover:bg-opacity-20 rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-200" aria-label="Close chat">×</button>
+        <button @click="showChat = false"
+          class="text-white font-bold text-2xl hover:bg-white hover:bg-opacity-20 rounded-full w-8 h-8 flex items-center justify-center transition-colors duration-200"
+          aria-label="Close chat">×</button>
       </div>
 
       <!-- Messages -->

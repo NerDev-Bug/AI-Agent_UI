@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gradient-to-br from-background-light via-background-lighter to-background-light min-h-screen overflow-y-auto z-50">
+  <div class="bg-gradient-to-br from-background-light via-background-lighter to-background-light min-h-screen overflow-y-auto z-50 px-4">
     <!-- left leafs - Hidden on mobile -->
     <div class="hidden md:block">
       <img src="/images/leaf2.png"
@@ -65,7 +65,7 @@
       <!-- ✅ Conditional success message OR upload box -->
       <transition name="scaleIn" mode="out-in">
         <div
-          class="bg-white w-full max-w-md rounded-3xl shadow-large border-4 border-primary-500 flex flex-col items-center justify-center mb-10 px-6 py-6 relative animate-scaleIn hover:shadow-glow transition-all duration-300">
+          class="bg-white w-full max-w-md rounded-3xl shadow-large border-4 border-primary-500 flex flex-col items-center justify-center mb-10 px-6 py-6 relative animate-scaleIn hover:shadow-glow transition-all duration-300 mx-4">
 
           <!-- ✅ Success message INSIDE card - covers upload area and filename, but NOT buttons -->
           <transition name="bounceIn">
@@ -155,7 +155,7 @@
           </div>
 
           <!-- ✅ Toggle Button for JSON/API Mode -->
-          <!-- <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
+          <div v-if="!isAnalyzed && !isUploading" class="flex items-center justify-center gap-3 mt-2 relative z-50">
             <span class="text-sm text-gray-700 font-medium">Use JSON File:</span>
             <button
               @click="toggleJsonMode"
@@ -172,7 +172,7 @@
               ></span>
             </button>
             <span class="text-xs text-gray-500">{{ useJsonFile ? 'ON' : 'OFF' }}</span>
-          </div> -->
+          </div>
 
           <!-- ✅ Buttons - positioned at bottom, always visible above success overlay -->
           <transition name="fade" mode="out-in">
