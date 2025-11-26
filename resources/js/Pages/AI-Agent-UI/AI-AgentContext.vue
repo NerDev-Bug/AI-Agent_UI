@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-12 relative">
+    <div class="flex justify-center items-center bg-gradient-to-br from-emerald-50/50 via-green-50/30 to-teal-50/50 min-h-screen w-full mt-12 relative">
         <!-- Subtle pattern overlay -->
         <div class="fixed inset-0 opacity-[0.02] pointer-events-none z-0"
             style="background-image: radial-gradient(circle at 2px 2px, #16a34a 1px, transparent 0); background-size: 40px 40px;">
