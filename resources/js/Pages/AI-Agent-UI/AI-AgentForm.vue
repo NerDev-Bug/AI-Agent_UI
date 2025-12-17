@@ -3,13 +3,13 @@
     <!-- left leafs - Hidden on mobile -->
     <div class="hidden md:block">
       <img src="/images/leaf2.png"
-        class="absolute top-[60px] left-[110px] w-[40px] h-auto pointer-events-none z-20 rotate-[-75deg]">
+        class="absolute top-[60px] left-[110px] w-[40px] h-auto pointer-events-none z-10 rotate-[-75deg]">
       <img src="/images/leaf2.png"
         class="absolute w-[60px] h-auto pointer-events-none bottom-[290px] left-[446px] z-10">
       <img src="/images/leaf1.png"
-        class="absolute top-[140px] left-[365px] w-[30px] h-auto pointer-events-none z-20 scale-x-[-1] rotate-[-70deg]">
+        class="absolute top-[140px] left-[365px] w-[30px] h-auto pointer-events-none z-10 scale-x-[-1] rotate-[-70deg]">
       <img src="/images/leaf1.png"
-        class="absolute top-[160px] left-[-60px] w-[270px] h-auto pointer-events-none z-20 rotate-[70deg]">
+        class="absolute top-[160px] left-[-60px] w-[270px] h-auto pointer-events-none z-10 rotate-[70deg]">
       <img src="/images/leaf1.png"
         class="absolute w-[46px] h-auto pointer-events-none bottom-[90px] left-[115px] scale-x-[-1] rotate-[-128deg] z-10">
       <img src="/images/leaf1.png"
@@ -19,7 +19,7 @@
     <!-- right leafs - Hidden on mobile -->
     <div class="hidden md:block">
       <img src="/images/leaf1.png"
-        class="absolute top-[60px] right-[210px] w-[44px] h-auto pointer-events-none z-20 rotate-[56deg]">
+        class="absolute top-[60px] right-[210px] w-[44px] h-auto pointer-events-none z-10 rotate-[56deg]">
       <img src="/images/leaf1.png"
         class="absolute w-[50px] h-auto pointer-events-none bottom-[180px] right-[494px] z-10 rotate-[70deg]">
       <img src="/images/leaf1.png"
@@ -33,15 +33,15 @@
 
     <!-- Top left image NFBT1 - Hidden on mobile -->
     <img src="/images/NFBT1.png" alt="Middle"
-      class="hidden md:block absolute top-[160px] left-[230px] w-[90px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[160px] left-[230px] w-[90px] h-auto pointer-events-none z-10" />
 
     <!-- Top right images FO1 - Hidden on mobile -->
     <img src="/images/FO1.png" alt="Middle"
-      class="hidden md:block absolute top-[190px] right-[210px] w-[90px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[190px] right-[210px] w-[90px] h-auto pointer-events-none z-10" />
 
     <!-- center right images iSBM - Hidden on mobile -->
     <img src="/images/iSBM.png" alt="Middle"
-      class="hidden md:block absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-20" />
+      class="hidden md:block absolute top-[400px] right-[360px] w-[70px] h-auto pointer-events-none z-10" />
 
     <!-- ✅ Main Upload Form -->
     <div id="AI-AgentForm" class="min-h-screen flex flex-col items-center justify-center pt-24 pb-8 relative z-10">
@@ -219,47 +219,18 @@
       </transition>
     </div>
 
-    <!-- Three Cards column-->
-    <div class="flex justify-center items-center mt-12 md:mt-16 mb-24 md:mb-32 px-4 relative">
-      <img src="/images/Pandoy.png" alt="Pandoy"
-        class="hidden md:block absolute w-[280px] md:w-[340px] h-auto pointer-events-none bottom-[20px] md:bottom-[240px] left-[180px] md:left-[220px] z-10" />
-      <div class="flex flex-col md:flex-row gap-4 md:gap-8 max-w-6xl w-full">
-        <!-- First card -->
-        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary-500/30 animate-slideInLeft group border-2 border-transparent hover:border-primary-200">
-          <div class="bg-gradient-to-br from-blue-100 to-blue-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
-            <img src="/images/magic.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="AI Magic Icon">
-          </div>
-          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors duration-300">AI-Powered Analysis</h1>
-          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Automatically extract and analyze form fields, patterns, and user behavior with advanced AI technology</p>
-        </div>
-
-        <!-- Second card -->
-        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-secondary-500/30 animate-slideInUp group border-2 border-transparent hover:border-secondary-200">
-          <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
-            <img src="/images/graph.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="Dashboard Icon">
-          </div>
-          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-secondary-600 transition-colors duration-300">Interactive Dashboard</h1>
-          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Visualize form metrics, completion rates, and conversion insights with beautiful, interactive charts</p>
-        </div>
-
-        <!-- Third card -->
-        <div class="bg-white w-full md:w-[420px] h-auto rounded-2xl shadow-large px-8 py-8 z-20 transform transition-all duration-500 hover:scale-110 hover:-translate-y-3 hover:shadow-2xl hover:shadow-primary-500/30 animate-slideInRight group border-2 border-transparent hover:border-primary-200">
-          <div class="bg-gradient-to-br from-primary-100 to-primary-200 w-16 h-16 rounded-2xl flex justify-center items-center mb-5 group-hover:scale-125 group-hover:rotate-6 transition-all duration-500 group-hover:shadow-lg">
-            <img src="/images/flash.png" class="w-10 h-10 object-cover group-hover:scale-110 transition-transform duration-500" alt="Lightning Icon">
-          </div>
-          <h1 class="text-lg md:text-xl font-bold text-gray-900 mb-4 group-hover:text-primary-600 transition-colors duration-300">Instant Insights</h1>
-          <p class="text-base text-gray-700 leading-relaxed group-hover:text-gray-800 transition-colors duration-300">Get actionable recommendations to improve form performance and drive better results</p>
-        </div>
-      </div>
-    </div>
-
     <!-- Navbar -->
     <div>
       <Navbarheader @searchResults="handleSearchResults" />
     </div>
 
+    <!-- Context 2-->
+     <div class="p-2 px-4">
+      <AIAgentContext2 />
+     </div>
+
     <!-- Context -->
-    <div id="AI-AgentContext" class="p-2" data-resultssection>
+    <div id="AI-AgentContext" data-resultssection>
       <AIAgentContext :analysisData="analysisData" :isSaved="isSaved" />
     </div>
 
@@ -310,6 +281,7 @@
 
 <script setup>
 import AIAgentContext from "./AI-AgentContext.vue";
+import AIAgentContext2 from "./AI-AgentContext2.vue";
 import Navbarheader from "../Layouts/Header.vue";
 import LoadingPage from "../Components/LoadingPage.vue";
 import LoadingOverlay from "../Components/LoadingOverlay.vue";

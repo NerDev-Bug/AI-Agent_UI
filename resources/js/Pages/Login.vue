@@ -1,55 +1,82 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-400 to-indigo-600 px-2 py-2">
-        <div class="bg-white w-[420px] rounded-2xl shadow-2xl p-8">
-            <h3 class="text-center text-3xl font-bold text-gray-800 mb-8">
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F0F9FF] to-[#E0F7FA] px-4 py-4">
+        <div class="bg-white/80 backdrop-blur-xl w-[470px] rounded-3xl shadow-2xl p-10 border border-[#E2E8F0]">
+
+            <h3 class="text-center text-3xl font-extrabold text-[#0F172A] mb-8 tracking-wide drop-shadow">
                 Product Demo Trials Analysis
             </h3>
 
-            <form class="space-y-6">
+            <form @submit.prevent="submit" class="space-y-6">
+
+                <!-- Email -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-2" for="email">
+                    <label class="block text-[#111827] font-semibold mb-2" for="email">
                         Email
                     </label>
-                    <input id="email" name="email" type="email" required
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                        placeholder="Enter your email" />
-                        <span class="text-[14px] text-red-400 m-2">Please type the correct Email</span>
+                    <input id="email" name="email" type="email" v-model="form.user_email" class="w-full border border-gray-300 rounded-xl px-4 py-3 
+                               focus:ring-4 focus:ring-[#22D3EE]/40 focus:border-[#0EA5E9] 
+                               transition-all shadow-sm" placeholder="Enter your email" />
+                    <span v-if="form.errors.user_email" class="text-[14px] text-red-500 m-1">
+                        {{ form.errors.user_email }}
+                    </span>
                 </div>
 
+                <!-- Password -->
                 <div>
-                    <label class="block text-gray-700 font-semibold mb-2" for="password">
+                    <label class="block text-[#111827] font-semibold mb-2" for="password">
                         Password
                     </label>
-                    <input id="password" name="password" type="password" required
-                        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-sky-500 focus:outline-none"
-                        placeholder="Enter your password" />
-                        <span class="text-[14px] text-red-400 m-2">Please type the correct Password</span>
+                    <input id="password" name="password" type="password" v-model="form.password" class="w-full border border-gray-300 rounded-xl px-4 py-3 
+                               focus:ring-4 focus:ring-[#22D3EE]/40 focus:border-[#0EA5E9] 
+                               transition-all shadow-sm" placeholder="Enter your password" />
+                    <span v-if="form.errors.password" class="text-[14px] text-red-500 m-1">
+                        {{ form.errors.password }}
+                    </span>
                 </div>
 
+                <div class="mt-4 block">
+                    <label class="flex items-center">
+                        <Checkbox name="remember" v-model:checked="form.remember" />
+                        <span class="ms-2 text-sm text-gray-600">Remember me</span>
+                    </label>
+                </div>
+
+                <!-- Login Button -->
                 <div class="pt-4">
-                    <button type="submit" name="submit"
-                        class="w-full bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 rounded-lg shadow-md transition duration-200">
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#0EA5E9] to-[#22D3EE]
+                               hover:from-[#0284C7] hover:to-[#06B6D4]
+                               text-white font-semibold py-3 rounded-2xl shadow-lg
+                               transform hover:scale-[1.02] transition-all">
                         Login
                     </button>
                 </div>
 
-                <div class="flex justify-between mt-2">
-                    <div class="text-center">
-                        <a href="#" class="text-sky-600 hover:text-sky-700 text-sm font-medium">
-                            Forgot your password?
-                        </a>
-                    </div>
-                    <div class="text-center">
-                        <a href="#" class="text-gray-500 hover:text-green-700 text-sm font-medium">
-                            Don't have an account?
-                        </a>
-                    </div>
+                <!-- Links -->
+                <div class="flex justify-between mt-3">
+                    <a href="#" class="text-[#0EA5E9] hover:text-[#0284C7] text-sm font-medium">
+                        Forgot your password?
+                    </a>
+
+                    <a href="/register" class="text-gray-600 hover:text-[#0EA5E9] text-sm font-medium">
+                        Don't have an account?
+                    </a>
                 </div>
+
             </form>
         </div>
     </div>
 </template>
 
 <script setup>
+import { useForm } from '@inertiajs/vue3'
+import Checkbox from './Components/Checkbox.vue'
 
+const form = useForm({
+    user_email: '',
+    password: '',
+})
+
+const submit = () => {
+    form.post('/login')   // route to backend
+}
 </script>
