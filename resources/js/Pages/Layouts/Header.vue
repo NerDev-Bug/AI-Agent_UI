@@ -46,10 +46,11 @@
       </span>
     </button>
 
-    <!-- DASHBOARD -->
-    <button class="
+    <!-- LOGOUT -->
+    <button @click="handleLogout" :class="[
       'flex-1 sm:flex-none font-semibold px-4 py-2 rounded-full transition-all duration-300 text-center hover:scale-105 active:scale-95',
-      'hover:bg-white hover:text-white hover:shadow-soft'">
+      'hover:bg-white hover:text-primary-600 hover:shadow-soft'
+    ]">
       Logout
     </button>
   </nav>
@@ -190,6 +191,7 @@
 
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount, nextTick } from "vue";
+import { router } from "@inertiajs/vue3";
 import axios from "axios";
 
 // Define emits for parent component
@@ -228,6 +230,19 @@ function scrollToSection(section) {
   );
   if (el) el.scrollIntoView({ behavior: "smooth" });
   activeSection.value = section;
+}
+
+function handleLogout() {
+  // Use Inertia router to make POST request to logout endpoint
+  router.post('/logout', {}, {
+    onSuccess: () => {
+      // Redirect will be handled by the backend
+      // The backend already redirects to '/' after logout
+    },
+    onError: (errors) => {
+      console.error('Logout error:', errors);
+    }
+  });
 }
 
 function handleScroll() {
